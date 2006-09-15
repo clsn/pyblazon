@@ -36,7 +36,7 @@ parser Blazonry:
 	| "per" ORDINARY COLOR {{ col1=COLOR }} "and" COLOR
    {{ return blazon.__dict__["Per"+ORDINARY.capitalize()](col1,COLOR) }}
 	| LINEY "of" NUM COLOR {{ col1=COLOR }} "and" COLOR
-   {{ return blazon.__dict__[LINEY.capitalize()](atoi(NUM),col1,COLOR) }}
+   {{ return blazon.__dict__[LINEY.capitalize()](int(NUM),col1,COLOR) }}
 
 
 
