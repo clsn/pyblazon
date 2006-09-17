@@ -24,12 +24,19 @@ parser Blazonry:
    rule blazon:		treatment  
 		{{ shield=blazon.Field(); shield.tincture=treatment }}
 			[[A]
-			charge {{ shield.charges.append(charge) }}
+			grouporcharge {{ shield.charges.extend(grouporcharge) }}
 			( ["and"] [A] charge 
 				{{ shield.charges.append(charge) }})*]
 			END {{ return shield }}
 
 
+
+
+   rule group:		NUM charge {{ return blazon.ChargeGroup(int(NUM),charge); }}
+
+
+   rule grouporcharge:	group {{ return group.elts }}
+			| charge {{ return [charge] }}
 
 
    rule treatment:	COLOR  {{ return blazon.Tincture(COLOR) }}

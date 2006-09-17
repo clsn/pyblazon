@@ -246,8 +246,10 @@ class Pile(Ordinary):
         self.clipPathElt.addElement(self.clipPath)
 
 class ChargeGroup:
-    def __init__(self):
+    def __init__(self,num=None,charge=None):
         self.elts=[]
+        if num and charge:
+           self.numcharges(num,charge)
 
     def numcharges(self,num,charge):
         for i in range(0,num):
@@ -267,6 +269,8 @@ class ChargeGroup:
             # only for completeness
             obj=self.elts[0]
             obj.moveto(Ordinary.FESSEPT)
+            # Maybe scale it?
+            obj.scale(2)
         elif num==2 or num==3:
             self.elts[0].moveto(Ordinary.DEXSIDE)
             self.elts[1].moveto(Ordinary.SINSIDE)
@@ -286,6 +290,13 @@ class Charge:
             self.svg.attributes["transform"]=""
         self.svg.attributes["transform"]+=" translate(%d,%d)" % args[0]
 
+    def scale(self,x,y=None):
+       if y==None:
+          y=x
+       if not self.svg.attributes.has_key("transform"):
+          self.svg.attributes["transform"]=""
+       self.svg.attributes["transform"] += " scale(%.2f,%.2f)"%(x,y)
+              
     def dexterchief(self):
         self.moveto(Ordinary.DEXCHIEF)
 
@@ -395,6 +406,65 @@ class PerBendSinister(BendySinister):
 
 # PerCross and PerSaltire aren't going to be so easy. :(
 
+class PerCross(Tincture):
+   def __init__(self,color1="argent",color2="sable"):
+      try:
+         self.colors=(Tincture.lookup[color1],Tincture.lookup[color2])
+      except KeyError:
+         sys.stderr.write("Invalid colors: %s, %s\n"%(color1,color2))
+         self.colors=(color1,color2)
+
+   # I'm really not so sure this is such a good way to do this...
+   def fill(self,elt):
+      elt.attributes["fill"]=self.colors[1]
+      p=partLine()
+      g=SVGdraw.group()
+      g.addElement(elt)
+      p.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
+      p.relhline(Ordinary.FESSPTX)
+      p.relvline(Ordinary.HEIGHT)
+      p.relhline(Ordinary.FESSPTX)
+      p.relvline(Ordinary.FESSPTY-Ordinary.HEIGHT)
+      p.relhline(-Ordinary.WIDTH)
+      p.closepath()
+      self.path=SVGdraw.path(p)
+      self.path.attributes["fill-rule"]="evenodd"
+      self.path.attributes["fill"]=self.colors[0]
+      g.addElement(self.path)
+      return g
+
+class PerSaltire(PerCross):
+   def fill(self,elt):
+      elt.attributes["fill"]=self.colors[0]
+      p=partLine()
+      g=SVGdraw.group()
+      g.addElement(elt)
+      p.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
+      # Yes, width over *and* width down!  45-degree lines!
+      p.relline(Ordinary.WIDTH, Ordinary.WIDTH)
+      p.relvline(-Ordinary.WIDTH)
+      p.relline(-Ordinary.WIDTH, Ordinary.WIDTH)
+      p.closepath()
+      self.path=SVGdraw.path(p)
+      self.path.attributes["fill-rule"]="evenodd"
+      self.path.attributes["fill"]=self.colors[1]
+      g.addElement(self.path)
+      return g
+
+class Gyronny(PerSaltire):
+   # DEFINITELY the wrong way to do this!!
+   def fill(self,elt):
+      PerCross.fill(self,elt)
+      path=self.path
+      PerSaltire.fill(self,elt)
+      elt.attributes["fill"]=self.colors[1] # PerSaltire messes this up.
+      path.attributes['d']+=" "+self.path.attributes['d']
+      self.path=path
+      g=SVGdraw.group()
+      g.addElement(elt)
+      g.addElement(self.path)
+      return g
+
 # Other notions: Hooks for functions for drawing lines, defaults to
 # straight normal line (path), but functions to make wavy, indented,
 # engrailed, invected, etc etc lines.  Probably give from and to
@@ -411,11 +481,6 @@ class PerBendSinister(BendySinister):
 # between three, etc etc etc.  This is something that relates to a charge's
 # *siblings* on the field.
 
-# Furs and patterns with <defs> making patterns, use clipping paths?  Might
-# be easier than using fill, for complex shapes.
-
-# How 'bout we start with just fields and simple ordinaries?
-
 if __name__=="__main__":
 #     d=SVGdraw.drawing()
 #     s=SVGdraw.svg(x=0,y=0,width="10cm",height="10cm",viewBox=(0,0,50,50))
@@ -429,8 +494,13 @@ if __name__=="__main__":
    import __main__                      # !!
    shield=Field(sys.argv[1])
    #charge=__main__.__dict__[sys.argv[3].capitalize()](sys.argv[4],"plain")
-   shield.tincture=BendySinister(8,"gules","azure")
+   shield.tincture=Gyronny("or","azure")
    #shield.charges.append(charge)
 
+   d=SVGdraw.drawing()
+   s=SVGdraw.svg()
+   s.addElement(vair)
+   d.setSVG(s)
+   print d.toXml()
+
    print shield
-  
