@@ -347,13 +347,87 @@ class Tincture:                         # Metal or color.
             self.color=Tincture.lookup[color]
         except KeyError:
             sys.stderr.write("Invalid tincture: %s\n"%color)
-            self.color="argent"
+            self.color="white"
 
     def fill(self, elt):
         elt.attributes["fill"]=self.color
         return elt
 
 class Fur(Tincture): pass
+
+class VairInPale(Fur):
+   def __init__(self,color1="argent",color2="azure"):
+      try:
+         (self.color1,self.color2)=(Tincture.lookup[color1],
+                                    Tincture.lookup[color2])
+      except KeyError:
+         sys.stderr.write("Invalid tinctures: %s,%s\n"%(color1,color2))
+         (self.color1,self.color2)=("white","blue")
+
+   def VairPattern(self):
+      pattern=SVGdraw.SVGelement(type="pattern",attributes=
+                                 {"patternContentUnits":"userSpaceOnUse",
+                                  "height":"8",
+                                  "id":"vair-in-pale%04d"%Ordinary.id,
+                                  "patternUnits":"userSpaceOnUse",
+                                  "width":"8"})
+      pattern.addElement(SVGdraw.rect(x="0", y="0", width="8", height="8",
+                                      fill=self.color1))
+      pattern.addElement(SVGdraw.SVGelement(type='path',attributes=
+                                            {"d":"M0,8 l2,-2 l0,-4 l2,-2 l2,2 l0,4 l2,2 z",
+                                             "fill":self.color2}))
+      Ordinary.id+=1
+      return pattern
+
+   def fill(self,elt):
+      g=SVGdraw.group()
+      pattern=self.VairPattern()
+      g.addElement(pattern)
+      elt.attributes["fill"]="url(#%s)"%pattern.attributes["id"]
+      Ordinary.id += 1
+      g.addElement(elt)
+      return g
+
+class Vair(VairInPale):
+   def fill(self,elt):
+      g=SVGdraw.group()
+      VIPpattern=self.VairPattern()
+      g.addElement(VIPpattern)
+      pattern=SVGdraw.SVGelement('pattern',attributes=
+                                 {"width":"16", "height":"16",
+                                  "patternUnits":"userSpaceOnUse",
+                                  "patternContentUnits":"userSpaceOnUse",
+                                  "id":"vair%04d"%Ordinary.id})
+      Ordinary.id+=1
+      pattern.addElement(SVGdraw.rect(x="0", y="0", width="16", height="8",
+                                      fill="url(#%s)"%VIPpattern.attributes["id"]))
+      pattern.addElement(SVGdraw.rect(x="0", y="8", width="20", height="8",
+                                      fill="url(#%s)"%VIPpattern.attributes["id"],
+                                      transform="translate(-4,0)"))
+      g.addElement(pattern)
+      elt.attributes["fill"]="url(#%s)"%pattern.attributes["id"]
+      g.addElement(elt)
+      return g
+
+class CounterVair(VairInPale):
+   def fill(self,elt):
+      g=SVGdraw.group()
+      pattern=SVGdraw.SVGelement('pattern',attributes=
+                                 {"width":"8", "height":"16",
+                                  "patternUnits":"userSpaceOnUse",
+                                  "patternContentUnits":"userSpaceOnUse",
+                                  "id":"counter-vair%04d"%Ordinary.id})
+      Ordinary.id+=1
+      pattern.addElement(SVGdraw.rect(x="0", y="0", width="8", height="18",
+                                      fill=self.color1))
+      pattern.addElement(SVGdraw.SVGelement('path',
+                                            attributes={"d":
+                                                        "M0,8 l2,-2 l0,-4 l2,-2 l2,2 l0,4 l2,2 l-2,2 l0,4 l-2,2 l-2,-2 l0,-4 z",
+                                                        "fill":self.color2}))
+      g.addElement(pattern)
+      elt.attributes["fill"]="url(#%s)"%pattern.attributes["id"]
+      g.addElement(elt)
+      return g
 
 class Paly(Tincture):
     def __init__(self,bars=6,color1="argent",color2="sable"):
