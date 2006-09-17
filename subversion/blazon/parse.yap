@@ -13,7 +13,7 @@ parser Blazonry:
    token A:		"(a|an)"
    token COLOR:		"(or|argent|sable|azure|gules|purpure|vert)"
    token ORDINARY:	"(fesse|pale|cross|saltire|bend|pile|chevron)"
-   token CHARGE:	"(chief|roundel)"  # can't have "per chief"
+   token CHARGE:	"(chief|roundel|lozenge)"  # can't have "per chief"
    token BENDSINISTER:	"bend sinister"
    token LINEY:		"(paly|barry|bendy)"
    token LINETYPE:	"(plain|indented|dancetty|embattled|invected|engrailed|wavy)"

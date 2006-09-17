@@ -306,18 +306,28 @@ class Charge:
     def chief(self):
         self.moveto(Ordinary.CHIEFPT)
 
-class SubOrdinary(Charge, Ordinary): pass
-
+class SubOrdinary(Charge, Ordinary):
+   def __init__(self,*args,**kwargs):
+      self.setup(*args,**kwargs)
+      
 class Roundel(SubOrdinary):
-    def __init__(self,*args,**kwargs):
-        self.setup(*args,**kwargs)
+   def process(self):
+      self.clipPathElt.addElement(SVGdraw.circle(cx=0,cy=0,r=30))
+      if not self.maingroup.attributes.has_key("transform"):
+         self.maingroup.attributes["transform"]=""
+         # This is not handled well.  but it's a start.
+         self.maingroup.attributes["transform"] +=" scale(.3)"
 
-    def process(self):
-        self.clipPathElt.addElement(SVGdraw.circle(cx=0,cy=0,r=30))
-        if not self.maingroup.attributes.has_key("transform"):
-            self.maingroup.attributes["transform"]=""
-        # This is not handled well.  but it's a start.
-        self.maingroup.attributes["transform"] +=" scale(.3)"
+class Lozenge(SubOrdinary):
+   def process(self):
+      p=SVGdraw.pathdata()
+      p.move(0,-20)
+      p.line(15,0)
+      p.line(0,20)
+      p.line(-15,0)
+      p.closepath()
+      self.clipPath=SVGdraw.path(p)
+      self.clipPathElt.addElement(self.clipPath)
 
 class Pattern: pass                     # gyronny, checky, etc.
 
