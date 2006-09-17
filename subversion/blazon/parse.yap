@@ -1,5 +1,6 @@
 import blazon
 import sys
+import re
 
 class Globals:
    shield=None
@@ -7,6 +8,35 @@ class Globals:
    ord=None
    ordcol=None
    line=None
+
+   lookup={
+	"vair": blazon.Vair,
+	"counter.vair": blazon.CounterVair,
+	"fesse?": blazon.Fesse,
+	"pale" : blazon.Pale,
+	"cross": blazon.Cross,
+	"saltire": blazon.Saltire,
+	"bend" : blazon.Bend,
+	"pile": blazon.Pile,
+	"chevron": blazon.Chevron,
+	"bend sinister": blazon.BendSinister,
+	"paly": blazon.Paly,
+	"barry": blazon.Barry,
+	"bendy":blazon.Bendy
+   }
+
+
+def lookup(key):
+   try:
+      return Globals.lookup[key.lower()]
+   except KeyError:
+      key=key.lower()
+      for k in Globals.lookup.keys():
+         m=re.match(k,key)
+         if m:
+           return Globals.lookup[m.re.pattern]
+      return None
+
 
 %%
 parser Blazonry:
@@ -17,6 +47,7 @@ parser Blazonry:
    token BENDSINISTER:	"bend sinister"
    token LINEY:		"(paly|barry|bendy)"
    token LINETYPE:	"(plain|indented|dancetty|embattled|invected|engrailed|wavy)"
+   token FUR:		"(vair|counter.vair)"
    token NUM:		"\\d+"
    ignore:		"\\W+"
    token END:		"$"
@@ -44,6 +75,7 @@ parser Blazonry:
    {{ return blazon.__dict__["Per"+ORDINARY.capitalize()](col1,COLOR) }}
 	| LINEY "of" NUM COLOR {{ col1=COLOR }} "and" COLOR
    {{ return blazon.__dict__[LINEY.capitalize()](int(NUM),col1,COLOR) }}
+	| FUR {{ cols=() }} [COLOR {{ col1=COLOR }} "and" COLOR {{ cols=(col1,COLOR) }}] {{ return lookup(FUR)(*cols) }}
 
 
 
