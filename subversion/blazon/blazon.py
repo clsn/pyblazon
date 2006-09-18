@@ -429,6 +429,48 @@ class CounterVair(VairInPale):
       g.addElement(elt)
       return g
 
+class Ermine(Fur):
+   def __init__(self,color1="argent",color2="sable"):
+      try:
+         (self.color1,self.color2)=(Tincture.lookup[color1],
+                                    Tincture.lookup[color2])
+      except KeyError:
+         sys.stderr.write("Invalid tinctures: %s,%s\n"%(color1,color2))
+         (self.color1,self.color2)=("white","black")
+
+   def fill(self,elt):
+      g=SVGdraw.group()
+      pattern=SVGdraw.SVGelement('pattern',attributes=
+                                 {"height":"15","width":"15",
+                                  "patternUnits":"userSpaceOnUse",
+                                  "patternContentUnits":"userSpaceOnUse",
+                                  "id":"ermine%04d"%Ordinary.id})
+      Ordinary.id+=1
+      pattern.addElement(SVGdraw.rect(x="0",y="0",width="15",height="15",
+                                      fill=self.color1))
+      pattern.addElement(SVGdraw.SVGelement('path',
+                                            attributes={"d":
+                                                        "M1,5 c1,-1 1.5,-4 1.5,-4 c0,0 .5,3 1.5,4 l-1.5,1.5 z",
+                                                        "fill":self.color2}))
+      pattern.addElement(SVGdraw.circle(cx="1.5",cy="2",r=".5",fill=self.color2))
+      pattern.addElement(SVGdraw.circle(cx="2.5",cy="1",r=".5",fill=self.color2))
+      pattern.addElement(SVGdraw.circle(cx="3.5",cy="2",r=".5",fill=self.color2))
+      pattern.addElement(SVGdraw.SVGelement('path',
+                                            attributes={"d":
+                                                        "M8.5,12.5 c1,-1 1.5,-4 1.5,-4 c0,0 .5,3 1.5,4 l-1.5,1.5 z",
+                                                        "fill":self.color2}))
+      pattern.addElement(SVGdraw.circle(cx="9",cy="9.5",r=".5",fill=self.color2))
+      pattern.addElement(SVGdraw.circle(cx="10",cy="8.5",r=".5",fill=self.color2))
+      pattern.addElement(SVGdraw.circle(cx="11",cy="9.5",r=".5",fill=self.color2))
+
+
+      g.addElement(pattern)
+      g.addElement(elt)
+      elt.attributes["fill"]="url(#%s)"%pattern.attributes["id"]
+      return g
+
+
+
 class Paly(Tincture):
     def __init__(self,bars=6,color1="argent",color2="sable"):
         try:
