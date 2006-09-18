@@ -8,16 +8,6 @@ import copy
 from pathstuff import partLine
 from string import atoi
 
-class Blazon:
-    """A blazon is a heraldic definition. We would like to be as liberal
-    as possible in what we accept."""
-    def __init__(self, blazon):
-        # Our parser is somewhat finicky, so we want to convert the raw,
-        # user-provided text into something it can handle.
-        self.blazon = self.Normalize(blazon)
-    def Normalize(self, blazon):
-        return blazon.lower().replace(",", " ,").replace(".", " .")
-
 # For the sake of argument, let's assume the base background SVG is 100x125
 # in user-units, starting from 0,0 at top left.  Most ordinaries will also
 # be the same size and same location--only they'll have clipping paths,
@@ -617,7 +607,29 @@ class Gyronny(PerSaltire):
 # between three, etc etc etc.  This is something that relates to a charge's
 # *siblings* on the field.
 
+import parse
+
+class Blazon:
+    """A blazon is a heraldic definition. We would like to be as liberal
+    as possible in what we accept."""
+    def __init__(self, blazon):
+        # Our parser is somewhat finicky, so we want to convert the raw,
+        # user-provided text into something it can handle.
+        self.blazon = self.Normalize(blazon)
+    def Normalize(self, blazon):
+        return blazon.lower().replace(",", " ,").replace(".", " .")
+    def GetBlazon(self):
+        return self.blazon
+    def GetShield(self):
+        return parse.parse('blazon', self.GetBlazon())
+
+
 if __name__=="__main__":
+    cmdlineinput = " ".join(sys.argv[1:])
+    blazon = Blazon(cmdlineinput)
+    print blazon.GetShield()
+
+## Old test stuff goes here:
 #     d=SVGdraw.drawing()
 #     s=SVGdraw.svg(x=0,y=0,width="10cm",height="10cm",viewBox=(0,0,50,50))
 #     d.setSVG(s)
@@ -627,16 +639,16 @@ if __name__=="__main__":
 #     s.addElement(SVGdraw.path(p,stroke="black", stroke_width=".2", fill="none"))
 #     print d.toXml()
    # Parsing "or a pale sable" from argv.
-   import __main__                      # !!
-   shield=Field(sys.argv[1])
+#   import __main__                      # !!
+#   shield=Field(sys.argv[1])
    #charge=__main__.__dict__[sys.argv[3].capitalize()](sys.argv[4],"plain")
-   shield.tincture=Gyronny("or","azure")
+#   shield.tincture=Gyronny("or","azure")
    #shield.charges.append(charge)
 
-   d=SVGdraw.drawing()
-   s=SVGdraw.svg()
-   s.addElement(vair)
-   d.setSVG(s)
-   print d.toXml()
+#   d=SVGdraw.drawing()
+#   s=SVGdraw.svg()
+#   s.addElement(vair)
+#   d.setSVG(s)
+#   print d.toXml()
 
-   print shield
+#   print shield

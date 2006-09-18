@@ -1,0 +1,18 @@
+To set-up, run "make clean", then "make". Make is supposed to know
+when parse.py is older than parse.yap, but apparently it does
+not. Oops.
+
+Usage:
+   python blazon.py <blazon>
+
+Example:
+   python blazon.py Vert a saltire argent. > test.svg
+
+Examine the output SVG file, for example in Firefox.
+
+To run the regression tests, do:
+   python regressiontest.py
+
+It should output a lot of stuff, but end with OK. If it ends with
+FAILED, you need to figure out if the production code or the test code
+is wrong, and fix accordingly.

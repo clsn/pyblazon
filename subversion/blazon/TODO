@@ -1,0 +1,23 @@
+Remove items from here as soon as they are implemented.
+
+Vital:
+- parse numbers written as words
+- support all tinctures, even the unusual ones
+- support all charges that are simple, geometrical figures
+
+Fairly important:
+- countercharging
+- semy of any single charge
+- importing charges from file or database (it would get tedious to specify
+  the outline of, say, a lion, in the source code itself)
+- back-references ("of the first", "as many")
+- define the tincture of multiple charges at the same time
+  ("a foo and a bar argent")
+- thin black lines between everything (or at least the option of having it)
+
+Wishlist:
+- semy of _anything_ (even crazy, complex things like "a
+  cross-crosslet or between four bezants"
+- multilingual support (e.g. blazons in French, German, Norwegian ...)
+- support for other shield shapes
+- support for using a flag instead of a shield
