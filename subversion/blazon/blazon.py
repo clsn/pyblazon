@@ -8,6 +8,16 @@ import copy
 from pathstuff import partLine
 from string import atoi
 
+class Blazon:
+    """A blazon is a heraldic definition. We would like to be as liberal
+    as possible in what we accept."""
+    def __init__(self, blazon):
+        # Our parser is somewhat finicky, so we want to convert the raw,
+        # user-provided text into something it can handle.
+        self.blazon = self.Normalize(blazon)
+    def Normalize(self, blazon):
+        return blazon.lower().replace(",", " ,").replace(".", " .")
+
 # For the sake of argument, let's assume the base background SVG is 100x125
 # in user-units, starting from 0,0 at top left.  Most ordinaries will also
 # be the same size and same location--only they'll have clipping paths,

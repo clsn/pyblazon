@@ -42,6 +42,7 @@ def lookup(key):
 parser Blazonry:
    token A:		"(a|an)"
    token COLOR:		"(or|argent|sable|azure|gules|purpure|vert)"
+   token PARTYPER:      "(party per|per)"
    token ORDINARY:	"(fesse|pale|cross|saltire|bend|pile|chevron)"
    token CHARGE:	"(chief|roundel|lozenge)"  # can't have "per chief"
    token BENDSINISTER:	"bend sinister"
@@ -50,7 +51,7 @@ parser Blazonry:
    token FUR:		"(vair|counter.vair)"
    token NUM:		"\\d+"
    ignore:		"\\W+"
-   token END:		"$"
+   token END:		"($|\.$)"
 
    rule blazon:		treatment  
 		{{ shield=blazon.Field(); shield.tincture=treatment }}
@@ -71,12 +72,19 @@ parser Blazonry:
 
 
    rule treatment:	COLOR  {{ return blazon.Tincture(COLOR) }}
-	| "per" ORDINARY COLOR {{ col1=COLOR }} "and" COLOR
+	| PARTYPER ORDINARY COLOR {{ col1=COLOR }} "and" COLOR
    {{ return blazon.__dict__["Per"+ORDINARY.capitalize()](col1,COLOR) }}
 	| LINEY "of" NUM COLOR {{ col1=COLOR }} "and" COLOR
    {{ return blazon.__dict__[LINEY.capitalize()](int(NUM),col1,COLOR) }}
 	| FUR {{ cols=() }} [COLOR {{ col1=COLOR }} "and" COLOR {{ cols=(col1,COLOR) }}] {{ return lookup(FUR)(*cols) }}
+>>>>>>> .r8
 
+## The following does not work. It results in:
+##  * These tokens could be matched by more than one clause:
+##  * LINEY
+## Why?
+#	| LINEY LINETYPE "of" NUM COLOR {{ col1=COLOR }} "and" COLOR
+#   {{ res = blazon.__dict__[LINEY.capitalize()](int(NUM),col1,COLOR); res.lineType=LINETYPE; return res }}
 
 
    rule ordinary:	ORDINARY {{ return blazon.__dict__[ORDINARY.capitalize()]() }}
