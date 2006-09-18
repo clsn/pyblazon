@@ -77,7 +77,6 @@ parser Blazonry:
 	| LINEY "of" NUM COLOR {{ col1=COLOR }} "and" COLOR
    {{ return blazon.__dict__[LINEY.capitalize()](int(NUM),col1,COLOR) }}
 	| FUR {{ cols=() }} [COLOR {{ col1=COLOR }} "and" COLOR {{ cols=(col1,COLOR) }}] {{ return lookup(FUR)(*cols) }}
->>>>>>> .r8
 
 ## The following does not work. It results in:
 ##  * These tokens could be matched by more than one clause:
