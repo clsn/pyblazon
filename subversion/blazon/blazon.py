@@ -6,7 +6,6 @@ import sys
 import copy
 
 from pathstuff import partLine
-from string import atoi
 
 # For the sake of argument, let's assume the base background SVG is 100x125
 # in user-units, starting from 0,0 at top left.  Most ordinaries will also
@@ -452,16 +451,22 @@ class Ermine(Fur):
                                             attributes={"d":
                                                         "M1,5 c1,-1 1.5,-4 1.5,-4 c0,0 .5,3 1.5,4 l-1.5,1.5 z",
                                                         "fill":self.color2}))
-      pattern.addElement(SVGdraw.circle(cx="1.5",cy="2",r=".5",fill=self.color2))
-      pattern.addElement(SVGdraw.circle(cx="2.5",cy="1",r=".5",fill=self.color2))
-      pattern.addElement(SVGdraw.circle(cx="3.5",cy="2",r=".5",fill=self.color2))
+      pattern.addElement(SVGdraw.circle(cx="1.5",cy="2",
+                                        r=".5",fill=self.color2))
+      pattern.addElement(SVGdraw.circle(cx="2.5",cy="1",
+                                        r=".5",fill=self.color2))
+      pattern.addElement(SVGdraw.circle(cx="3.5",cy="2",
+                                        r=".5",fill=self.color2))
       pattern.addElement(SVGdraw.SVGelement('path',
                                             attributes={"d":
                                                         "M8.5,12.5 c1,-1 1.5,-4 1.5,-4 c0,0 .5,3 1.5,4 l-1.5,1.5 z",
                                                         "fill":self.color2}))
-      pattern.addElement(SVGdraw.circle(cx="9",cy="9.5",r=".5",fill=self.color2))
-      pattern.addElement(SVGdraw.circle(cx="10",cy="8.5",r=".5",fill=self.color2))
-      pattern.addElement(SVGdraw.circle(cx="11",cy="9.5",r=".5",fill=self.color2))
+      pattern.addElement(SVGdraw.circle(cx="9",cy="9.5",
+                                        r=".5",fill=self.color2))
+      pattern.addElement(SVGdraw.circle(cx="10",cy="8.5",
+                                        r=".5",fill=self.color2))
+      pattern.addElement(SVGdraw.circle(cx="11",cy="9.5",
+                                        r=".5",fill=self.color2))
 
 
       g.addElement(pattern)
