@@ -384,7 +384,6 @@ class VairInPale(Fur):
       pattern=self.VairPattern()
       g.addElement(pattern)
       elt.attributes["fill"]="url(#%s)"%pattern.attributes["id"]
-      Ordinary.id += 1
       g.addElement(elt)
       return g
 
@@ -478,32 +477,51 @@ class Ermine(Fur):
 
 
 class Paly(Tincture):
-    def __init__(self,bars=6,color1="argent",color2="sable"):
-        try:
-            self.colors=(Tincture.lookup[color1],Tincture.lookup[color2])
-        except KeyError:
-            sys.stderr.write("Invalid colors: %s, %s\n"%(color1,color2))
-            self.colors=(color1,color2)
-        self.elt=SVGdraw.lineargradient()
-        for i in range(0,bars):
-            here=float(i)/bars
-            next=float(i+1)/bars
-            self.elt.addElement(SVGdraw.stop(here, self.colors[i%2]))
-            self.elt.addElement(SVGdraw.stop(next-0.001,
-                                             self.colors[i%2]))
-        self.elt.addElement(SVGdraw.stop(1.0,self.colors[(bars+1)%2]))
-        self.elt.attributes["id"]="Grad%04d"%Ordinary.id
-        self.id=self.elt.attributes["id"]
-        Ordinary.id+=1
+   def parseColors(self,color1,color2):
+      """For internal use, to simplify subclasses"""
+      if type(color1)==type("x"):
+         color1=Tincture(color1)
+      if type(color2)==type("x"):
+         color2=Tincture(color2)
+      self.colors=(color1,color2)
 
-    def fill(self, elt):
-        elt.attributes["fill"]="url(#%s)"%self.elt.attributes["id"]
-        return elt
+   def assemble(self):
+      """For internal use, to simplify assembly of subclasses"""
+      p=partLine(linetype=self.lineType) # Start to support partition lines
+      width=float(Ordinary.WIDTH)/self.pieces
+      for i in range(1,self.pieces,2):
+         p.rect(-Ordinary.FESSPTX+i*width,-Ordinary.HEIGHT,
+                width,2*Ordinary.HEIGHT)
+      self.path=SVGdraw.path(p)
+      
+   def __init__(self,bars=6,color1="argent",color2="sable",linetype="plain"):
+      self.parseColors(color1,color2)
+      self.lineType=linetype
+      self.pieces=bars
+            
+   def fill(self, elt):
+      self.assemble()
+      self.foreground=Ordinary()        # treat it like an Ordinary
+      self.foreground.clipPath=self.path
+      self.foreground.clipPathElt.addElement(self.path)
+      self.foreground.tincture=self.colors[1]
+      self.background=SVGdraw.rect(-Ordinary.FESSPTX, -Ordinary.FESSPTY,
+                                   Ordinary.WIDTH, Ordinary.HEIGHT)
+      self.background=self.colors[0].fill(self.background)
+   
+      g=SVGdraw.group()
+      g.addElement(self.background)
+      g.addElement(self.foreground.finalizeSVG())
+      return g
 
 class Barry(Paly):
-    def __init__(self,*args,**kwargs):
-        Paly.__init__(self,*args,**kwargs)
-        self.elt.attributes["gradientTransform"]="rotate(90)"
+   def assemble(self):
+      p=partLine(linetype=self.lineType)
+      height=float(Ordinary.HEIGHT)/self.pieces
+      for i in range(1,self.pieces,2):
+         p.rect(-Ordinary.FESSPTX, -Ordinary.FESSPTY+i*height,
+                Ordinary.WIDTH, height)
+         self.path=SVGdraw.path(p)
 
 class Bendy(Paly):
     def __init__(self,*args,**kwargs):

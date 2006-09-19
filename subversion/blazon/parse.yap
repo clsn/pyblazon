@@ -102,10 +102,10 @@ parser Blazonry:
 
 
    rule treatment:	COLOR  {{ return blazon.Tincture(COLOR) }}
-	| PARTYPER ORDINARY COLOR {{ col1=COLOR }} "and" COLOR
-   {{ return lookup("per "+ORDINARY)(col1,COLOR) }}
-	| LINEY "of" amount COLOR {{ col1=COLOR }} "and" COLOR
-   {{ return blazon.__dict__[LINEY.capitalize()](amount,col1,COLOR) }}
+	| PARTYPER ORDINARY treatment {{ col1=treatment }} "and" treatment
+   {{ return lookup("per "+ORDINARY)(col1,treatment) }}
+	| LINEY "of" amount treatment {{ col1=treatment }} "and" treatment
+   {{ return lookup(LINEY)(amount,col1,treatment) }}
 	| FUR {{ return lookup(FUR)() }}
         | FURRY {{ cols=() }} COLOR {{ col1=COLOR }} "and" COLOR {{ cols=(col1,COLOR) }} {{ return lookup(FURRY)(*cols) }}
 

@@ -8,12 +8,13 @@ class partLine:
     """class used to create a pathdata object which can be used for a path.
     although most methods are pretty straightforward it might be useful to look at the SVG specification."""
     #I didn't test the methods below. 
-    def __init__(self,x=None,y=None):
+    def __init__(self,x=None,y=None,linetype="plain"):
         self.path=[]
         if x is not None and y is not None:
             self.path.append('M '+str(x)+' '+str(y))
             self.curX=x
             self.curY=y
+        self.lineType=linetype
     def update(self,x,y):
         """Internal function only!!"""
         (self.curX,self.curY)=(x,y)
@@ -98,9 +99,9 @@ class partLine:
         self.relupdate(x,y)
     def __repr__(self):
         return ' '.join(self.path)
-
     
     def makeline(self,x,y):
+        """draw a line using whatever linetype is called for"""
         if not hasattr(self,"lineType") or self.lineType == "plain":
             self.line(x,y)
         else:
@@ -192,13 +193,14 @@ class partLine:
             self.update(x,y)
 
     def makelinerel(self,x,y):
+        """draw a line with the current linetype to xy relative"""
         self.makeline(x+self.curX,y+self.curY)
 
     def rect(self,x,y,width,height):
+        """draw a rectangle using the current linetype"""
         self.move(x,y)
         self.makelinerel(width,0)
         self.makelinerel(0,height)
         self.makelinerel(-width,0)
         self.makelinerel(0,-height)
         self.closepath()
-
