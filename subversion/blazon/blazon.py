@@ -4,6 +4,7 @@ import SVGdraw
 import math
 import sys
 import copy
+import re
 
 from pathstuff import partLine
 
@@ -622,7 +623,7 @@ class Blazon:
         # user-provided text into something it can handle.
         self.blazon = self.Normalize(blazon)
     def Normalize(self, blazon):
-        return blazon.lower().replace(",", " ,").replace(".", " .")
+        return re.sub("[^a-z0-9 ]+"," ",blazon.lower())
     def GetBlazon(self):
         return self.blazon
     def GetShield(self):

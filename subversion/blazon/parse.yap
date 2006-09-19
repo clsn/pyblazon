@@ -20,6 +20,8 @@ class Globals:
 	"pile": blazon.Pile,
 	"chevron": blazon.Chevron,
 	"bend sinister": blazon.BendSinister,
+	"roundel": blazon.Roundel,
+	"lozenge": blazon.Lozenge,
 	"paly": blazon.Paly,
 	"barry": blazon.Barry,
 	"bendy":blazon.Bendy,
