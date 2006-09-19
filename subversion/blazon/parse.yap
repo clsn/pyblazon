@@ -20,6 +20,7 @@ class Globals:
 	"pile": blazon.Pile,
 	"chevron": blazon.Chevron,
 	"bend sinister": blazon.BendSinister,
+	"chief": blazon.Chief,
 	"roundel": blazon.Roundel,
 	"lozenge": blazon.Lozenge,
 	"paly": blazon.Paly,
@@ -36,11 +37,18 @@ class Globals:
 	"per cross": blazon.PerCross,
 	"per saltire": blazon.PerSaltire,
 	"per fesse?": blazon.PerFesse,
+	"per chief": blazon.PerFesse,		# So what?
 	"per pale": blazon.PerPale,
 	"per bend": blazon.PerBend,
 	"per bend sinister": blazon.PerBendSinister
    }
 
+def word2num(word):
+   return {"one":1, "two":2, "three":3, "four":4, "five":5, "six":6,
+           "seven":7, "eight":8, "nine":9, "ten":10, "eleven":11,
+           "twelve":12, "thirteen":13, "fourteen":14, "fifteen":15,
+           "sixteen":16, "seventeen":17, "eighteen":18, "nineteen":19,
+           "twenty":20}[word]
 
 def lookup(key):
    # sys.stderr.write("Looking up: %s\n"%key)
@@ -62,13 +70,14 @@ def lookup(key):
 parser Blazonry:
    token A:		"(a|an)"
    token COLOR:		"(or|argent|sable|azure|gules|purpure|vert)"
-   token ORDINARY:	"(fesse?|pale|cross|saltire|bend sinister|bend|pile|chevron)"
-   token CHARGE:	"(chief|roundel|lozenge)"  # can't have "per chief"
+   token ORDINARY:	"(fesse?|pale|cross|saltire|bend sinister|bend|pile|chevron|chief)"
+   token CHARGE:	"(roundel|lozenge)"
    token LINEY:		"(paly|barry|bendy)"
    token LINETYPE:	"(plain|indented|dancetty|embattled|invected|engrailed|wavy)"
    token FUR:		"(vair.in.pale|vair|counter.vair|ermines?|erminois|pean)"
    token FURRY:		"(vairy.in.pale|vairy|ermined)"
    token NUM:		"\\d+"
+   token NUMWORD:	"(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)"
    token PARTYPER:	"(party per|per)"
    ignore:		"\\W+"
    token END:		"\.?$"
@@ -81,10 +90,11 @@ parser Blazonry:
 				{{ shield.charges.append(charge) }})*]
 			END {{ return shield }}
 
+   rule amount:		NUM {{ return int(NUM) }}
+			| NUMWORD {{ return word2num(NUMWORD) }}
 
 
-
-   rule group:		NUM charge {{ return blazon.ChargeGroup(int(NUM),charge); }}
+   rule group:		amount charge {{ return blazon.ChargeGroup(amount,charge); }}
 
 
    rule grouporcharge:	group {{ return group.elts }}
@@ -94,8 +104,8 @@ parser Blazonry:
    rule treatment:	COLOR  {{ return blazon.Tincture(COLOR) }}
 	| PARTYPER ORDINARY COLOR {{ col1=COLOR }} "and" COLOR
    {{ return lookup("per "+ORDINARY)(col1,COLOR) }}
-	| LINEY "of" NUM COLOR {{ col1=COLOR }} "and" COLOR
-   {{ return blazon.__dict__[LINEY.capitalize()](int(NUM),col1,COLOR) }}
+	| LINEY "of" amount COLOR {{ col1=COLOR }} "and" COLOR
+   {{ return blazon.__dict__[LINEY.capitalize()](amount,col1,COLOR) }}
 	| FUR {{ return lookup(FUR)() }}
         | FURRY {{ cols=() }} COLOR {{ col1=COLOR }} "and" COLOR {{ cols=(col1,COLOR) }} {{ return lookup(FURRY)(*cols) }}
 
