@@ -40,8 +40,11 @@ class CorrectBlazonPreprocessing(unittest.TestCase):
         test = blazon.Blazon("This is a test")
         self.assertEqual(test.blazon, "this is a test")
     def testPunctuation(self):
+        import re
         test = blazon.Blazon("This, is, also, a test.")
-        self.assertEqual(test.blazon, "this , is , also , a test .")
+        # Whatever the text normalizer done, it should not allow
+        # punctuation to attach to a word.
+        self.assert_(re.match("[a-z][\,\.]", test.GetBlazon()) is None)
 
 BlazonryTests.addTest(CorrectBlazonPreprocessing)
 
@@ -56,7 +59,12 @@ class CanParseBlazonry(unittest.TestCase):
         testblazons = open("tests/blazons-good.txt", "r")
         for line in testblazons:
             line = line.strip()
-            self.assert_(ParsesOK(line))
+            try:
+                self.assert_(ParsesOK(line))
+            except AttributeError:
+                print "Could not parse good blazon:"
+                print line # Output offending blazon
+                raise      # Re-raise
 BlazonryTests.addTest(CanParseBlazonry)
 
 class CanNotParseBlazonry(unittest.TestCase):

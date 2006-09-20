@@ -102,7 +102,6 @@ parser Blazonry:
    rule grouporcharge:	group {{ return group.elts }}
 			| charge {{ return [charge] }}
 
-
    rule treatment:	COLOR  {{ return blazon.Tincture(COLOR) }}
 	| PARTYPER ORDINARY {{ LINETYPE="plain" }} 
          [LINETYPE] treatment 
