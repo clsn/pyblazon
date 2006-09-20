@@ -2,6 +2,7 @@
 
 import unittest
 import blazon
+import sys
 
 # Test for SVG drawing code
 
@@ -60,7 +61,7 @@ class CanParseBlazonry(unittest.TestCase):
         for line in testblazons:
             line = line.strip()
             try:
-                self.assert_(ParsesOK(line))
+                self.assert_(ParsesOK(line), "This does not parse: " + line)
             except AttributeError:
                 print "Could not parse good blazon:"
                 print line # Output offending blazon
@@ -90,10 +91,37 @@ class PurpureALozengeArgent(unittest.TestCase):
         # by the blazon, before those actions are actually executed.
 PipelineTests.addTest(PurpureALozengeArgent)
 
-# TODO:
 # - tests for standards-compliant SVG output
+from xml.parsers.xmlproc import xmlproc
+from xml.parsers.xmlproc import xmlval
+from xml.parsers.xmlproc import xmldtd
 
+class ValidateSVGofBlazons(unittest.TestCase):
+    def testSVG(self):
+        testblazons = open("tests/blazons-good.txt", "r")
+        for line in testblazons:
+            line = line.strip()
+            curblazon = blazon.Blazon(line)
+            shield = curblazon.GetShield()
+            if shield is not None:
+                # If the shield *is* empty, it should be caught by other tests.
+                try:
+                    XMLisValid = self.ValidateXML(repr(shield))
+                except SystemExit:
+                    XMLisValid = False
+                self.assert_(XMLisValid, "Invalid XML for blazon: " + line)
+    def ValidateXML(self, XML):
+        self.parser = xmlval.XMLValidator()
+        self.parser.parseStart()
+        self.parser.feed(XML)
+        self.parser.flush()
+        self.parser.parseEnd()
+        # Big fat assumption: if there were no exceptions, everything went well.
+        # I *think* that's the way XMLValidator works, anyway ...
+        return True
+                    
 
+# TODO:
 # One way to test for correct output could be to have a collection of
 # known-good shields, and compare them to the produced SVG output.
 # To account for changes in the SVG structure that is invisible when drawn,
