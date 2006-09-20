@@ -174,8 +174,8 @@ class partLine:
                     sweep=1
                 else:
                     sweep=0
-                wavelength=5
-                amplitude=1
+                wavelength=10
+                amplitude=5
                 delX=(wavelength*math.cos(angle))
                 delY=(wavelength*math.sin(angle))
                 (uptoX,uptoY)=(self.curX,self.curY)
@@ -184,9 +184,9 @@ class partLine:
                 for i in range(0,int(leng/wavelength)):
                     uptoX+=delX
                     uptoY+=delY
-                    self.path.append(" A%f,%f 0 0 %d %f,%f"%
+                    self.path.append(" A%f,%f 0 1 %d %f,%f"%
                                      (amplitude,amplitude,sweep,uptoX,uptoY))
-                self.path.append(" A%f,%f 0 0 %d %f,%f"%
+                self.path.append(" A%f,%f 0 1 %d %f,%f"%
                                  (amplitude, amplitude,sweep,x,y))
             else:
                 self.line(x,y)

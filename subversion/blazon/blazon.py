@@ -18,7 +18,7 @@ class Ordinary:
     id=0
     FESSPTX=50
     FESSPTY=50
-    HEIGHT=126
+    HEIGHT=110
     WIDTH=100
 
     CHIEFPTY=-FESSPTY+15
@@ -97,20 +97,20 @@ class Ordinary:
 class Field(Ordinary):
     def __init__(self,tincture="argent"):
         self.svg=SVGdraw.svg(x=0,y=0,width="10cm",height="12.5cm",
-                             viewBox=(-Ordinary.FESSPTX,
-                                      -Ordinary.FESSPTY,
-                                      Ordinary.WIDTH,
-                                      Ordinary.HEIGHT))
+                             viewBox=(-Ordinary.FESSPTX-3,
+                                      -Ordinary.FESSPTY-3,
+                                      Ordinary.WIDTH+6,
+                                      Ordinary.HEIGHT+6))
 #        self.svg.attributes["transform"]="scale(1,-1)"
         self.pdata=SVGdraw.pathdata()
         self.pdata.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
         self.pdata.bezier(-Ordinary.FESSPTX,
-                          Ordinary.HEIGHT*2/3-Ordinary.FESSPTY,
+                          Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
                           0,Ordinary.HEIGHT-Ordinary.FESSPTY,
                           0,Ordinary.HEIGHT-Ordinary.FESSPTY)
         self.pdata.bezier(0,Ordinary.HEIGHT-Ordinary.FESSPTY,
                           Ordinary.FESSPTX,
-                          Ordinary.HEIGHT*2/3-Ordinary.FESSPTY,
+                          Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
                           Ordinary.FESSPTX,-Ordinary.FESSPTY)
         self.pdata.closepath()
         self.charges=[]
@@ -521,19 +521,34 @@ class Barry(Paly):
       for i in range(1,self.pieces,2):
          p.rect(-Ordinary.FESSPTX, -Ordinary.FESSPTY+i*height,
                 Ordinary.WIDTH, height)
-         self.path=SVGdraw.path(p)
+      self.path=SVGdraw.path(p)
 
 class Bendy(Paly):
-    def __init__(self,*args,**kwargs):
-        Paly.__init__(self,*args,**kwargs)
-        # The "translate" below was found by experimentation. :(
-        self.elt.attributes["gradientTransform"]="rotate(-45) translate(-.35,0)"
-
+   def assemble(self):
+      p=partLine(linetype=self.lineType)
+      # OK, let's map things on the *square* WIDTHxWIDTH
+      fullwidth=math.sqrt(2)*Ordinary.WIDTH
+      # Oh, this is going to be much easier to do orthogonally and rotating.
+      width=fullwidth*.87/self.pieces   # Compensate for the round corner
+      for i in range(1,self.pieces,2):
+         p.rect(fullwidth/2-i*width, -Ordinary.HEIGHT,
+                width,2*Ordinary.HEIGHT)
+      self.path=SVGdraw.path(p)
+      self.path.attributes["transform"]="rotate(-45)"
+      
 class BendySinister(Paly):
-    def __init__(self,*args,**kwargs):
-        Paly.__init__(self,*args,**kwargs)
-        # The "translate" below was found by experimentation. :(
-        self.elt.attributes["gradientTransform"]="rotate(45) translate(.07,0)"
+   def assemble(self):
+      # Can't really do this by rotating Bendy, since the round corner is
+      # on the other side.
+      p=partLine(linetype=self.lineType)
+      fullwidth=math.sqrt(2)*Ordinary.WIDTH
+      width=fullwidth*.87/self.pieces
+      for i in range(1,self.pieces,2):
+         p.rect(-fullwidth/2+i*width, -Ordinary.HEIGHT,
+                width, 2*Ordinary.HEIGHT)
+      self.path=SVGdraw.path(p)
+      self.path.attributes["transform"]="rotate(45)"
+
 
 class PerPale(Paly):
     def __init__(self,*args,**kwargs):
@@ -554,52 +569,29 @@ class PerBendSinister(BendySinister):
         # Probably bad too.
         BendySinister.__init__(self,2,*args,**kwargs)
 
-# PerCross and PerSaltire aren't going to be so easy. :(
-
-class PerCross(Tincture):
-   def __init__(self,color1="argent",color2="sable"):
-      try:
-         self.colors=(Tincture.lookup[color1],Tincture.lookup[color2])
-      except KeyError:
-         sys.stderr.write("Invalid colors: %s, %s\n"%(color1,color2))
-         self.colors=(color1,color2)
-
-   # I'm really not so sure this is such a good way to do this...
-   def fill(self,elt):
-      elt.attributes["fill"]=self.colors[1]
+class PerCross(Paly):
+   def __init__(self,color1="argent",color2="sable",linetype="plain"):
+      # reverse order of colors  so I don't have to bother rewriting assemble()
+      self.parseColors(color2,color1)
+      self.lineType=linetype
+   
+   def assemble(self):
       p=partLine()
-      g=SVGdraw.group()
-      g.addElement(elt)
-      p.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
-      p.relhline(Ordinary.FESSPTX)
-      p.relvline(Ordinary.HEIGHT)
-      p.relhline(Ordinary.FESSPTX)
-      p.relvline(Ordinary.FESSPTY-Ordinary.HEIGHT)
-      p.relhline(-Ordinary.WIDTH)
+      p.lineType=self.lineType
+      p.move(-Ordinary.WIDTH-Ordinary.FESSPTX,-Ordinary.HEIGHT-Ordinary.FESSPTY)
+      p.hline(0)
+      p.makeline(0,Ordinary.HEIGHT)
+      p.hline(Ordinary.WIDTH)
+      p.vline(0)
+      p.makeline(-Ordinary.WIDTH,0)
       p.closepath()
       self.path=SVGdraw.path(p)
       self.path.attributes["fill-rule"]="evenodd"
-      self.path.attributes["fill"]=self.colors[0]
-      g.addElement(self.path)
-      return g
 
 class PerSaltire(PerCross):
-   def fill(self,elt):
-      elt.attributes["fill"]=self.colors[0]
-      p=partLine()
-      g=SVGdraw.group()
-      g.addElement(elt)
-      p.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
-      # Yes, width over *and* width down!  45-degree lines!
-      p.relline(Ordinary.WIDTH, Ordinary.WIDTH)
-      p.relvline(-Ordinary.WIDTH)
-      p.relline(-Ordinary.WIDTH, Ordinary.WIDTH)
-      p.closepath()
-      self.path=SVGdraw.path(p)
-      self.path.attributes["fill-rule"]="evenodd"
-      self.path.attributes["fill"]=self.colors[1]
-      g.addElement(self.path)
-      return g
+   def assemble(self):
+      PerCross.assemble(self)
+      self.path.attributes["transform"]="rotate(-45)"
 
 class Gyronny(PerSaltire):
    # DEFINITELY the wrong way to do this!!

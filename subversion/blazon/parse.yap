@@ -26,6 +26,7 @@ class Globals:
 	"paly": blazon.Paly,
 	"barry": blazon.Barry,
 	"bendy":blazon.Bendy,
+	"bendy.sinister": blazon.BendySinister,
 	"ermine": blazon.Ermine,
         # This is a bit of a hack...
 	"ermines": (lambda *a: blazon.Ermine("sable","argent")),
@@ -72,12 +73,12 @@ parser Blazonry:
    token COLOR:		"(or|argent|sable|azure|gules|purpure|vert)"
    token ORDINARY:	"(fesse?|pale|cross|saltire|bend sinister|bend|pile|chevron|chief)"
    token CHARGE:	"(roundel|lozenge)"
-   token LINEY:		"(paly|barry|bendy)"
+   token LINEY:		"(paly|barry|bendy(.sinister)?)"
    token LINETYPE:	"(plain|indented|dancetty|embattled|invected|engrailed|wavy)"
    token FUR:		"(vair.in.pale|vair|counter.vair|ermines?|erminois|pean)"
    token FURRY:		"(vairy.in.pale|vairy|ermined)"
    token NUM:		"\\d+"
-   token NUMWORD:	"(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)"
+   token NUMWORD:	"(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty)"
    token PARTYPER:	"(party per|per)"
    ignore:		"\\W+"
    token END:		"\.?$"
@@ -102,8 +103,10 @@ parser Blazonry:
 
 
    rule treatment:	COLOR  {{ return blazon.Tincture(COLOR) }}
-	| PARTYPER ORDINARY treatment {{ col1=treatment }} "and" treatment
-   {{ return lookup("per "+ORDINARY)(col1,treatment) }}
+	| PARTYPER ORDINARY {{ linetype="plain" }} 
+         [LINETYPE {{linetype=LINETYPE}}] treatment 
+         {{ col1=treatment }} "and" treatment
+   {{ return lookup("per "+ORDINARY)(col1,treatment,linetype=linetype) }}
 	| LINEY "of" amount treatment {{ col1=treatment }} "and" treatment
    {{ return lookup(LINEY)(amount,col1,treatment) }}
 	| FUR {{ return lookup(FUR)() }}
