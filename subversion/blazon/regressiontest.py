@@ -106,10 +106,10 @@ class ValidateSVGofBlazons(unittest.TestCase):
             if shield is not None:
                 # If the shield *is* empty, it should be caught by other tests.
                 try:
-                    XMLisValid = self.ValidateXML(repr(shield))
+                    SVGisValid = self.ValidateXML(repr(shield))
                 except SystemExit:
-                    XMLisValid = False
-                self.assert_(XMLisValid, "Invalid XML for blazon: " + line)
+                    SVGisValid = False
+                self.assert_(SVGisValid, "Invalid SVG for blazon: " + line)
     def ValidateXML(self, XML):
         self.parser = xmlval.XMLValidator()
         self.parser.parseStart()
