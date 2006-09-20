@@ -95,8 +95,8 @@ class Ordinary:
 
    def finalizeSVG(self):
       # we really should only ever do this once.
-      if self.done:
-         return self.svg
+      # if self.done:
+      #   return self.svg
       self.process()
       # Keep the "defs" property around for general use, but fill it
       # automatically if possible.
@@ -116,6 +116,7 @@ class Ordinary:
             if not self.clipPath.attributes.has_key("transform"):
                self.clipPath.attributes["transform"]=""
             self.clipPath.attributes["transform"] += self.clipTransforms
+      self.baseRect=self.tincture.fill(self.baseRect)
       self.maingroup.addElement(self.baseRect)
       if hasattr(self,"fimbriation"):
            self.do_fimbriation()
@@ -124,10 +125,9 @@ class Ordinary:
             self.maingroup.addElement(charge.finalizeSVG())
       self.svg.addElement(self.maingroup)
       # Add in all the defs...
-      self.baseRect=self.tincture.fill(self.baseRect)
       for i in self.mydefs:
          defs.addElement(i)
-      self.done=True
+      # self.done=True
       return self.svg
 
 
@@ -227,7 +227,7 @@ class Bend(Ordinary):
         # group so it isn't inherited.  Things on a bend usually ARE
         # rotated.  May need to reconsider this.
         # g=SVGdraw.group()
-        g=SVGdraw.group()
+        # g=SVGdraw.group()               # What's this doing here??
         self.clipPathElt.addElement(g)
         r=partLine()
         r.lineType=self.lineType
@@ -373,25 +373,26 @@ class Pattern: pass                     # gyronny, checky, etc.
 
 class Tincture:                         # Metal or color.
    lookup={ "azure" : "blue",
-             "gules" : "red",
-             "or" : "yellow",
-             "argent" : "white",
-             "sable" : "black",
-             "vert" : "green",
-             "purpure" : "purple",
-             "none" : "none"
-             }
-    
+            "gules" : "red",
+            "or" : "yellow",
+            "argent" : "white",
+            "sable" : "black",
+            "vert" : "green",
+            "purpure" : "purple",
+            "none" : "none"
+            }
+   
    def __init__(self,color):
-        try:
-            self.color=Tincture.lookup[color]
-        except KeyError:
-            sys.stderr.write("Invalid tincture: %s\n"%color)
-            self.color="white"
+      try:
+         self.color=Tincture.lookup[color]
+      except KeyError:
+         sys.stderr.write("Invalid tincture: %s\n"%color)
+         self.color="white"
 
    def fill(self, elt):
-        elt.attributes["fill"]=self.color
-        return elt
+      sys.stderr.write("Being called to fill something with %s\n"%self.color)
+      elt.attributes["fill"]=self.color
+      return elt
 
 class Fur(Tincture): pass
 
