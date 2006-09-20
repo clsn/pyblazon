@@ -104,7 +104,7 @@ parser Blazonry:
 
 
    rule treatment:	COLOR  {{ return blazon.Tincture(COLOR) }}
-	| PARTYPER ORDINARY {{ linetype="plain" }} 
+	| PARTYPER ORDINARY {{ LINETYPE="plain" }} 
          [LINETYPE] treatment 
          {{ col1=treatment }} "and" treatment
    {{ return lookup("per "+ORDINARY)(col1,treatment,linetype=LINETYPE) }}
