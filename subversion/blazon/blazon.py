@@ -188,25 +188,16 @@ class Fesse(Ordinary):
         p.rect(-Ordinary.WIDTH,-20,Ordinary.WIDTH*3,40)
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
-#       self.svg.addElement(SVGdraw.path(p,stroke="black",
-#                                        stroke_width=2,
-#                                        fill="none"))
         
 class Saltire(Ordinary):
     def process(self):
-        g=SVGdraw.group()
-        self.clipPathElt.addElement(g)
         p=partLine()
         p.lineType=self.lineType
         p.rect(-10,-Ordinary.HEIGHT,20,Ordinary.HEIGHT*3)
         p.rect(-Ordinary.WIDTH,-10,Ordinary.WIDTH*3,20)
         self.clipPath=SVGdraw.path(p)
-        g.addElement(self.clipPath)
-#         g.addElement(SVGdraw.rect(x=-10,y=-Ordinary.HEIGHT,width=20,
-#                                   height=Ordinary.HEIGHT*3))
-#         g.addElement(SVGdraw.rect(x=-Ordinary.WIDTH,y=-10,
-#                                   width=Ordinary.WIDTH*3,height=20))
-        g.attributes["transform"]="rotate(45)"
+        self.clipPathElt.addElement(self.clipPath)
+        self.clipPath.attributes["transform"]="rotate(45)"
 
 class Pale(Ordinary):
     def process(self):
@@ -387,7 +378,6 @@ class Tincture:                         # Metal or color.
          self.color="white"
 
    def fill(self, elt):
-      sys.stderr.write("Being called to fill something with %s\n"%self.color)
       elt.attributes["fill"]=self.color
       return elt
 
