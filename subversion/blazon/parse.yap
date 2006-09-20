@@ -41,7 +41,8 @@ class Globals:
 	"per chief": blazon.PerFesse,		# So what?
 	"per pale": blazon.PerPale,
 	"per bend": blazon.PerBend,
-	"per bend sinister": blazon.PerBendSinister
+	"per bend sinister": blazon.PerBendSinister,
+	"per chevron": blazon.PerChevron
    }
 
 def word2num(word):

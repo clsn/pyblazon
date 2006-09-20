@@ -529,8 +529,11 @@ class Bendy(Paly):
       # OK, let's map things on the *square* WIDTHxWIDTH
       fullwidth=math.sqrt(2)*Ordinary.WIDTH
       # Oh, this is going to be much easier to do orthogonally and rotating.
-      width=fullwidth*.87/self.pieces   # Compensate for the round corner
-      for i in range(1,self.pieces,2):
+      if self.pieces>3:
+         width=fullwidth*.87/self.pieces # Compensate for round corner.
+      else:                             # Otherwise Per Bend doesn't work.
+         width=fullwidth/self.pieces
+      for i in range(1,self.pieces+2,2): # Add two to handle odd numbers, just in case.
          p.rect(fullwidth/2-i*width, -Ordinary.HEIGHT,
                 width,2*Ordinary.HEIGHT)
       self.path=SVGdraw.path(p)
@@ -542,8 +545,11 @@ class BendySinister(Paly):
       # on the other side.
       p=partLine(linetype=self.lineType)
       fullwidth=math.sqrt(2)*Ordinary.WIDTH
-      width=fullwidth*.87/self.pieces
-      for i in range(1,self.pieces,2):
+      if self.pieces>3:
+         width=fullwidth*.87/self.pieces # Compensate for round corner.
+      else:
+         width=fullwidth/self.pieces
+      for i in range(1,self.pieces+2,2):
          p.rect(-fullwidth/2+i*width, -Ordinary.HEIGHT,
                 width, 2*Ordinary.HEIGHT)
       self.path=SVGdraw.path(p)
@@ -566,7 +572,6 @@ class PerBend(Bendy):
 
 class PerBendSinister(BendySinister):
     def __init__(self,*args,**kwargs):
-        # Probably bad too.
         BendySinister.__init__(self,2,*args,**kwargs)
 
 class PerCross(Paly):
@@ -593,25 +598,31 @@ class PerSaltire(PerCross):
       PerCross.assemble(self)
       self.path.attributes["transform"]="rotate(-45)"
 
-class Gyronny(PerSaltire):
-   # DEFINITELY the wrong way to do this!!
-   def fill(self,elt):
-      PerCross.fill(self,elt)
-      path=self.path
-      PerSaltire.fill(self,elt)
-      elt.attributes["fill"]=self.colors[1] # PerSaltire messes this up.
-      path.attributes['d']+=" "+self.path.attributes['d']
-      self.path=path
-      g=SVGdraw.group()
-      g.addElement(elt)
-      g.addElement(self.path)
-      return g
+class PerChevron(Paly):
+   def __init__(self,color1="argent", color2="sable", linetype="plain"):
+      self.parseColors(color1,color2)
+      self.lineType=linetype
+   
+   def assemble(self):
+      p=partLine(linetype=self.lineType)
+      p.move(-Ordinary.FESSPTX,35)
+      p.makeline(0,-5)
+      p.makeline(Ordinary.FESSPTX,35)
+      p.relvline(Ordinary.FESSPTY)
+      p.relhline(-Ordinary.WIDTH)
+      p.closepath()
+      self.path=SVGdraw.path(p)
 
-# Other notions: Hooks for functions for drawing lines, defaults to
-# straight normal line (path), but functions to make wavy, indented,
-# engrailed, invected, etc etc lines.  Probably give from and to
-# coordinates and it fills in the path with a straight or complex path.
-# (Maybe direction will distinguish engrailed from invected).
+# Leaving Chevronny for another day...
+
+# Barry-bendy and paly-bendy are easy now: just do:
+# paly of 8 barry of 8 or and sable and barry of 8 sable and or
+# except we'll want to adjust the quantities because the shield is longer
+# than it is wide.
+
+# Ditto checky/chequy, lozengy, etc.
+
+# Other ideas...:
 
 # Presumably each charge (esp. each Ordinary) will be its own <g> element,
 # thus allowing a remapping of coordinates.  Obv. we don't want complete
