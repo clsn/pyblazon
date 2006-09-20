@@ -105,11 +105,13 @@ parser Blazonry:
 
    rule treatment:	COLOR  {{ return blazon.Tincture(COLOR) }}
 	| PARTYPER ORDINARY {{ linetype="plain" }} 
-         [LINETYPE {{linetype=LINETYPE}}] treatment 
+         [LINETYPE] treatment 
          {{ col1=treatment }} "and" treatment
-   {{ return lookup("per "+ORDINARY)(col1,treatment,linetype=linetype) }}
-	| LINEY "of" amount treatment {{ col1=treatment }} "and" treatment
-   {{ return lookup(LINEY)(amount,col1,treatment) }}
+   {{ return lookup("per "+ORDINARY)(col1,treatment,linetype=LINETYPE) }}
+	| LINEY {{ LINETYPE="plain"}} [LINETYPE] 
+          {{ amount=8 }} ["of" amount] treatment {{ col1=treatment }} 
+          "and" treatment
+   {{ return lookup(LINEY)(amount,col1,treatment,linetype=LINETYPE) }}
 	| FUR {{ return lookup(FUR)() }}
         | FURRY {{ cols=() }} COLOR {{ col1=COLOR }} "and" COLOR {{ cols=(col1,COLOR) }} {{ return lookup(FURRY)(*cols) }}
 
