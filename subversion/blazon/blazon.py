@@ -15,117 +15,137 @@ from pathstuff import partLine
 # a rectangle filling it).
 
 class Ordinary:
-    id=0
-    FESSPTX=50
-    FESSPTY=50
-    HEIGHT=110
-    WIDTH=100
+   id=0
+   FESSPTX=50
+   FESSPTY=50
+   HEIGHT=110
+   WIDTH=100
 
-    CHIEFPTY=-FESSPTY+15
-    DEXCHIEFX=-FESSPTX+15
-    SINCHIEFX=FESSPTX-15
+   CHIEFPTY=-FESSPTY+15
+   DEXCHIEFX=-FESSPTX+15
+   SINCHIEFX=FESSPTX-15
+   
+   DEXCHIEF=(DEXCHIEFX,CHIEFPTY)
+   SINCHIEF=(SINCHIEFX,CHIEFPTY)
+   CHIEFPT=(0,CHIEFPTY)
 
-    DEXCHIEF=(DEXCHIEFX,CHIEFPTY)
-    SINCHIEF=(SINCHIEFX,CHIEFPTY)
-    CHIEFPT=(0,CHIEFPTY)
+   FESSEPT=(0,0)
+   
+   BASEPT=(0,FESSPTY-6)
 
-    FESSEPT=(0,0)
+   DEXSIDE=(DEXCHIEFX+15,0)
+   SINSIDE=(SINCHIEFX-15,0)
 
-    BASEPT=(0,FESSPTY-6)
+   def __init__(self,*args,**kwargs):
+      self.setup(*args,**kwargs)
 
-    DEXSIDE=(DEXCHIEFX+15,0)
-    SINSIDE=(SINCHIEFX-15,0)
-
-    def __init__(self,*args,**kwargs):
-        self.setup(*args,**kwargs)
-
-    def setup(self,tincture="argent",linetype="plain"):
-        self.tincture=Tincture(tincture)
-        self.lineType=linetype
-        self.charges=[]
-        if not hasattr(self,"svg"):
-            self.svg=SVGdraw.svg(x=-Ordinary.FESSPTX,
+   def setup(self,tincture="argent",linetype="plain"):
+      self.tincture=Tincture(tincture)
+      self.lineType=linetype
+      self.charges=[]
+      if not hasattr(self,"svg"):
+         self.svg=SVGdraw.svg(x=-Ordinary.FESSPTX,
+                              y=-Ordinary.FESSPTY,
+                              width=Ordinary.WIDTH,
+                              height=Ordinary.HEIGHT,
+                              viewBox=(-Ordinary.FESSPTX,
+                                       -Ordinary.FESSPTY,
+                                       Ordinary.WIDTH,
+                                       Ordinary.HEIGHT))
+      self.clipPathElt=SVGdraw.SVGelement('clipPath',
+                                          id=('Clip%04d'%Ordinary.id))
+      Ordinary.id=Ordinary.id+1
+      self.svg.addElement(self.clipPathElt)
+      self.maingroup=SVGdraw.group()
+      self.maingroup.attributes["clip-path"]="url(#%s)"%self.clipPathElt.attributes["id"]
+      self.baseRect=SVGdraw.rect(x=-Ordinary.FESSPTX,
                                  y=-Ordinary.FESSPTY,
                                  width=Ordinary.WIDTH,
-                                 height=Ordinary.HEIGHT,
-                                 viewBox=(-Ordinary.FESSPTX,
-                                          -Ordinary.FESSPTY,
-                                          Ordinary.WIDTH,
-                                          Ordinary.HEIGHT))
-        self.clipPathElt=SVGdraw.SVGelement('clipPath',
-                                            id=('Clip%04d'%Ordinary.id))
-        Ordinary.id=Ordinary.id+1
-        self.svg.addElement(self.clipPathElt)
-        self.maingroup=SVGdraw.group()
-        self.maingroup.attributes["clip-path"]="url(#%s)"%self.clipPathElt.attributes["id"]
-        self.baseRect=SVGdraw.rect(x=-Ordinary.FESSPTX,
-                                   y=-Ordinary.FESSPTY,
-                                   width=Ordinary.WIDTH,
-                                   height=Ordinary.HEIGHT)
-    def process(self): pass
+                                 height=Ordinary.HEIGHT)
 
-    def invert(self):
-        if not hasattr(self,"clipTransforms"):
-            self.clipTransforms=""
-        self.clipTransforms += " rotate(180)"
+   def fimbriate(self,color):
+      # Only plain colors ATM
+      self.fimbriation=Tincture.lookup[color]
 
-    def finalizeSVG(self):
-        self.process()
-        # Keep the "defs" property around for general use, but fill it
-        # automatically if possible.
-        if not hasattr(self,"defs"):
-            self.defs=[]
-        if hasattr(self.tincture,"id"):
-            self.defs.append(self.tincture.elt)
-        defs=SVGdraw.defs()
-        self.svg.addElement(defs)
-        for i in self.defs:
-            defs.addElement(i)
-        if hasattr(self,"clipPath") and hasattr(self,"clipTransforms"):
-            if not self.clipPath.attributes.has_key("transform"):
-                self.clipPath.attributes["transform"]=""
-            self.clipPath.attributes["transform"] += self.clipTransforms
-        self.baseRect=self.tincture.fill(self.baseRect)
-        self.maingroup.addElement(self.baseRect)
-        if hasattr(self,"charges"):
-            for charge in self.charges:
-                self.maingroup.addElement(charge.finalizeSVG())
-        self.svg.addElement(self.maingroup)
-        return self.svg
+   # Is this too brittle a way to do it?
+   def do_fimbriation(self):
+      self.maingroup.addElement(SVGdraw.SVGelement('use',
+                                                   attributes={"xlink:href":"#%s"%self.clipPath.attributes["id"],
+                                                               "stroke":self.fimbriation,
+                                                               "stroke-width":"4",
+                                                               "fill":"none"}))
+      
+       
+   def process(self): pass
+
+   def invert(self):
+      if not hasattr(self,"clipTransforms"):
+         self.clipTransforms=""
+      self.clipTransforms += " rotate(180)"
+
+   def finalizeSVG(self):
+      self.process()
+      # Keep the "defs" property around for general use, but fill it
+      # automatically if possible.
+      if not hasattr(self,"defs"):
+         self.defs=[]
+      if hasattr(self.tincture,"id"):
+         self.defs.append(self.tincture.elt)
+      defs=SVGdraw.defs()
+      self.svg.addElement(defs)
+      for i in self.defs:
+         defs.addElement(i)
+      if hasattr(self,"clipPath") and hasattr(self,"clipTransforms"):
+         if not self.clipPath.attributes.has_key("transform"):
+            self.clipPath.attributes["transform"]=""
+         self.clipPath.attributes["transform"] += self.clipTransforms
+      # For fimbriation (at least one way to do it), need an id on the actual
+      # path, not just the group:
+      self.clipPath.attributes["id"]="ClipPath%04d"%Ordinary.id
+      Ordinary.id+=1
+      self.baseRect=self.tincture.fill(self.baseRect)
+      self.maingroup.addElement(self.baseRect)
+      if hasattr(self,"fimbriation"):
+           self.do_fimbriation()
+      if hasattr(self,"charges"):
+         for charge in self.charges:
+            self.maingroup.addElement(charge.finalizeSVG())
+      self.svg.addElement(self.maingroup)
+      return self.svg
 
 
 class Field(Ordinary):
-    def __init__(self,tincture="argent"):
-        self.svg=SVGdraw.svg(x=0,y=0,width="10cm",height="12.5cm",
-                             viewBox=(-Ordinary.FESSPTX-3,
-                                      -Ordinary.FESSPTY-3,
-                                      Ordinary.WIDTH+6,
-                                      Ordinary.HEIGHT+6))
-#        self.svg.attributes["transform"]="scale(1,-1)"
-        self.pdata=SVGdraw.pathdata()
-        self.pdata.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
-        self.pdata.bezier(-Ordinary.FESSPTX,
-                          Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
-                          0,Ordinary.HEIGHT-Ordinary.FESSPTY,
-                          0,Ordinary.HEIGHT-Ordinary.FESSPTY)
-        self.pdata.bezier(0,Ordinary.HEIGHT-Ordinary.FESSPTY,
-                          Ordinary.FESSPTX,
-                          Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
-                          Ordinary.FESSPTX,-Ordinary.FESSPTY)
-        self.pdata.closepath()
-        self.charges=[]
-        self.setup(tincture)
-        self.clipPath=SVGdraw.path(self.pdata)
-        self.clipPathElt.addElement(self.clipPath)
-        self.svg.addElement(SVGdraw.path(self.pdata,stroke="black",
-                                         stroke_width=1,fill="none"))
-        # self.maingroup.addElement(SVGdraw.circle(cx=0,cy=0,r=20,fill="red"))
-        
-    def __repr__(self):
-        self.finalizeSVG()
-        drawing=SVGdraw.drawing()
-        drawing.setSVG(self.svg)
-        return drawing.toXml()
+   def __init__(self,tincture="argent"):
+      self.svg=SVGdraw.svg(x=0,y=0,width="10cm",height="12.5cm",
+                           viewBox=(-Ordinary.FESSPTX-3,
+                                    -Ordinary.FESSPTY-3,
+                                    Ordinary.WIDTH+6,
+                                    Ordinary.HEIGHT+6))
+      #        self.svg.attributes["transform"]="scale(1,-1)"
+      self.pdata=SVGdraw.pathdata()
+      self.pdata.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
+      self.pdata.bezier(-Ordinary.FESSPTX,
+                        Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
+                        0,Ordinary.HEIGHT-Ordinary.FESSPTY,
+                        0,Ordinary.HEIGHT-Ordinary.FESSPTY)
+      self.pdata.bezier(0,Ordinary.HEIGHT-Ordinary.FESSPTY,
+                        Ordinary.FESSPTX,
+                        Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
+                        Ordinary.FESSPTX,-Ordinary.FESSPTY)
+      self.pdata.closepath()
+      self.charges=[]
+      self.setup(tincture)
+      self.clipPath=SVGdraw.path(self.pdata)
+      self.clipPathElt.addElement(self.clipPath)
+      self.svg.addElement(SVGdraw.path(self.pdata,stroke="black",
+                                       stroke_width=1,fill="none"))
+      # self.maingroup.addElement(SVGdraw.circle(cx=0,cy=0,r=20,fill="red"))
+      
+   def __repr__(self):
+      self.finalizeSVG()
+      drawing=SVGdraw.drawing()
+      drawing.setSVG(self.svg)
+      return drawing.toXml()
 
 
 
@@ -518,6 +538,8 @@ class Barry(Paly):
    def assemble(self):
       p=partLine(linetype=self.lineType)
       height=float(Ordinary.HEIGHT)/self.pieces
+      # Problem.  Optical center is at 0.  Geometric center is a little lower,
+      # owing to the placement of the coordinates.
       for i in range(1,self.pieces,2):
          p.rect(-Ordinary.FESSPTX, -Ordinary.FESSPTY+i*height,
                 Ordinary.WIDTH, height)

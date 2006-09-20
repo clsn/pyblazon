@@ -81,6 +81,7 @@ parser Blazonry:
    token NUM:		"\\d+"
    token NUMWORD:	"(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty)"
    token PARTYPER:	"(party per|per)"
+   token FIMBRIATED:	"fimbriated"
    ignore:		"\\W+"
    token END:		"\.?$"
 
@@ -125,7 +126,9 @@ parser Blazonry:
    rule charge:		ordinary {{ res=ordinary }}
 			["inverted" {{ res.invert() }}]
                         [LINETYPE {{ res.lineType=LINETYPE }}] 
-			treatment {{ res.tincture=treatment; return res }}
+			treatment {{ res.tincture=treatment  }}
+			[FIMBRIATED COLOR {{res.fimbriate(COLOR)}}]
+			{{ return res }}
 			|
 	"on" [A] charge {{ res=charge }} 
 		[A] charge {{ res.charges.append(charge) ; return res }}
