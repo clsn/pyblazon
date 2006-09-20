@@ -226,9 +226,6 @@ class Bend(Ordinary):
         # trick here that's used in Saltire, to isolate the rotation in a
         # group so it isn't inherited.  Things on a bend usually ARE
         # rotated.  May need to reconsider this.
-        # g=SVGdraw.group()
-        # g=SVGdraw.group()               # What's this doing here??
-        self.clipPathElt.addElement(g)
         r=partLine()
         r.lineType=self.lineType
         r.rect(-10,-Ordinary.HEIGHT,20,Ordinary.HEIGHT*3)
