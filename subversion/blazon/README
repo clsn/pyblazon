@@ -1,14 +1,40 @@
-To set-up, run "make clean", then "make". Make is supposed to know
-when parse.py is older than parse.yap, but apparently it does
-not. Oops.
+SET-UP
+------
+This software requires the following:
+- Python
+- the Python base library
+- SVGDraw
+- YAPPS
+
+YAPPS is available as the Debian package yapps2. SVGDraw is not
+packaged yet as far as we know, but it is available at
+http://www2.sfk.nl/svg .
+
+When you have installed all of the above, run "make". This will
+generate parse.py from parse.yap.
 
 Usage:
    python blazon.py <blazon>
 
 Example:
+   python blazon.py Vert a saltire argent.
+
+Though, to actually view the shield, you need to save the SVG output
+with redirection, e.g.:
+
    python blazon.py Vert a saltire argent. > test.svg
 
-Examine the output SVG file, for example in Firefox.
+Or pipe it into a viewer, such as:
+
+   python blazon.py Vert a saltire argent. | rsvg-view --stdin
+
+If you are unfamiliar with blazonry, the Wikipedia article
+http://en.wikipedia.org/wiki/Blazon is a good starting point. Some
+examples of blazons that are currently supported can be found in
+blazons-good.txt in the tests/ subdirectory.
+
+FOR DEVELOPERS
+--------------
 
 To run the regression tests, do:
    python regressiontest.py
