@@ -88,9 +88,9 @@ parser Blazonry:
    rule blazon:		treatment  
 		{{ shield=blazon.Field(); shield.tincture=treatment }}
 			[[A]
-			grouporcharge {{ shield.charges.extend(grouporcharge) }}
+			grouporcharge {{ shield.extendCharges(grouporcharge) }}
 			( ["and"] [A] charge 
-				{{ shield.charges.append(charge) }})*]
+				{{ shield.addCharge(charge) }})*]
 			END {{ return shield }}
 
    rule amount:		NUM {{ return int(NUM) }}
@@ -113,7 +113,7 @@ parser Blazonry:
           "and" treatment
    {{ return lookup(LINEY)(amount,col1,treatment,linetype=LINETYPE) }}
 	| FUR {{ return lookup(FUR)() }}
-        | FURRY {{ cols=() }} COLOR {{ col1=COLOR }} "and" COLOR {{ cols=(col1,COLOR) }} {{ return lookup(FURRY)(*cols) }}
+        | FURRY {{ cols=() }} treatment {{ col1=treatment }} "and" treatment {{ cols=(col1,treatment) }} {{ return lookup(FURRY)(*cols) }}
 
 
 
@@ -131,7 +131,7 @@ parser Blazonry:
 			{{ return res }}
 			|
 	"on" [A] charge {{ res=charge }} 
-		[A] charge {{ res.charges.append(charge) ; return res }}
+		[A] charge {{ res.addCharge(charge) ; return res }}
 
 %%
 if __name__=="__main__":

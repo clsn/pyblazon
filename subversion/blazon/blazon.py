@@ -40,6 +40,7 @@ class Ordinary:
       self.setup(*args,**kwargs)
 
    def setup(self,tincture="argent",linetype="plain"):
+      self.done=False
       self.tincture=Tincture(tincture)
       self.lineType=linetype
       self.charges=[]
@@ -78,32 +79,43 @@ class Ordinary:
        
    def process(self): pass
 
+   def addCharge(self,charge):
+      charge.parent=self
+      self.charges.append(charge)
+
+   def extendCharges(self,charges):
+      for elt in charges:
+         elt.parent=self
+      self.charges.extend(charges)
+
    def invert(self):
       if not hasattr(self,"clipTransforms"):
          self.clipTransforms=""
       self.clipTransforms += " rotate(180)"
 
    def finalizeSVG(self):
+      # we really should only ever do this once.
+      if self.done:
+         return self.svg
       self.process()
       # Keep the "defs" property around for general use, but fill it
       # automatically if possible.
-      if not hasattr(self,"defs"):
-         self.defs=[]
-      if hasattr(self.tincture,"id"):
-         self.defs.append(self.tincture.elt)
+      if not hasattr(self,"mydefs"):
+         self.mydefs=[]
+      #if hasattr(self.tincture,"id"):
+      #   self.defs.append(self.tincture.elt)
       defs=SVGdraw.defs()
       self.svg.addElement(defs)
-      for i in self.defs:
-         defs.addElement(i)
-      if hasattr(self,"clipPath") and hasattr(self,"clipTransforms"):
-         if not self.clipPath.attributes.has_key("transform"):
-            self.clipPath.attributes["transform"]=""
-         self.clipPath.attributes["transform"] += self.clipTransforms
-      # For fimbriation (at least one way to do it), need an id on the actual
-      # path, not just the group:
-      self.clipPath.attributes["id"]="ClipPath%04d"%Ordinary.id
-      Ordinary.id+=1
-      self.baseRect=self.tincture.fill(self.baseRect)
+      self.defsElt=defs
+      if hasattr(self,"clipPath"): 
+         # For fimbriation (at least one way to do it), need an id on the actual
+         # path, not just the group:
+         self.clipPath.attributes["id"]="ClipPath%04d"%Ordinary.id
+         Ordinary.id+=1
+         if hasattr(self,"clipTransforms"):
+            if not self.clipPath.attributes.has_key("transform"):
+               self.clipPath.attributes["transform"]=""
+            self.clipPath.attributes["transform"] += self.clipTransforms
       self.maingroup.addElement(self.baseRect)
       if hasattr(self,"fimbriation"):
            self.do_fimbriation()
@@ -111,6 +123,11 @@ class Ordinary:
          for charge in self.charges:
             self.maingroup.addElement(charge.finalizeSVG())
       self.svg.addElement(self.maingroup)
+      # Add in all the defs...
+      self.baseRect=self.tincture.fill(self.baseRect)
+      for i in self.mydefs:
+         defs.addElement(i)
+      self.done=True
       return self.svg
 
 
@@ -139,12 +156,15 @@ class Field(Ordinary):
       self.clipPathElt.addElement(self.clipPath)
       self.svg.addElement(SVGdraw.path(self.pdata,stroke="black",
                                        stroke_width=1,fill="none"))
+      Ordinary.defs=[]                  # This is a hack.
       # self.maingroup.addElement(SVGdraw.circle(cx=0,cy=0,r=20,fill="red"))
       
    def __repr__(self):
       self.finalizeSVG()
       drawing=SVGdraw.drawing()
       drawing.setSVG(self.svg)
+      for thing in Ordinary.defs:
+         self.defsElt.addElement(thing)
       return drawing.toXml()
 
 
@@ -352,7 +372,7 @@ class Lozenge(SubOrdinary):
 class Pattern: pass                     # gyronny, checky, etc.
 
 class Tincture:                         # Metal or color.
-    lookup={ "azure" : "blue",
+   lookup={ "azure" : "blue",
              "gules" : "red",
              "or" : "yellow",
              "argent" : "white",
@@ -362,14 +382,14 @@ class Tincture:                         # Metal or color.
              "none" : "none"
              }
     
-    def __init__(self,color):
+   def __init__(self,color):
         try:
             self.color=Tincture.lookup[color]
         except KeyError:
             sys.stderr.write("Invalid tincture: %s\n"%color)
             self.color="white"
 
-    def fill(self, elt):
+   def fill(self, elt):
         elt.attributes["fill"]=self.color
         return elt
 
@@ -378,11 +398,14 @@ class Fur(Tincture): pass
 class VairInPale(Fur):
    def __init__(self,color1="argent",color2="azure"):
       try:
-         (self.color1,self.color2)=(Tincture.lookup[color1],
-                                    Tincture.lookup[color2])
+         if type(color1) is type("x"):
+            color1=Tincture(color1)
+         if type(color2) is type("x"):
+            color2=Tincture(color2)
       except KeyError:
          sys.stderr.write("Invalid tinctures: %s,%s\n"%(color1,color2))
-         (self.color1,self.color2)=("white","blue")
+         (self.color1,self.color2)=(Tincture("argent"),Tincture("azure"))
+      (self.color1,self.color2)=(color1,color2)
 
    def VairPattern(self):
       pattern=SVGdraw.SVGelement(type="pattern",attributes=
@@ -391,46 +414,42 @@ class VairInPale(Fur):
                                   "id":"vair-in-pale%04d"%Ordinary.id,
                                   "patternUnits":"userSpaceOnUse",
                                   "width":"8"})
-      pattern.addElement(SVGdraw.rect(x="0", y="0", width="8", height="8",
-                                      fill=self.color1))
-      pattern.addElement(SVGdraw.SVGelement(type='path',attributes=
-                                            {"d":"M0,8 l2,-2 l0,-4 l2,-2 l2,2 l0,4 l2,2 z",
-                                             "fill":self.color2}))
+      pattern.addElement(self.color1.fill(SVGdraw.rect(x="0", y="0", width="8", height="8")))
+      pattern.addElement(self.color2.fill(SVGdraw.SVGelement(type='path',
+                                                             attributes=
+                                            {"d":"M0,8 l2,-2 l0,-4 l2,-2 l2,2 l0,4 l2,2 z"})))
+      self.color="vair-in-pale%04d"%Ordinary.id
       Ordinary.id+=1
       return pattern
 
    def fill(self,elt):
-      g=SVGdraw.group()
       pattern=self.VairPattern()
-      g.addElement(pattern)
+      Ordinary.defs.append(pattern)
       elt.attributes["fill"]="url(#%s)"%pattern.attributes["id"]
-      g.addElement(elt)
-      return g
+      return elt
 
 class Vair(VairInPale):
    def fill(self,elt):
-      g=SVGdraw.group()
       VIPpattern=self.VairPattern()
-      g.addElement(VIPpattern)
+      Ordinary.defs.append(VIPpattern)
       pattern=SVGdraw.SVGelement('pattern',attributes=
                                  {"width":"16", "height":"16",
                                   "patternUnits":"userSpaceOnUse",
                                   "patternContentUnits":"userSpaceOnUse",
                                   "id":"vair%04d"%Ordinary.id})
+      self.color="vair%04d"%Ordinary.id
       Ordinary.id+=1
       pattern.addElement(SVGdraw.rect(x="0", y="0", width="16", height="8",
                                       fill="url(#%s)"%VIPpattern.attributes["id"]))
       pattern.addElement(SVGdraw.rect(x="0", y="8", width="20", height="8",
                                       fill="url(#%s)"%VIPpattern.attributes["id"],
                                       transform="translate(-4,0)"))
-      g.addElement(pattern)
+      Ordinary.defs.append(pattern)
       elt.attributes["fill"]="url(#%s)"%pattern.attributes["id"]
-      g.addElement(elt)
-      return g
+      return elt
 
 class CounterVair(VairInPale):
    def fill(self,elt):
-      g=SVGdraw.group()
       pattern=SVGdraw.SVGelement('pattern',attributes=
                                  {"width":"8", "height":"16",
                                   "patternUnits":"userSpaceOnUse",
@@ -443,56 +462,52 @@ class CounterVair(VairInPale):
                                             attributes={"d":
                                                         "M0,8 l2,-2 l0,-4 l2,-2 l2,2 l0,4 l2,2 l-2,2 l0,4 l-2,2 l-2,-2 l0,-4 z",
                                                         "fill":self.color2}))
-      g.addElement(pattern)
       elt.attributes["fill"]="url(#%s)"%pattern.attributes["id"]
-      g.addElement(elt)
-      return g
+      Ordinary.defs.append(pattern)
+      return elt
 
 class Ermine(Fur):
    def __init__(self,color1="argent",color2="sable"):
       try:
-         (self.color1,self.color2)=(Tincture.lookup[color1],
-                                    Tincture.lookup[color2])
+         if type(color1) is type("x"):
+            color1=Tincture(color1)
+         if type(color2) is type("x"):
+            color2=Tincture(color2)
       except KeyError:
          sys.stderr.write("Invalid tinctures: %s,%s\n"%(color1,color2))
-         (self.color1,self.color2)=("white","black")
+         (self.color1,self.color2)=(Tincture("argent"),Tincture("sable"))
+      (self.color1,self.color2)=(color1,color2)
 
    def fill(self,elt):
-      g=SVGdraw.group()
       pattern=SVGdraw.SVGelement('pattern',attributes=
                                  {"height":"15","width":"15",
                                   "patternUnits":"userSpaceOnUse",
                                   "patternContentUnits":"userSpaceOnUse",
                                   "id":"ermine%04d"%Ordinary.id})
       Ordinary.id+=1
-      pattern.addElement(SVGdraw.rect(x="0",y="0",width="15",height="15",
-                                      fill=self.color1))
-      pattern.addElement(SVGdraw.SVGelement('path',
+      pattern.addElement(self.color1.fill(SVGdraw.rect(x="0",y="0",width="15",height="15")))
+      pattern.addElement(self.color2.fill(SVGdraw.SVGelement('path',
+                                                             attributes={"d":
+                                                        "M1,5 c1,-1 1.5,-4 1.5,-4 c0,0 .5,3 1.5,4 l-1.5,1.5 z"})))
+      pattern.addElement(self.color2.fill(SVGdraw.circle(cx="1.5",cy="2",
+                                                         r=".5")))
+      pattern.addElement(self.color2.fill(SVGdraw.circle(cx="2.5",cy="1",
+                                                         r=".5")))
+      pattern.addElement(self.color2.fill(SVGdraw.circle(cx="3.5",cy="2",
+                                                         r=".5")))
+      pattern.addElement(self.color2.fill(SVGdraw.SVGelement('path',
                                             attributes={"d":
-                                                        "M1,5 c1,-1 1.5,-4 1.5,-4 c0,0 .5,3 1.5,4 l-1.5,1.5 z",
-                                                        "fill":self.color2}))
-      pattern.addElement(SVGdraw.circle(cx="1.5",cy="2",
-                                        r=".5",fill=self.color2))
-      pattern.addElement(SVGdraw.circle(cx="2.5",cy="1",
-                                        r=".5",fill=self.color2))
-      pattern.addElement(SVGdraw.circle(cx="3.5",cy="2",
-                                        r=".5",fill=self.color2))
-      pattern.addElement(SVGdraw.SVGelement('path',
-                                            attributes={"d":
-                                                        "M8.5,12.5 c1,-1 1.5,-4 1.5,-4 c0,0 .5,3 1.5,4 l-1.5,1.5 z",
-                                                        "fill":self.color2}))
-      pattern.addElement(SVGdraw.circle(cx="9",cy="9.5",
-                                        r=".5",fill=self.color2))
-      pattern.addElement(SVGdraw.circle(cx="10",cy="8.5",
-                                        r=".5",fill=self.color2))
-      pattern.addElement(SVGdraw.circle(cx="11",cy="9.5",
-                                        r=".5",fill=self.color2))
+                                                        "M8.5,12.5 c1,-1 1.5,-4 1.5,-4 c0,0 .5,3 1.5,4 l-1.5,1.5 z"})))
+      pattern.addElement(self.color2.fill(SVGdraw.circle(cx="9",cy="9.5",
+                                                         r=".5")))
+      pattern.addElement(self.color2.fill(SVGdraw.circle(cx="10",cy="8.5",
+                                                         r=".5")))
+      pattern.addElement(self.color2.fill(SVGdraw.circle(cx="11",cy="9.5",
+                                                         r=".5")))
 
-
-      g.addElement(pattern)
-      g.addElement(elt)
+      Ordinary.defs.append(pattern)
       elt.attributes["fill"]="url(#%s)"%pattern.attributes["id"]
-      return g
+      return elt
 
 
 
@@ -671,7 +686,6 @@ class Blazon:
         return self.blazon
     def GetShield(self):
         return parse.parse('blazon', self.GetBlazon())
-
 
 if __name__=="__main__":
     cmdlineinput = " ".join(sys.argv[1:])
