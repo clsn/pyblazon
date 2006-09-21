@@ -35,6 +35,9 @@ blazons-good.txt in the tests/ subdirectory.
 
 FOR DEVELOPERS
 --------------
+If you want to run the regression tests, you also need the
+xml.parsers.xmlproc library, which is a part of PyXML. In Debian,
+install the python-xml package.
 
 To run the regression tests, do:
    python regressiontest.py
