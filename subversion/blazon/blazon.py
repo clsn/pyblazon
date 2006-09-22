@@ -532,9 +532,11 @@ class Paly(Tincture):
    def assemble(self):
       """For internal use, to simplify assembly of subclasses"""
       p=partLine(linetype=self.lineType) # Start to support partition lines
+      width=float(Ordinary.WIDTH)/self.pieces
       # Make the lines a tiny bit too wide, so paly wavy doesn't show
       # an extra bit.
-      width=float(Ordinary.WIDTH)/self.pieces*1.03
+      if self.pieces>4 and self.lineType <> "plain":
+         width*=1.03
       for i in range(1,self.pieces,2):
          p.rect(-Ordinary.FESSPTX+i*width,-Ordinary.HEIGHT,
                 width,2*Ordinary.HEIGHT)
@@ -563,14 +565,16 @@ class Paly(Tincture):
 class Barry(Paly):
    def assemble(self):
       p=partLine(linetype=self.lineType)
+      height=float(Ordinary.HEIGHT)/self.pieces
       # Make the lines a LITTLE wider, so "wavy" doesn't show an extra bit
       # at the bottom.
-      height=float(Ordinary.HEIGHT)/self.pieces*1.03
+      if self.pieces>4 and self.lineType <> "plain":
+         height*=1.03
       # Problem.  Optical center is at 0.  Geometric center is a little lower,
       # owing to the placement of the coordinates.
       for i in range(1,self.pieces,2):
          p.rect(-Ordinary.FESSPTX, -Ordinary.FESSPTY+i*height,
-                Ordinary.WIDTH, height)
+                2*Ordinary.WIDTH, height)
       self.path=SVGdraw.path(p)
 
 class Bendy(Paly):
