@@ -3,6 +3,8 @@
 import unittest
 import blazon
 import sys
+import os
+import Image
 
 # Test for SVG drawing code
 
@@ -129,13 +131,64 @@ class ValidateSVGofBlazons(unittest.TestCase):
         return True
                     
 
-# TODO:
-# One way to test for correct output could be to have a collection of
+# One way to test for correct output is to have a collection of
 # known-good shields, and compare them to the produced SVG output.
 # To account for changes in the SVG structure that is invisible when drawn,
 # the gold-standard shield and the candidate shield could be converted to
 # bitmaps, and subtracted. If the difference is above a set threshold, it
 # should trigger a manual investigation.
+#
+# FIXME: needs to write this in a more object-oriented way (remove global
+# variables &c.)
+
+IMGDIR       = "tests/gsshields/"
+TESTSVGFN    = "tests/gsshields/in.svg"
+TESTEDIMGFN  = "tests/gsshields/out.png"
+TESTBLAZONFN = "tests/gsshields/gsblazons.txt"
+MAX_DISCREPANCY = 0.03
+
+def CompImage(tested, gs):
+    xsize, ysize = tested.size
+    area = xsize * ysize
+    wrongpixels = 0
+    for x in range(xsize):
+        for y in range(ysize):
+            if tested.getpixel((x,y)) != gs.getpixel((x,y)):
+                wrongpixels = wrongpixels + 1
+    return float(wrongpixels) / float(area)
+
+def BlazonsAndGoldStandards(filename):
+    f = open(filename, "r")
+    out = []
+    for line in f:
+        line = line.strip()
+        out.append(BlazonAndGoldStandard(line))
+    return out
+
+def BlazonAndGoldStandard(line):
+    gs, coadef = line.split(" ", 1)
+    return [coadef, gs]
+
+def GenTestImage(coadef, svgfn, imgfn):
+    curblazon = blazon.Blazon(coadef)
+    shield = curblazon.GetShield()
+    f = open(svgfn, "w")
+    f.writelines(repr(shield))
+    f.close()
+    os.system("rsvg -w 100 " + svgfn + " " + imgfn)
+
+class CompImages(unittest.TestCase):
+    def testCompImages(self):
+        for curblazon, gsfn in BlazonsAndGoldStandards(TESTBLAZONFN):
+            GenTestImage(curblazon, TESTSVGFN, TESTEDIMGFN)
+            testedshield = Image.open(TESTEDIMGFN)
+            goldstandard = Image.open(IMGDIR + gsfn)
+            discrepancy = CompImage(testedshield, goldstandard)
+            self.assert_(discrepancy < MAX_DISCREPANCY, \
+                         "Detected difference of " + \
+                         repr(int(discrepancy * 100)) + "% on: " + \
+                         curblazon + "\nOffending file: " + gsfn)
+
 
 if __name__ == '__main__':
     unittest.main()
