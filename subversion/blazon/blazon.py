@@ -158,9 +158,30 @@ class Field(Ordinary):
                                        stroke_width=1,fill="none"))
       Ordinary.defs=[]                  # This is a hack.
       # self.maingroup.addElement(SVGdraw.circle(cx=0,cy=0,r=20,fill="red"))
+
+   # A chief is different.  Adding one depresses the rest of the field.
+   def addChief(self, chief):
+      """Add a chief, depressing the rest of the field"""
+      g=SVGdraw.group()
+      g.attributes["clip-path"]=self.maingroup.attributes["clip-path"]
+      g.addElement(self.maingroup)
+      self.newmaingroup=g
+      self.chief=chief                  # Have to handle this later.
       
    def __repr__(self):
       self.finalizeSVG()
+      if hasattr(self,"chief"):
+         # Do I need to worry to *append* rather than replace the transform?
+         # Hm.  Somehow I need add something outside the main group
+         # AFTER things have happened...
+         self.maingroup.attributes["transform"]="scale(1,.8) translate(0,15)"
+         # See, there's the problem above: the transform also applies to
+         # the clip-path, so it gets pudgy and overwrites the black line
+         # around the edge of the shield.  Work on it. TODO.
+         g=SVGdraw.group()
+         g.attributes["clip-path"]=self.maingroup.attributes["clip-path"]
+         g.addElement(self.chief.finalizeSVG())
+         self.svg.addElement(g)
       drawing=SVGdraw.drawing()
       drawing.setSVG(self.svg)
       for thing in Ordinary.defs:
@@ -511,7 +532,9 @@ class Paly(Tincture):
    def assemble(self):
       """For internal use, to simplify assembly of subclasses"""
       p=partLine(linetype=self.lineType) # Start to support partition lines
-      width=float(Ordinary.WIDTH)/self.pieces
+      # Make the lines a tiny bit too wide, so paly wavy doesn't show
+      # an extra bit.
+      width=float(Ordinary.WIDTH)/self.pieces*1.03
       for i in range(1,self.pieces,2):
          p.rect(-Ordinary.FESSPTX+i*width,-Ordinary.HEIGHT,
                 width,2*Ordinary.HEIGHT)
@@ -540,7 +563,9 @@ class Paly(Tincture):
 class Barry(Paly):
    def assemble(self):
       p=partLine(linetype=self.lineType)
-      height=float(Ordinary.HEIGHT)/self.pieces
+      # Make the lines a LITTLE wider, so "wavy" doesn't show an extra bit
+      # at the bottom.
+      height=float(Ordinary.HEIGHT)/self.pieces*1.03
       # Problem.  Optical center is at 0.  Geometric center is a little lower,
       # owing to the placement of the coordinates.
       for i in range(1,self.pieces,2):
@@ -561,6 +586,8 @@ class Bendy(Paly):
       for i in range(1,self.pieces+2,2): # Add two to handle odd numbers, just in case.
          p.rect(fullwidth/2-i*width, -Ordinary.HEIGHT,
                 width,2*Ordinary.HEIGHT)
+      # Owing to the way these things work, the colors come in the wrong order
+      self.colors=(self.colors[1],self.colors[0])
       self.path=SVGdraw.path(p)
       self.path.attributes["transform"]="rotate(-45)"
       
@@ -653,6 +680,11 @@ class PerChevron(Paly):
 # thus allowing a remapping of coordinates.  Obv. we don't want complete
 # rescaling, but it's a step.
 
+# I like the idea of a function parent-charges can call on their
+# descendents, "suggesting" a transformation to apply, which the charges
+# may or may not choose to listen to, or by how much.  By transforming
+# their paths only, we can avoid transforming furs used to fill them in.
+
 # A "between" function, which returns a list of points in the
 # *surroundings* of this Ordinary suitable for putting n other charges.
 # e.g. "a bend between two annulets sable" vs. three annulets vs. a chevron
@@ -679,27 +711,3 @@ if __name__=="__main__":
     cmdlineinput = " ".join(sys.argv[1:])
     blazon = Blazon(cmdlineinput)
     print blazon.GetShield()
-
-## Old test stuff goes here:
-#     d=SVGdraw.drawing()
-#     s=SVGdraw.svg(x=0,y=0,width="10cm",height="10cm",viewBox=(0,0,50,50))
-#     d.setSVG(s)
-#     p=partLine(10,10)
-#     p.lineType="indented"
-#     p.makeline(40,40)
-#     s.addElement(SVGdraw.path(p,stroke="black", stroke_width=".2", fill="none"))
-#     print d.toXml()
-   # Parsing "or a pale sable" from argv.
-#   import __main__                      # !!
-#   shield=Field(sys.argv[1])
-   #charge=__main__.__dict__[sys.argv[3].capitalize()](sys.argv[4],"plain")
-#   shield.tincture=Gyronny("or","azure")
-   #shield.charges.append(charge)
-
-#   d=SVGdraw.drawing()
-#   s=SVGdraw.svg()
-#   s.addElement(vair)
-#   d.setSVG(s)
-#   print d.toXml()
-
-#   print shield
