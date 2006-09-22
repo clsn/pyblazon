@@ -97,6 +97,9 @@ from xml.parsers.xmlproc import xmlval
 from xml.parsers.xmlproc import xmldtd
 
 class ValidateSVGofBlazons(unittest.TestCase):
+    def setUp(self):
+        dtd_filename = "tests/svg10.dtd"
+        self.dtd = xmldtd.load_dtd(dtd_filename)
     def testSVG(self):
         testblazons = open("tests/blazons-good.txt", "r")
         for line in testblazons:
@@ -111,11 +114,16 @@ class ValidateSVGofBlazons(unittest.TestCase):
                     SVGisValid = False
                 self.assert_(SVGisValid, "Invalid SVG for blazon: " + line)
     def ValidateXML(self, XML):
-        self.parser = xmlval.XMLValidator()
-        self.parser.parseStart()
+        # self.parser = xmlval.XMLValidator()
+        self.parser = xmlproc.XMLProcessor()
+        self.parser.set_application(xmlval.ValidatingApp(self.dtd, self.parser))
+        self.parser.dtd = self.dtd
+        self.parser.ent = self.dtd
+        # self.parser.parseStart()
         self.parser.feed(XML)
-        self.parser.flush()
-        self.parser.parseEnd()
+ #       self.parser.flush()
+ #       self.parser.parseEnd()
+        self.parser.close()
         # Big fat assumption: if there were no exceptions, everything went well.
         # I *think* that's the way XMLValidator works, anyway ...
         return True
