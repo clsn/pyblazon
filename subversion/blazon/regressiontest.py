@@ -186,8 +186,12 @@ class CompImages(unittest.TestCase):
             discrepancy = CompImage(testedshield, goldstandard)
             self.assert_(discrepancy < MAX_DISCREPANCY, \
                          "Detected difference of " + \
-                         repr(int(discrepancy * 100)) + "% on: " + \
-                         curblazon + "\nOffending file: " + gsfn)
+                         repr(int(discrepancy * 100)) + "%. " + \
+                         "This looks different than before: " + \
+                         curblazon + "\nCompare the shields, and replace " + \
+                         "with the new version if OK.\n" + \
+                         "Old (expected) version: " + IMGDIR + gsfn + "\n" + \
+                         "New version: " + TESTEDIMGFN)
 
 
 if __name__ == '__main__':
