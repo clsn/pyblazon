@@ -328,6 +328,28 @@ class ChargeGroup:
                 self.elts[1].moveto((0,-10))
                 self.elts[2].moveto(Ordinary.FESSEPT)
                 self.elts[2].moveto((0,15))
+        elif num > 3 and num < 6:
+           # Scale the charges down a bit so they don't merge
+           for elt in self.elts:
+              elt.scale(0.8)
+           if num==4:
+              self.elts[0].moveto(Ordinary.DEXSIDE)
+              self.elts[1].moveto(Ordinary.SINSIDE)
+              self.elts[2].moveto(Ordinary.DEXSIDE)
+              self.elts[3].moveto(Ordinary.SINSIDE)
+              self.elts[0].moveto((0,-25))
+              self.elts[1].moveto((0,-25))
+              self.elts[2].moveto((0,20))
+              self.elts[3].moveto((0,20))
+           if num==5:
+              self.elts[0].moveto(Ordinary.DEXSIDE)
+              self.elts[1].moveto(Ordinary.SINSIDE)
+              self.elts[3].moveto(Ordinary.DEXSIDE)
+              self.elts[4].moveto(Ordinary.SINSIDE)
+              self.elts[0].moveto((-10,-25))
+              self.elts[1].moveto((10,-25))
+              self.elts[3].moveto((-10,20))
+              self.elts[4].moveto((10,20))
         else:                           # Too damn many.
             raise "Too many elements in charge group: %d"%num
         
