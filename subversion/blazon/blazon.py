@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+# -*- coding: latin-1 -*-
 import SVGdraw
 import math
 import sys
@@ -383,7 +383,7 @@ class SubOrdinary(Charge, Ordinary):
       
 class Roundel(SubOrdinary):
    def process(self):
-      self.clipPathElt.addElement(SVGdraw.circle(cx=0,cy=0,r=30))
+      self.clipPathElt.addElement(SVGdraw.circle(cx=0,cy=0,r=40))
       if not self.maingroup.attributes.has_key("transform"):
          self.maingroup.attributes["transform"]=""
          # This is not handled well.  but it's a start.
@@ -410,6 +410,12 @@ class Tincture:                         # Metal or color.
             "sable" : "black",
             "vert" : "green",
             "purpure" : "purple",
+            "tenné" : "#cd5700",
+            "tenne" : "#cd5700",
+            "tawny" : "#cd5700",
+            "sanguine" : "c00000",
+            "murrey" : "#800040",
+            "bleu celeste" : "#8080ff",
             "none" : "none"
             }
    

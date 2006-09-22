@@ -3,6 +3,11 @@ Remove items from here as soon as they are implemented.
 Vital:
 - support all tinctures, even the unusual ones
 - support all charges that are simple, geometrical figures
+- a charge or a group "between" a group
+- charges upon ordinaries
+- charges to end up in the conventional places according to divisions of the
+  field. E.g. two annulets on a field parted per bend is supposed to go in
+  the sinister chief and dexter base, not (by default) per fess.
 
 Fairly important:
 - countercharging
@@ -12,11 +17,13 @@ Fairly important:
 - back-references ("of the first", "as many")
 - define the tincture of multiple charges at the same time
   ("a foo and a bar argent")
+- possible to specify each quarter in a quartered shield individually
 - thin black lines between everything (or at least the option of having it)
 
 Wishlist:
 - semy of _anything_ (even crazy, complex things like "a
   cross-crosslet or between four bezants"
 - multilingual support (e.g. blazons in French, German, Norwegian ...)
+- marshalling
 - support for other shield shapes
 - support for using a flag instead of a shield
