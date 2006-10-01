@@ -29,7 +29,8 @@ def t_LINEY(t):
     r"(paly|barry|bendy(.sinister)?)"
     return t
 
-t_ORDINARY=r"(fesse?|pale|cross|saltire|bend[ ]sinister|bend|pile|chevron)"
+# Hmm.  How to handle "*in* a bordure..." ?
+t_ORDINARY=r"(fesse?|pale|cross|saltire|bend[ ]sinister|bend|pile|chevron|bordure)"
 
 # Chief is not an ordinary
 t_CHIEF=r"chief"
@@ -88,6 +89,7 @@ lookupdict={
     "chief": blazon.Chief,
     "roundel": blazon.Roundel,
     "lozenge": blazon.Lozenge,
+    "bordure": blazon.Bordure,
     "paly": blazon.Paly,
     "barry": blazon.Barry,
     "bendy":blazon.Bendy,

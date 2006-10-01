@@ -184,8 +184,9 @@ class Field(Ordinary):
          g2.attributes["clip-path"]=self.maingroup.attributes["clip-path"]
          g2.addElement(self.chief.finalizeSVG())
          #self.svg.addElement(g)
-         self.svg.addElement(g2)         
       self.finalizeSVG()
+      if hasattr(self,"chief"):
+         self.svg.addElement(g2)        # ugh.
       drawing=SVGdraw.drawing()
       drawing.setSVG(self.svg)
       for thing in Ordinary.defs:
@@ -264,10 +265,45 @@ class Chief(Ordinary):
     def process(self):
         p=partLine()
         p.lineType=self.lineType
-        p.rect(-Ordinary.WIDTH,-Ordinary.FESSPTY-Ordinary.HEIGHT,
-               Ordinary.WIDTH*3,Ordinary.HEIGHT+23)
+        # sys.stderr.write("Chief's linetype: (%s)\n"%self.lineType)
+        # There are days when you want a quarterly chief.  So we'll
+        # build the chief around the origin, like a charge, and then
+        # move it.
+        # Shift fancy-lined chiefs more, so as not to reveal the edge of the
+        # shrunken field beneath.
+        if p.lineType and p.lineType <> "plain":
+           p.rect(-Ordinary.WIDTH, -Ordinary.HEIGHT,
+                  Ordinary.WIDTH*3, Ordinary.HEIGHT+13.5)
+           self.svg.attributes["transform"]="translate(0,%f)"%(-Ordinary.FESSPTY+13.5)
+        else:
+           p.rect(-Ordinary.WIDTH, -Ordinary.HEIGHT,
+                  Ordinary.WIDTH*3, Ordinary.HEIGHT+11)
+           self.svg.attributes["transform"]="translate(0,%f)"%(-Ordinary.FESSPTY+11)
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
+
+class Bordure(Ordinary):
+   # Doing lines of partition is going to be hard with this one.
+   def process(self):
+      pdata=SVGdraw.pathdata()
+      pdata.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
+      pdata.bezier(-Ordinary.FESSPTX,
+                   Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
+                   0,Ordinary.HEIGHT-Ordinary.FESSPTY,
+                   0,Ordinary.HEIGHT-Ordinary.FESSPTY)
+      pdata.bezier(0,Ordinary.HEIGHT-Ordinary.FESSPTY,
+                   Ordinary.FESSPTX,
+                   Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
+                   Ordinary.FESSPTX,-Ordinary.FESSPTY)
+      pdata.closepath()
+      self.clipPath=SVGdraw.path(pdata)
+      self.clipPath.attributes["transform"]=" scale(.75)"
+      self.clipPathElt.addElement(SVGdraw.rect(-Ordinary.WIDTH,-Ordinary.HEIGHT,
+                                               Ordinary.WIDTH*4,
+                                               Ordinary.HEIGHT*4))
+      self.clipPathElt.attributes["fill-rule"]="evenodd"
+      self.clipPathElt.addElement(self.clipPath)
+
 
 class Chevron(Ordinary):
     def process(self):
@@ -293,7 +329,7 @@ class Pile(Ordinary):
         p.line(0,-Ordinary.HEIGHT*2)
         p.line(Ordinary.FESSPTX/2,-Ordinary.FESSPTY)
         p.makeline(*Ordinary.BASEPT)
-        p.makeline(-Ordinary.FESSPTX/2,-Ordinary.FESSPTY)
+        p.makeline(-Ordinary.FESSPTX/2,-Ordinary.FESSPTY,align=1)
         p.closepath
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)

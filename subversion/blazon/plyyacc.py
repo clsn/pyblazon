@@ -97,24 +97,26 @@ def p_charge_1(p):
 
 def p_chief(p):
     """chief : empty
-             | optand A CHIEF opttreatment
-             | optand ON A CHIEF opttreatment charges"""
+             | optand A CHIEF optlinetype opttreatment
+             | optand ON A CHIEF optlinetype opttreatment charges"""
     if len(p)<=2:
         p[0]=None
-    elif len(p)==5:
-        p[0]=blazon.Chief()
-        if not p[4]:
-            Globals.colorless.append(p[0])
-        else:
-            sys.stderr.write("Coloring a chief: (%s)\n"%p[4])
-            p[0].tincture=p[4]
-    elif len(p)==7:
+    elif len(p)==6:
         p[0]=blazon.Chief()
         if not p[5]:
             Globals.colorless.append(p[0])
         else:
+            # sys.stderr.write("Coloring a chief: (%s)\n"%p[5])
             p[0].tincture=p[5]
-        p[0].charges.extend(p[6])
+        p[0].lineType=p[4]
+    elif len(p)==8:
+        p[0]=blazon.Chief()
+        if not p[6]:
+            Globals.colorless.append(p[0])
+        else:
+            p[0].tincture=p[6]
+        p[0].charges.extend(p[7])
+        p[0].lineType=p[5]
     else:
         # Drop back ten and punt
         p[0]=None

@@ -100,7 +100,7 @@ class partLine:
     def __repr__(self):
         return ' '.join(self.path)
     
-    def makeline(self,x,y,align=0):
+    def makeline(self,x,y,align=0,shift=1):
         """draw a line using whatever linetype is called for"""
         # TODO: add parameter "align": if align is 0 (default), then put
         # the leftover part (that doesn't make up a complete oscillation)
@@ -134,7 +134,21 @@ class partLine:
                 delY=(wavelength*math.sin(angle))
                 # sys.stderr.write("delX: %d, delY: %d\n" % (delX, delY))
                 (uptoX,uptoY)=(self.curX,self.curY)
-                direction=1
+                # WRONG: need to account for waviness
+                # Doesn't yet QUITE do the job.  Dancetty and wavy don't
+                # seem to be able to look good at the same time.
+                if align:
+                    rem=leng%wavelength
+                    (remX,remY)=(rem*math.cos(angle),
+                                 rem*math.sin(angle))
+                    self.path.append(" L%.4f,%.4f"%
+                                     (uptoX+remX,uptoY+remY))
+                    uptoX+=remX
+                    uptoY+=remY
+                if int(leng/wavelength)%2:
+                    direction=shift
+                else:
+                    direction= -shift
                 (shiftX,shiftY)=((amplitude*math.cos(angle+math.pi/2)),
                                  (amplitude*math.sin(angle+math.pi/2)))
                 # sys.stderr.write("shiftX: %d, shiftY: %d\n"%(shiftX,shiftY))
@@ -197,15 +211,22 @@ class partLine:
                 self.line(x,y)
             self.update(x,y)
 
-    def makelinerel(self,x,y):
+    def makelinerel(self,x,y,align=0,shift=1):
         """draw a line with the current linetype to xy relative"""
-        self.makeline(x+self.curX,y+self.curY)
+        self.makeline(x+self.curX,y+self.curY,align=align,shift=shift)
 
     def rect(self,x,y,width,height):
         """draw a rectangle using the current linetype"""
         self.move(x,y)
         self.makelinerel(width,0)
         self.makelinerel(0,height)
-        self.makelinerel(-width,0)
-        self.makelinerel(0,-height)
+        self.makelinerel(-width,0,1)
+        self.makelinerel(0,-height,1)
         self.closepath()
+
+class Drawfunctions:
+    # How to do this?  Each linetype has its unique wavelength and
+    # amplitude, and its unique stuff-that-happens-inside-the-for-loop.
+    # Sounds like closure to me.  But may be easier to implement in other
+    # ways.
+    pass
