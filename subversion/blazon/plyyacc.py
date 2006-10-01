@@ -1,0 +1,180 @@
+#!/usr/bin/python
+
+import blazon
+import sys
+import yacc
+
+from plylex import tokens,lookup
+
+class Globals:
+    colorless=[]
+
+def p_blazon_1(p):
+    'blazon : treatment'
+    shield=blazon.Field()
+    shield.tincture=p[1]
+    p[0]=shield
+    return shield
+
+def p_blazon_2(p):
+    "blazon : treatment charges chief"
+    shield=blazon.Field()
+    shield.tincture=p[1]
+    shield.charges.extend(p[2])
+    if p[3]:
+        shield.addChief(p[3])
+    p[0]=shield
+    return shield
+
+def p_treatment_1(p):
+    "treatment : COLOR"
+    p[0]=blazon.Tincture(p[1])
+
+def p_treatment_2(p):
+    "treatment : PARTYPER ORDINARY optlinetype treatment AND treatment"
+    p[0]=lookup("per "+p[2])(p[4],p[6],linetype=p[3])
+
+def p_treatment_3(p):
+    "treatment : LINEY optlinetype optamt treatment AND treatment"
+    p[0]=lookup(p[1])(p[3],p[4],p[6],linetype=p[2])
+
+def p_treatment_4(p):
+    "treatment : FUR"
+    p[0]=lookup(p[1])()
+
+def p_treatment_5(p):
+    "treatment : FURRY treatment AND treatment"
+    p[0]=lookup(p[1])()(p[2],p[4])
+
+def p_opttreatment(p):
+    """opttreatment : treatment
+                    | empty"""
+    p[0]=p[1]
+    if p[1]:
+        for obj in Globals.colorless:
+            obj.tincture=p[1]
+        Globals.colorless=[]
+
+def p_optlinetype(p):
+    """optlinetype : LINETYPE
+                   | empty"""
+    p[0]=p[1]
+
+def p_charges(p):
+    """charges : grouporcharge
+               | charges optand grouporcharge"""
+    if len(p)==2:
+        p[0]=[p[1]]
+    else:
+        p[0]=p[1]+[p[3]]
+
+def p_grouporcharge(p):
+    """grouporcharge : group
+                     | charge"""
+    p[0]=p[1]
+
+def p_group(p):
+    "group : amount charge"
+    p[0]=blazon.ChargeGroup(p[1],p[2])
+
+def p_ordinary(p):
+    """ordinary : ORDINARY
+                | CHIEF
+                | CHARGE"""
+    p[0]=lookup(p[1])()
+
+def p_charge_1(p):
+    "charge : optA ordinary optinverted optlinetype opttreatment optfimbriation"
+    res=p[2]
+    p[3](res)
+    res.lineType=p[4]
+    if not p[5]:
+        Globals.colorless.append(res)
+    else:
+        res.tincture=p[5]
+    p[6](res)
+    p[0]=res
+
+def p_chief(p):
+    """chief : empty
+             | optand A CHIEF opttreatment
+             | optand ON A CHIEF opttreatment charges"""
+    if len(p)<=2:
+        p[0]=None
+    elif len(p)==5:
+        p[0]=blazon.Chief()
+        if not p[4]:
+            Globals.colorless.append(p[0])
+        else:
+            sys.stderr.write("Coloring a chief: (%s)\n"%p[4])
+            p[0].tincture=p[4]
+    elif len(p)==7:
+        p[0]=blazon.Chief()
+        if not p[5]:
+            Globals.colorless.append(p[0])
+        else:
+            p[0].tincture=p[5]
+        p[0].charges.extend(p[6])
+    else:
+        # Drop back ten and punt
+        p[0]=None
+    
+def p_amount(p):
+    """amount : NUM
+              | NUMWORD"""
+    p[0]=p[1]
+
+def p_optamt(p):
+    """optamt : OF amount
+              | empty"""
+    if len(p) == 3:
+        p[0]=p[2]
+    else:
+        p[0]=8
+
+def p_optinverted(p):
+    """optinverted : INVERTED
+                   | empty"""
+    if p[1]=="inverted":
+        p[0]=lambda x:x.invert()
+    else:
+        p[0]=lambda x:x
+        
+def p_optfimbriation(p):
+    """optfimbriation : FIMBRIATED COLOR
+                      | empty"""
+    if len(p)<=2:
+        p[0]=lambda x:x
+    else:
+        col=p[2]
+        p[0]=lambda x:x.fimbriate(col)
+
+def p_optand(p):
+    """optand : AND
+              | empty"""
+    pass
+
+def p_optA(p):
+    """optA : A
+            | empty"""
+    pass
+
+def p_empty(p):
+    "empty :"
+    pass
+
+def p_error(p):
+    ""
+    pass
+
+yacc.yacc()
+
+if __name__=="__main__":
+#    line=sys.stdin.readline()
+#    while line:
+#        sh=yacc.parse(line)
+#        print sh
+#        line=sys.stdin.readline()
+   sh=yacc.parse(" ".join(sys.argv[1:]))
+   print sh
+    

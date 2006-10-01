@@ -100,8 +100,14 @@ class partLine:
     def __repr__(self):
         return ' '.join(self.path)
     
-    def makeline(self,x,y):
+    def makeline(self,x,y,align=0):
         """draw a line using whatever linetype is called for"""
+        # TODO: add parameter "align": if align is 0 (default), then put
+        # the leftover part (that doesn't make up a complete oscillation)
+        # at the other end.  If it's 1, put it on the near end.  This will
+        # be easier to do when the whole functioning of this method is made
+        # neater.
+
         if not hasattr(self,"lineType") or self.lineType == "plain":
             self.line(x,y)
         else:
@@ -168,7 +174,6 @@ class partLine:
                     direction *= -1
                 self.path.append(" L"+str(x)+","+str(y))
             elif self.lineType == "invected" or self.lineType == "engrailed":
-                # TODO: this.  It doesn't yet work.
                 if self.lineType=="invected":
                     # I'm pretty sure this isn't correct in the general case.
                     sweep=1

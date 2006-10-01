@@ -66,6 +66,7 @@ class Ordinary:
 
    def fimbriate(self,color):
       # Only plain colors ATM
+      # sys.stderr.write("fimbriating with %s\n"%color)
       self.fimbriation=Tincture.lookup[color]
 
    # Is this too brittle a way to do it?
@@ -123,6 +124,8 @@ class Ordinary:
       if hasattr(self,"charges"):
          for charge in self.charges:
             self.maingroup.addElement(charge.finalizeSVG())
+      if hasattr(self,"newmaingroup"):
+         self.maingroup=self.newmaingroup
       self.svg.addElement(self.maingroup)
       # Add in all the defs...
       for i in self.mydefs:
@@ -162,26 +165,27 @@ class Field(Ordinary):
    # A chief is different.  Adding one depresses the rest of the field.
    def addChief(self, chief):
       """Add a chief, depressing the rest of the field"""
-      g=SVGdraw.group()
-      g.attributes["clip-path"]=self.maingroup.attributes["clip-path"]
-      g.addElement(self.maingroup)
-      self.newmaingroup=g
       self.chief=chief                  # Have to handle this later.
       
    def __repr__(self):
-      self.finalizeSVG()
       if hasattr(self,"chief"):
          # Do I need to worry to *append* rather than replace the transform?
          # Hm.  Somehow I need add something outside the main group
          # AFTER things have happened...
-         self.maingroup.attributes["transform"]="scale(1,.8) translate(0,15)"
-         # See, there's the problem above: the transform also applies to
-         # the clip-path, so it gets pudgy and overwrites the black line
-         # around the edge of the shield.  Work on it. TODO.
+         #
+         # TODO: Currently this doesn't work when the chief is filled with
+         # a pattern.  The pattern def happens *after* the chief.
          g=SVGdraw.group()
          g.attributes["clip-path"]=self.maingroup.attributes["clip-path"]
-         g.addElement(self.chief.finalizeSVG())
-         self.svg.addElement(g)
+         g.addElement(self.maingroup)
+         self.maingroup.attributes["transform"]="scale(1,.8) translate(0,15)"
+         self.newmaingroup=g
+         g2=SVGdraw.group()
+         g2.attributes["clip-path"]=self.maingroup.attributes["clip-path"]
+         g2.addElement(self.chief.finalizeSVG())
+         #self.svg.addElement(g)
+         self.svg.addElement(g2)         
+      self.finalizeSVG()
       drawing=SVGdraw.drawing()
       drawing.setSVG(self.svg)
       for thing in Ordinary.defs:
