@@ -26,6 +26,15 @@ class ChargesAppendTestCase(unittest.TestCase):
         self.assertTrue(shield.charges[0].tincture.color is 'yellow')
 SVGDrawingTests.addTest(ChargesAppendTestCase)
 
+# TODO:
+# When charges are in a group, they must not overlap each other.
+# In some specific circumstances, the charges must not cross lines of
+# division either.
+#
+# Lines of division should not cross themselves. This is currently a problem
+# with, for instance, embattled/engrailed piles. But the problem should
+# probably be fixed before it is tested...
+
 # Tests for blazonry-related code
 
 BlazonryTests = unittest.TestSuite()
@@ -187,7 +196,7 @@ class CompImages(unittest.TestCase):
             self.assert_(discrepancy < MAX_DISCREPANCY, \
                          "Detected difference of " + \
                          repr(int(discrepancy * 100)) + "%. " + \
-                         "This looks different than before: " + \
+                         "This looks different than before:\n" + \
                          curblazon + "\nCompare the shields, and replace " + \
                          "with the new version if OK.\n" + \
                          "Old (expected) version: " + IMGDIR + gsfn + "\n" + \

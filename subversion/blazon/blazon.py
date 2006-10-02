@@ -763,7 +763,10 @@ class PerChevron(Paly):
 # between three, etc etc etc.  This is something that relates to a charge's
 # *siblings* on the field.
 
-import parse
+# Old YAPPS parser:
+# import parse
+# New YACC parser:
+import plyyacc
 
 class Blazon:
     """A blazon is a heraldic definition. We would like to be as liberal
@@ -777,7 +780,10 @@ class Blazon:
     def GetBlazon(self):
         return self.blazon
     def GetShield(self):
-        return parse.parse('blazon', self.GetBlazon())
+        # Old YAPPS parser:
+        # return parse.parse('blazon', self.GetBlazon())
+        # New YACC parser:
+        return plyyacc.yacc.parse(self.GetBlazon())
 
 if __name__=="__main__":
     cmdlineinput = " ".join(sys.argv[1:])
