@@ -18,7 +18,7 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
 t_ignore=" \n\t"
 
 def t_COLOR(t):
-    r"(or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu celeste)"
+    r"(or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste)"
     return t
 
 def t_AND(t):

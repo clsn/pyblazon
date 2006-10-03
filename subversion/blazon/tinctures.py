@@ -20,7 +20,7 @@ class Tincture:                         # Metal or color.
             "tenné" : "#cd5700",
             "tenne" : "#cd5700",
             "tawny" : "#cd5700",
-            "sanguine" : "c00000",
+            "sanguine" : "#c00000",
             "murrey" : "#800040",
             "bleu celeste" : "#8080ff",
             "none" : "none"
