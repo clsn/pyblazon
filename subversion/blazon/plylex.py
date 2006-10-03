@@ -9,7 +9,7 @@ import tinctures
 
 tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED","ALTERED",
-        "PARTYPER","FIMBRIATED","AND","OF","A","WS")
+        "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -29,6 +29,10 @@ t_OF=r"of"
 
 def t_LINEY(t):
     r"(paly|barry|bendy(.sinister)?|gyronny)"
+    return t
+
+def t_QUARTERLY(t):
+    r"(quarterly|quartered)"
     return t
 
 # Hmm.  How to handle "*in* a bordure..." ?
@@ -119,6 +123,8 @@ lookupdict={
     "per bend": tinctures.PerBend,
     "per bend sinister": tinctures.PerBendSinister,
     "per chevron": tinctures.PerChevron,
+    "quarterly": tinctures.PerCross,
+    "quartered": tinctures.PerCross,
     "countercharged": tinctures.Countercharged
     }
 
