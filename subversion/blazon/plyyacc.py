@@ -103,6 +103,11 @@ def p_charge_1(p):
     p[6](res)
     p[0]=res
 
+def p_charge_2(p):
+    "charge : ON A charge optA grouporcharge"
+    p[3].addCharge(p[5])
+    p[0]=p[3]
+
 def p_chief(p):
     """chief : empty
              | optand A CHIEF optlinetype opttreatment
