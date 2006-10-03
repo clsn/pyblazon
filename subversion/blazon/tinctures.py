@@ -101,12 +101,11 @@ class CounterVair(VairInPale):
                                   "patternContentUnits":"userSpaceOnUse",
                                   "id":"counter-vair%04d"%blazon.Ordinary.id})
       blazon.Ordinary.id+=1
-      pattern.addElement(SVGdraw.rect(x="0", y="0", width="8", height="18",
-                                      fill=self.color1))
-      pattern.addElement(SVGdraw.SVGelement('path',
-                                            attributes={"d":
-                                                        "M0,8 l2,-2 l0,-4 l2,-2 l2,2 l0,4 l2,2 l-2,2 l0,4 l-2,2 l-2,-2 l0,-4 z",
-                                                        "fill":self.color2}))
+      pattern.addElement(self.color1.fill(SVGdraw.rect(x="0", y="0", width="8",
+                                                       height="18")))
+      pattern.addElement(self.color2.fill(SVGdraw.SVGelement('path',
+                                                             attributes={"d":
+                                                                         "M0,8 l2,-2 l0,-4 l2,-2 l2,2 l0,4 l2,2 l-2,2 l0,4 l-2,2 l-2,-2 l0,-4 z"})))
       elt.attributes["fill"]="url(#%s)"%pattern.attributes["id"]
       blazon.Ordinary.defs.append(pattern)
       return elt
@@ -154,7 +153,41 @@ class Ermine(Fur):
       elt.attributes["fill"]="url(#%s)"%pattern.attributes["id"]
       return elt
 
-
+class Fretty(Ermine):
+    def fill(self,elt):
+        pattern=SVGdraw.SVGelement('pattern',attributes=
+                                   {"height":"20", "width":"20",
+                                    "patternUnits": "userSpaceOnUse",
+                                    "patternContentUnits": "userSpaceOnUse",
+                                    "id": "fret%04d"%blazon.Ordinary.id})
+        blazon.Ordinary.id+=1
+        pattern.addElement(self.color1.fill(SVGdraw.rect(x="0",y="0",width="22",
+                                                         height="22")))
+        group=SVGdraw.group()
+        group.attributes["stroke"]="black"
+        group.attributes["stroke-width"]=".1"
+        rect1=self.color2.fill(SVGdraw.rect(x="-2",y="-20",
+                                            width="4",height="50"))
+        rect1.attributes["transform"]="translate(0,10) rotate(45)"
+        
+        rect2=self.color2.fill(SVGdraw.rect(x="-2",y="-20",
+                                            width="4",height="50"))
+        rect2.attributes["transform"]="translate(20,10) rotate(45)"
+                           
+        rect3=self.color2.fill(SVGdraw.rect(x="-2",y="-20",
+                                            width="4",height="50"))
+        rect3.attributes["transform"]="translate(0,10) rotate(-45)"
+        
+        rect4=self.color2.fill(SVGdraw.rect(x="-2",y="-20",
+                                            width="4",height="50"))
+        rect4.attributes["transform"]="translate(20,10) rotate(-45)"
+        for e in [rect1,rect2,rect3,rect4]:
+            group.addElement(e)
+        pattern.addElement(group)
+        blazon.Ordinary.defs.append(pattern)
+        elt.attributes["fill"]="url(#%s)"%pattern.attributes["id"]
+        return elt
+                           
 # I wonder if this'll work...
 
 class Countercharged(Tincture):
@@ -223,8 +256,8 @@ class Barry(Paly):
       # Problem.  Optical center is at 0.  Geometric center is a little lower,
       # owing to the placement of the coordinates.
       for i in range(1,self.pieces,2):
-         p.rect(-blazon.Ordinary.FESSPTX, -blazon.Ordinary.FESSPTY+i*height,
-                2*blazon.Ordinary.WIDTH, height)
+         p.rect(-blazon.Ordinary.WIDTH, -blazon.Ordinary.FESSPTY+i*height,
+                3*blazon.Ordinary.WIDTH, height)
       self.path=SVGdraw.path(p)
 
 class Bendy(Paly):

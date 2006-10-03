@@ -50,6 +50,10 @@ def p_treatment_5(p):
     "treatment : FURRY treatment AND treatment"
     p[0]=lookup(p[1])(p[2],p[4])
 
+def p_treatment_6(p):
+    "treatment : treatment ALTERED treatment"
+    p[0]=lookup(p[2])(p[1],p[3])
+
 def p_opttreatment(p):
     """opttreatment : treatment
                     | empty"""

@@ -8,7 +8,7 @@ import sys
 import tinctures
 
 tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
-        "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED",
+        "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED","ALTERED",
         "PARTYPER","FIMBRIATED","AND","OF","A","WS")
 
 # For some reason, things seem to work better when functions are defined,
@@ -40,10 +40,14 @@ t_ON=r"on"
 
 t_CHARGE=r"(roundel|lozenge)"
 
-t_LINETYPE=r"(plain|indented|dancetty|embattled|invected|engrailed|wavy)"
+t_LINETYPE=r"(plain|indented|dancetty|embattled|invected|engrailed|wavy|rayonny)"
 
 def t_FURRY(t):
-    r"(vairy.in.pale|vairy|ermined)"
+    r"(vairy.in.pale|vairy|counter.vairy)"
+    return t
+
+def t_ALTERED(t):
+    r"(fretty|ermined)"
     return t
 
 t_FUR=r"(vair.in.pale|vair|counter.vair|ermines?|erminois|pean)"
@@ -81,7 +85,7 @@ def t_error(t):
 
 lookupdict={
     "vair": tinctures.Vair,
-    "counter.vair": tinctures.CounterVair,
+    "counter.vairy?": tinctures.CounterVair,
     "fesse?": blazon.Fesse,
     "pale" : blazon.Pale,
     "cross": blazon.Cross,
@@ -105,6 +109,7 @@ lookupdict={
     "erminois": (lambda *a: tinctures.Ermine("or","sable")),
     "pean": (lambda *a: tinctures.Ermine("sable","or")),
     "ermined": tinctures.Ermine,
+    "fretty": tinctures.Fretty,
     "vairy?.in.pale": tinctures.VairInPale,
     "vairy": tinctures.Vair,
     "per cross": tinctures.PerCross,

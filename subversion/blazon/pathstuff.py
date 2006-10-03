@@ -104,6 +104,7 @@ class partLine:
     lineInfo={
         "indented": (2,1),
         "dancetty": (8,5),
+        "rayonny": (3,5),
         "wavy": (8,5),
         "embattled": (6,2),
         "engrailed": (10,5),
@@ -153,7 +154,7 @@ class partLine:
                 uptoX+=remX
                 uptoY+=remY
             if int(leng/wavelength)%2:
-                direction=shift
+                direction= shift
             else:
                 direction= -shift
             (shiftX,shiftY)=((amplitude*math.cos(angle+math.pi/2)),
@@ -169,8 +170,10 @@ class partLine:
                                           uptoY-delY/2+shiftY*direction,
                                           uptoX,uptoY))
                     else:
-                        self.path.append(" L"+str(uptoX+shiftX*direction)+
-                                         ","+str(uptoY+shiftY*direction))
+                        self.path.append(" L%.3f,%.3f L%.3f,%.3f"%
+                                         (uptoX-delX/2+shiftX*direction,
+                                          uptoY-delY/2+shiftY*direction,
+                                          uptoX,uptoY))
                     direction *= -1
                 if self.lineType=="wavy":
                     self.path.append(" T%d,%d"%(x,y))
@@ -200,7 +203,30 @@ class partLine:
                                      (amplitude,amplitude,sweep,uptoX,uptoY))
                 self.path.append(" A%f,%f 0 1 %d %f,%f"%
                                  (amplitude, amplitude,sweep,x,y))
-            else:
+            #Rayonny doesn't quite work yet.
+#             elif self.lineType == "rayonny":
+#                 for i in range(0,int(leng/wavelength)):
+#                     uptoX+=delX
+#                     uptoY+=delY
+#                     midX=delX/2+shiftX*direction
+#                     midY=delY/2+shiftY*direction
+#                     # Make these q soon.
+#                     # Try to keep the math straight here....
+#                     self.path.append(" l%.3f,%.3f l%.3f,%.3f l%.3f,%.3f"%
+#                                      (midX/3+delX/3,
+#                                       midY/3+delY/3,
+#                                       2*midX/3-delX/3,
+#                                       2*midY/3-delY/3,
+#                                       midX,midY))
+#                     (midX,midY)=(delX/2-shiftX*direction,
+#                                  delY/2-shiftY*direction)
+#                     self.path.append(" l%.3f,%.3f l%.3f,%.3f l%.3f,%.3f"%
+#                                      (midX/3+delX/3,
+#                                       midY/3+delY/3,
+#                                       2*midX/3-delX/3,
+#                                       2*midY/3-delY/3,
+#                                       midX,midY))
+            else:                       # Just pretend it's plain.
                 self.line(x,y)
             self.update(x,y)
 
