@@ -6,6 +6,7 @@ from pathstuff import partLine
 import blazon
 import copy
 import sys
+import math
 
 class Pattern: pass                     # gyronny, checky, etc.
 
@@ -236,11 +237,9 @@ class Bendy(Paly):
          width=fullwidth*.87/self.pieces # Compensate for round corner.
       else:                             # Otherwise Per Bend doesn't work.
          width=fullwidth/self.pieces
-      for i in range(1,self.pieces+2,2): # Add two to handle odd numbers, just in case.
+      for i in range(0,self.pieces+2,2): # Add two to handle odd numbers, just in case.
          p.rect(fullwidth/2-i*width, -blazon.Ordinary.HEIGHT,
                 width,2*blazon.Ordinary.HEIGHT)
-      # Owing to the way these things work, the colors come in the wrong order
-      self.colors=(self.colors[1],self.colors[0])
       self.path=SVGdraw.path(p)
       self.path.attributes["transform"]="rotate(-45)"
       
@@ -302,6 +301,25 @@ class PerSaltire(PerCross):
    def assemble(self):
       PerCross.assemble(self)
       self.path.attributes["transform"]="rotate(-45)"
+
+# start with default: Gyronny of eight.
+class Gyronny(Paly):
+    def assemble(self):
+        # Yes, everything with HEIGHT, so I'm working in a square.
+        # May have the colors backwards.
+        p=partLine(linetype=self.lineType)
+        p.move(0,-blazon.Ordinary.HEIGHT)
+        p.makeline(0,blazon.Ordinary.HEIGHT)
+        p.hline(blazon.Ordinary.HEIGHT)
+        p.makeline(-blazon.Ordinary.HEIGHT,-blazon.Ordinary.HEIGHT)
+        p.closepath()
+        p.move(-blazon.Ordinary.HEIGHT,0)
+        p.makeline(blazon.Ordinary.HEIGHT,0)
+        p.vline(-blazon.Ordinary.HEIGHT)
+        p.makeline(-blazon.Ordinary.HEIGHT,blazon.Ordinary.HEIGHT)
+        p.closepath
+        self.path=SVGdraw.path(p)
+        self.path.attributes["fill-rule"]="evenodd"
 
 class PerChevron(Paly):
    def __init__(self,color1="argent", color2="sable", linetype="plain"):

@@ -9,6 +9,7 @@ from plylex import tokens,lookup
 
 class Globals:
     colorless=[]
+    colors=[]
 
 def p_blazon_1(p):
     'blazon : treatment'
@@ -30,6 +31,7 @@ def p_blazon_2(p):
 def p_treatment_1(p):
     "treatment : COLOR"
     p[0]=tinctures.Tincture(p[1])
+    Globals.colors.append(p[0])
 
 def p_treatment_2(p):
     "treatment : PARTYPER ORDINARY optlinetype treatment AND treatment"

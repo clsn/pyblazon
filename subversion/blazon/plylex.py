@@ -18,7 +18,7 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
 t_ignore=" \n\t"
 
 def t_COLOR(t):
-    r"(or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste)"
+    r"(or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste)"    
     return t
 
 def t_AND(t):
@@ -28,7 +28,7 @@ def t_AND(t):
 t_OF=r"of"
 
 def t_LINEY(t):
-    r"(paly|barry|bendy(.sinister)?)"
+    r"(paly|barry|bendy(.sinister)?|gyronny)"
     return t
 
 # Hmm.  How to handle "*in* a bordure..." ?
@@ -98,6 +98,7 @@ lookupdict={
     "barry": tinctures.Barry,
     "bendy": tinctures.Bendy,
     "bendy.sinister": tinctures.BendySinister,
+    "gyronny": tinctures.Gyronny,
     "ermine": blazon.Ermine,
     # This is a bit of a hack...
     "ermines": (lambda *a: tinctures.Ermine("sable","argent")),
