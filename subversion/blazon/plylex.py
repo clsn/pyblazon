@@ -42,7 +42,7 @@ t_ORDINARY=r"(fesse?|pale|cross|saltire|bend[ ]sinister|bend|pile|chevron|bordur
 t_CHIEF=r"chief"
 t_ON=r"on"
 
-t_CHARGE=r"(roundel|lozenge)"
+t_CHARGE=r"(roundel|lozenge|fleur)"
 
 t_LINETYPE=r"(plain|indented|dancetty|embattled|invected|engrailed|wavy|rayonny)"
 
@@ -101,6 +101,7 @@ lookupdict={
     "chief": blazon.Chief,
     "roundel": blazon.Roundel,
     "lozenge": blazon.Lozenge,
+    "fleur": (lambda *a: blazon.ExtCharge("data/Fleur.svg#fleur")),
     "bordure": blazon.Bordure,
     "paly": tinctures.Paly,
     "barry": tinctures.Barry,

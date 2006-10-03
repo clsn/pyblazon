@@ -402,7 +402,7 @@ class ChargeGroup:
             raise "Too many elements in charge group: %d"%num
         
 
-class Charge:
+class Charge(Ordinary):
     def moveto(self,*args):
         # Remember, args[0] is a tuple!
         if not self.svg.attributes.has_key("transform"):
@@ -425,19 +425,15 @@ class Charge:
     def chief(self):
         self.moveto(Ordinary.CHIEFPT)
 
-class SubOrdinary(Charge, Ordinary):
-   def __init__(self,*args,**kwargs):
-      self.setup(*args,**kwargs)
-      
-class Roundel(SubOrdinary):
+class Roundel(Charge):
    def process(self):
       self.clipPathElt.addElement(SVGdraw.circle(cx=0,cy=0,r=40))
       if not self.maingroup.attributes.has_key("transform"):
          self.maingroup.attributes["transform"]=""
          # This is not handled well.  but it's a start.
-         self.maingroup.attributes["transform"] +=" scale(.3)"
+      self.maingroup.attributes["transform"] +=" scale(.3)"
 
-class Lozenge(SubOrdinary):
+class Lozenge(Charge):
    def process(self):
       p=SVGdraw.pathdata()
       p.move(0,-20)
@@ -448,6 +444,13 @@ class Lozenge(SubOrdinary):
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
 
+class ExtCharge(Charge):
+    def __init__(self,path,*args,**kwargs):
+        self.setup(*args,**kwargs)
+        self.path=path
+
+    def process(self):
+        self.clipPathElt.addElement(SVGdraw.use(self.path))
 
 # Other ideas...:
 
