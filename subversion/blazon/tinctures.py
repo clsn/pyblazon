@@ -310,13 +310,13 @@ class Gyronny(Paly):
         p=partLine(linetype=self.lineType)
         p.move(0,-blazon.Ordinary.HEIGHT)
         p.makeline(0,blazon.Ordinary.HEIGHT)
-        p.hline(blazon.Ordinary.HEIGHT)
-        p.makeline(-blazon.Ordinary.HEIGHT,-blazon.Ordinary.HEIGHT)
+        p.hline(-blazon.Ordinary.HEIGHT)
+        p.makeline(blazon.Ordinary.HEIGHT,-blazon.Ordinary.HEIGHT)
         p.closepath()
         p.move(-blazon.Ordinary.HEIGHT,0)
         p.makeline(blazon.Ordinary.HEIGHT,0)
-        p.vline(-blazon.Ordinary.HEIGHT)
-        p.makeline(-blazon.Ordinary.HEIGHT,blazon.Ordinary.HEIGHT)
+        p.vline(blazon.Ordinary.HEIGHT)
+        p.makeline(-blazon.Ordinary.HEIGHT,-blazon.Ordinary.HEIGHT)
         p.closepath
         self.path=SVGdraw.path(p)
         self.path.attributes["fill-rule"]="evenodd"
