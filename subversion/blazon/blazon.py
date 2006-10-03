@@ -276,11 +276,11 @@ class Chief(Ordinary):
         if p.lineType and p.lineType <> "plain":
            p.rect(-Ordinary.WIDTH, -Ordinary.HEIGHT,
                   Ordinary.WIDTH*3, Ordinary.HEIGHT+13.5)
-           self.svg.attributes["transform"]="translate(0,%f)"%(-Ordinary.FESSPTY+13.5)
+           self.maingroup.attributes["transform"]="translate(0,%f)"%(-Ordinary.FESSPTY+13.5)
         else:
            p.rect(-Ordinary.WIDTH, -Ordinary.HEIGHT,
                   Ordinary.WIDTH*3, Ordinary.HEIGHT+11)
-           self.svg.attributes["transform"]="translate(0,%f)"%(-Ordinary.FESSPTY+11)
+           self.maingroup.attributes["transform"]="translate(0,%f)"%(-Ordinary.FESSPTY+11)
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
