@@ -161,8 +161,9 @@ class Fretty(Ermine):
                                     "patternContentUnits": "userSpaceOnUse",
                                     "id": "fret%04d"%blazon.Ordinary.id})
         blazon.Ordinary.id+=1
-        pattern.addElement(self.color1.fill(SVGdraw.rect(x="0",y="0",width="22",
-                                                         height="22")))
+        # Why do I need a background rectangle in the pattern???
+        # pattern.addElement(self.color1.fill(SVGdraw.rect(x="0",y="0",width="22",
+#                                                         height="22")))
         group=SVGdraw.group()
         group.attributes["stroke"]="black"
         group.attributes["stroke-width"]=".1"
@@ -185,8 +186,16 @@ class Fretty(Ermine):
             group.addElement(e)
         pattern.addElement(group)
         blazon.Ordinary.defs.append(pattern)
-        elt.attributes["fill"]="url(#%s)"%pattern.attributes["id"]
-        return elt
+        elt=self.color1.fill(elt)
+        newelt=SVGdraw.group()
+        newelt.addElement(elt)
+        newbase=SVGdraw.rect(x=-blazon.Ordinary.FESSPTX,
+                             y=-blazon.Ordinary.FESSPTY,
+                             width=blazon.Ordinary.WIDTH,
+                             height=blazon.Ordinary.HEIGHT,
+                             fill="url(#%s)"%pattern.attributes["id"])
+        newelt.addElement(newbase)
+        return newelt
                            
 # I wonder if this'll work...
 
