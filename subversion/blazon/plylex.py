@@ -59,7 +59,7 @@ t_FUR=r"(vair.in.pale|vair|counter.vair|ermines?|erminois|pean)"
 t_PARTYPER=r"(party[ ]per|per)"
 t_FIMBRIATED=r"fimbriated"
 t_INVERTED=r"inverted"
-t_COUNTERCHARGED=r"countercharged"
+t_COUNTERCHARGED=r"(countercharged|counterchanged)"
 
 def t_A(t):
     r"an?"
@@ -125,7 +125,8 @@ lookupdict={
     "per chevron": tinctures.PerChevron,
     "quarterly": tinctures.PerCross,
     "quartered": tinctures.PerCross,
-    "countercharged": tinctures.Countercharged
+    "countercharged": tinctures.Countercharged,
+    "counterchanged": tinctures.Countercharged
     }
 
 def lookup(key):
