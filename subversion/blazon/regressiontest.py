@@ -154,7 +154,7 @@ IMGDIR       = "tests/gsshields/"
 TESTSVGFN    = "tests/gsshields/in.svg"
 TESTEDIMGFN  = "tests/gsshields/out.png"
 TESTBLAZONFN = "tests/gsshields/gsblazons.txt"
-MAX_DISCREPANCY = 0.03
+MAX_DISCREPANCY = 0.05
 
 def CompImage(tested, gs):
     xsize, ysize = tested.size
