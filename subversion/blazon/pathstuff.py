@@ -99,7 +99,16 @@ class partLine:
         self.relupdate(x,y)
     def __repr__(self):
         return ' '.join(self.path)
-    
+
+    # Table of linetype, wavelength, and amplitude (for now)
+    lineInfo={
+        "indented": (2,1),
+        "dancetty": (8,5),
+        "wavy": (8,5),
+        "embattled": (6,2),
+        "engrailed": (10,5),
+        "invected": (10,5)
+        }
     def makeline(self,x,y,align=0,shift=1):
         """draw a line using whatever linetype is called for"""
         # TODO: add parameter "align": if align is 0 (default), then put
@@ -119,39 +128,38 @@ class partLine:
             # Maybe a dictionary referring to objects with drawing
             # functions on them...
             # There has to be a neater way to do this.
-            if self.lineType == "indented" or self.lineType=="dancetty" or self.lineType == "wavy":
-                if self.lineType=="indented":
-                    wavelength=2
-                    amplitude=1
-                else:
-                    wavelength=8
-                    amplitude=5
-                # NOTE: del[XY] and shift[XY] were ints, but that didn't work
-                # with some lines (notably the pile).  I've de-inted them for
-                # now, leaving the parens.  May want to re-int them, after
-                # significantly upping the resolution of the integer grid.
-                delX=(wavelength*math.cos(angle))
-                delY=(wavelength*math.sin(angle))
-                # sys.stderr.write("delX: %d, delY: %d\n" % (delX, delY))
-                (uptoX,uptoY)=(self.curX,self.curY)
-                # WRONG: need to account for waviness
-                # Doesn't yet QUITE do the job.  Dancetty and wavy don't
-                # seem to be able to look good at the same time.
-                if align:
-                    rem=leng%wavelength
-                    (remX,remY)=(rem*math.cos(angle),
-                                 rem*math.sin(angle))
-                    self.path.append(" L%.4f,%.4f"%
-                                     (uptoX+remX,uptoY+remY))
-                    uptoX+=remX
-                    uptoY+=remY
-                if int(leng/wavelength)%2:
-                    direction=shift
-                else:
-                    direction= -shift
-                (shiftX,shiftY)=((amplitude*math.cos(angle+math.pi/2)),
-                                 (amplitude*math.sin(angle+math.pi/2)))
-                # sys.stderr.write("shiftX: %d, shiftY: %d\n"%(shiftX,shiftY))
+            try:
+                (wavelength,amplitude)=partLine.lineInfo[self.lineType]
+            except KeyError:
+                # Probably the wrong way to handle this error, but okay for now.
+                (wavelength,amplitude)=(6,6)
+            # NOTE: del[XY] and shift[XY] were ints, but that didn't work
+            # with some lines (notably the pile).  I've de-inted them for
+            # now, leaving the parens.  May want to re-int them, after
+            # significantly upping the resolution of the integer grid.
+            delX=(wavelength*math.cos(angle))
+            delY=(wavelength*math.sin(angle))
+            # sys.stderr.write("delX: %d, delY: %d\n" % (delX, delY))
+            (uptoX,uptoY)=(self.curX,self.curY)
+            # WRONG: need to account for waviness
+            # Doesn't yet QUITE do the job.  Dancetty and wavy don't
+            # seem to be able to look good at the same time.
+            if align:
+                rem=leng%wavelength
+                (remX,remY)=(rem*math.cos(angle),
+                             rem*math.sin(angle))
+                self.path.append(" L%.4f,%.4f"%
+                                 (uptoX+remX,uptoY+remY))
+                uptoX+=remX
+                uptoY+=remY
+            if int(leng/wavelength)%2:
+                direction=shift
+            else:
+                direction= -shift
+            (shiftX,shiftY)=((amplitude*math.cos(angle+math.pi/2)),
+                             (amplitude*math.sin(angle+math.pi/2)))
+            # sys.stderr.write("shiftX: %d, shiftY: %d\n"%(shiftX,shiftY))
+            if self.lineType in ["indented","dancetty","wavy"]:
                 for i in range(1,int(leng/wavelength)):
                     uptoX+=delX
                     uptoY+=delY
@@ -170,14 +178,6 @@ class partLine:
                     self.path.append(" L"+str(x)+","+str(y))
             elif self.lineType == "embattled":
                 # I'm going to assume equal up/down lengths
-                wavelength=6
-                amplitude=2
-                delX=(wavelength*math.cos(angle))
-                delY=(wavelength*math.sin(angle))
-                (uptoX,uptoY)=(self.curX, self.curY)
-                direction=1
-                (shiftX,shiftY)=((amplitude*math.cos(angle+math.pi/2)),
-                                 (amplitude*math.sin(angle+math.pi/2)))
                 for i in range(1,int(leng/wavelength)):
                     self.path.append(" L"+str(uptoX+shiftX*direction)+
                                      ","+str(uptoY+shiftY*direction))
@@ -193,13 +193,6 @@ class partLine:
                     sweep=1
                 else:
                     sweep=0
-                wavelength=10
-                amplitude=5
-                delX=(wavelength*math.cos(angle))
-                delY=(wavelength*math.sin(angle))
-                (uptoX,uptoY)=(self.curX,self.curY)
-                #(shiftX,shiftY)=((amplitude*math.cos(angle+math.pi/2)),
-                #                 (amplitude*math.sin(angle+math.pi/2)))
                 for i in range(0,int(leng/wavelength)):
                     uptoX+=delX
                     uptoY+=delY
@@ -220,8 +213,8 @@ class partLine:
         self.move(x,y)
         self.makelinerel(width,0)
         self.makelinerel(0,height)
-        self.makelinerel(-width,0,1)
-        self.makelinerel(0,-height,1)
+        self.makelinerel(-width,0,1,-1)
+        self.makelinerel(0,-height,1,-1)
         self.closepath()
 
 class Drawfunctions:

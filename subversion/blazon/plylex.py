@@ -5,6 +5,7 @@ import lex
 import re
 import blazon
 import sys
+import tinctures
 
 tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED",
@@ -77,8 +78,8 @@ def t_error(t):
 
 
 lookupdict={
-    "vair": blazon.Vair,
-    "counter.vair": blazon.CounterVair,
+    "vair": tinctures.Vair,
+    "counter.vair": tinctures.CounterVair,
     "fesse?": blazon.Fesse,
     "pale" : blazon.Pale,
     "cross": blazon.Cross,
@@ -91,26 +92,25 @@ lookupdict={
     "roundel": blazon.Roundel,
     "lozenge": blazon.Lozenge,
     "bordure": blazon.Bordure,
-    "paly": blazon.Paly,
-    "barry": blazon.Barry,
-    "bendy":blazon.Bendy,
-    "bendy.sinister": blazon.BendySinister,
+    "paly": tinctures.Paly,
+    "barry": tinctures.Barry,
+    "bendy": tinctures.Bendy,
+    "bendy.sinister": tinctures.BendySinister,
     "ermine": blazon.Ermine,
     # This is a bit of a hack...
-    "ermines": (lambda *a: blazon.Ermine("sable","argent")),
-    "erminois": (lambda *a: blazon.Ermine("or","sable")),
-    "pean": (lambda *a: blazon.Ermine("sable","or")),
-    "ermined": blazon.Ermine,
-    "vairy?.in.pale": blazon.VairInPale,
-    "vairy": blazon.Vair,
-    "per cross": blazon.PerCross,
-    "per saltire": blazon.PerSaltire,
-    "per fesse?": blazon.PerFesse,
-    "per chief": blazon.PerFesse,		# So what?
-    "per pale": blazon.PerPale,
-    "per bend": blazon.PerBend,
-    "per bend sinister": blazon.PerBendSinister,
-    "per chevron": blazon.PerChevron
+    "ermines": (lambda *a: tinctures.Ermine("sable","argent")),
+    "erminois": (lambda *a: tinctures.Ermine("or","sable")),
+    "pean": (lambda *a: tinctures.Ermine("sable","or")),
+    "ermined": tinctures.Ermine,
+    "vairy?.in.pale": tinctures.VairInPale,
+    "vairy": tinctures.Vair,
+    "per cross": tinctures.PerCross,
+    "per saltire": tinctures.PerSaltire,
+    "per fesse?": tinctures.PerFesse,
+    "per pale": tinctures.PerPale,
+    "per bend": tinctures.PerBend,
+    "per bend sinister": tinctures.PerBendSinister,
+    "per chevron": tinctures.PerChevron
     }
 
 def lookup(key):
