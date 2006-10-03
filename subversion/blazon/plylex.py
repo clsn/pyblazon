@@ -35,14 +35,16 @@ def t_QUARTERLY(t):
     r"(quarterly|quartered)"
     return t
 
+def t_CHARGE(t):
+    r"(roundel|lozenge|fleur.de.lis|cross.formy|cross.pattee)"
+    return t
+
 # Hmm.  How to handle "*in* a bordure..." ?
 t_ORDINARY=r"(fesse?|pale|cross|saltire|bend[ ]sinister|bend|pile|chevron|bordure)"
 
 # Chief is not an ordinary
 t_CHIEF=r"chief"
 t_ON=r"on"
-
-t_CHARGE=r"(roundel|lozenge|fleur)"
 
 t_LINETYPE=r"(plain|indented|dancetty|embattled|invected|engrailed|wavy|rayonny)"
 
@@ -101,7 +103,9 @@ lookupdict={
     "chief": blazon.Chief,
     "roundel": blazon.Roundel,
     "lozenge": blazon.Lozenge,
-    "fleur": (lambda *a: blazon.ExtCharge("data/Fleur.svg#fleur")),
+    "fleur.de.lis": (lambda *a: blazon.ExtCharge("fleur")),
+    "cross.formy": (lambda *a: blazon.ExtCharge("formy")),
+    "cross.pattee": (lambda *a: blazon.ExtCharge("formy")),
     "bordure": blazon.Bordure,
     "paly": tinctures.Paly,
     "barry": tinctures.Barry,

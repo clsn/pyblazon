@@ -445,12 +445,28 @@ class Lozenge(Charge):
       self.clipPathElt.addElement(self.clipPath)
 
 class ExtCharge(Charge):
-    def __init__(self,path,*args,**kwargs):
+    paths={
+        "fleur":"data/Fleur.svg#fleur",
+        "formy":"data/Cross-Pattee-Heraldry.svg#formy"
+        }
+    
+    def __init__(self,name,*args,**kwargs):
         self.setup(*args,**kwargs)
-        self.path=path
+        try:
+            self.path=ExtCharge.paths[name]
+        except KeyError:
+            self.path=name              # Punt.
 
     def process(self):
         self.clipPathElt.addElement(SVGdraw.use(self.path))
+
+    def do_fimbriation(self):
+        self.maingroup.addElement(SVGdraw.SVGelement('use',
+                                                     attributes={"xlink:href":"%s"%self.path,
+                                                               "stroke":self.fimbriation,
+                                                               "stroke-width":"2",
+                                                               "fill":"none"}))
+
 
 # Other ideas...:
 
