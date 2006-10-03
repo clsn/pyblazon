@@ -64,6 +64,8 @@ class Ordinary:
                                  y=-Ordinary.FESSPTY,
                                  width=Ordinary.WIDTH,
                                  height=Ordinary.HEIGHT)
+      # Not the best solution...
+      self.baseRect.charge=self
 
    def fimbriate(self,color):
       # Only plain colors ATM
@@ -492,4 +494,4 @@ if __name__=="__main__":
     # Old YAPPS parser:
     # return parse.parse('blazon', self.GetBlazon())
     # New YACC parser:
-    return plyyacc.yacc.parse(self.GetBlazon())
+    print plyyacc.yacc.parse(self.GetBlazon())

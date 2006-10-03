@@ -7,7 +7,7 @@ import blazon
 import sys
 import tinctures
 
-tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON",
+tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED",
         "PARTYPER","FIMBRIATED","AND","OF","A","WS")
 
@@ -51,6 +51,8 @@ t_FUR=r"(vair.in.pale|vair|counter.vair|ermines?|erminois|pean)"
 t_PARTYPER=r"(party[ ]per|per)"
 t_FIMBRIATED=r"fimbriated"
 t_INVERTED=r"inverted"
+t_COUNTERCHARGED=r"countercharged"
+
 def t_A(t):
     r"an?"
     return t
@@ -110,7 +112,8 @@ lookupdict={
     "per pale": tinctures.PerPale,
     "per bend": tinctures.PerBend,
     "per bend sinister": tinctures.PerBendSinister,
-    "per chevron": tinctures.PerChevron
+    "per chevron": tinctures.PerChevron,
+    "countercharged": tinctures.Countercharged
     }
 
 def lookup(key):

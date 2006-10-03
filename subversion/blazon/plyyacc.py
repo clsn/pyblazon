@@ -21,7 +21,7 @@ def p_blazon_2(p):
     "blazon : treatment charges chief"
     shield=blazon.Field()
     shield.tincture=p[1]
-    shield.charges.extend(p[2])
+    shield.extendCharges(p[2])
     if p[3]:
         shield.addChief(p[3])
     p[0]=shield
@@ -40,7 +40,8 @@ def p_treatment_3(p):
     p[0]=lookup(p[1])(p[3],p[4],p[6],linetype=p[2])
 
 def p_treatment_4(p):
-    "treatment : FUR"
+    """treatment : FUR
+                 | COUNTERCHARGED"""
     p[0]=lookup(p[1])()
 
 def p_treatment_5(p):
@@ -116,7 +117,7 @@ def p_chief(p):
             Globals.colorless.append(p[0])
         else:
             p[0].tincture=p[6]
-        p[0].charges.extend(p[7])
+        p[0].extendCharges(p[7])
         p[0].lineType=p[5]
     else:
         # Drop back ten and punt

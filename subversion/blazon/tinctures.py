@@ -4,6 +4,8 @@
 import SVGdraw
 from pathstuff import partLine
 import blazon
+import copy
+import sys
 
 class Pattern: pass                     # gyronny, checky, etc.
 
@@ -152,6 +154,18 @@ class Ermine(Fur):
       return elt
 
 
+# I wonder if this'll work...
+
+class Countercharged(Tincture):
+    def __init__(self):
+        pass
+    
+    def fill(self,elt):
+        realtincture=copy.copy(elt.charge.parent.tincture)
+        realtincture.colors=(realtincture.colors[1],
+                             realtincture.colors[0])
+        elt=realtincture.fill(elt)
+        return elt
 
 class Paly(Tincture):
    def parseColors(self,color1,color2):
@@ -186,8 +200,10 @@ class Paly(Tincture):
       self.foreground.clipPath=self.path
       self.foreground.clipPathElt.addElement(self.path)
       self.foreground.tincture=self.colors[1]
-      self.background=SVGdraw.rect(-blazon.Ordinary.FESSPTX, -blazon.Ordinary.FESSPTY,
-                                   blazon.Ordinary.WIDTH, blazon.Ordinary.HEIGHT)
+      self.background=SVGdraw.rect(-blazon.Ordinary.FESSPTX,
+                                   -blazon.Ordinary.FESSPTY,
+                                   blazon.Ordinary.WIDTH,
+                                   blazon.Ordinary.HEIGHT)
       self.background=self.colors[0].fill(self.background)
    
       g=SVGdraw.group()
