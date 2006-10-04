@@ -33,6 +33,14 @@ http://en.wikipedia.org/wiki/Blazon is a good starting point. Some
 examples of blazons that are currently supported can be found in
 blazons-good.txt in the tests/ subdirectory.
 
+LITERATURE
+----------
+James Parker (1894): A Glossary of Terms Used in Heraldry.
+http://www.heraldsnet.org/saitou/parker/index.htm
+
+St. George's Roll.
+http://perso.numericable.fr/~briantimms/rolls/StGeorgesE1.html
+
 FOR DEVELOPERS
 --------------
 If you want to run the regression tests, you also need the following
