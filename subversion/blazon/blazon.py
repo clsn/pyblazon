@@ -361,6 +361,27 @@ class Base(Ordinary):
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
 
+class Label(Ordinary):
+   def __init__(self,points=3,*args,**kwargs):
+      self.points=points
+      self.setup(*args,**kwargs)
+
+   def process(self):
+      p=SVGdraw.pathdata()              # Labels don't get lines of partition.
+      p.move(-Ordinary.FESSPTX,-25)
+      p.relhline(Ordinary.WIDTH)
+      p.relvline(4)
+      p.relhline(-2)                    # There's a reason for this.
+      for i in range(0,self.points):
+         p.relhline((-Ordinary.WIDTH+self.points*4)/(self.points+2.0)-4)
+         p.relvline(10)
+         p.relhline(-4)
+         p.relvline(-10)
+      p.hline(-Ordinary.FESSPTX)
+      p.closepath()
+      self.clipPath=SVGdraw.path(p)
+      self.clipPathElt.addElement(self.clipPath)
+
 class ChargeGroup:            # Kind of an invisible ordinary
     def __init__(self,num=None,charge=None):
         self.charges=[]
@@ -408,6 +429,13 @@ class ChargeGroup:            # Kind of an invisible ordinary
             # Maybe scale it?
             obj.resize(2)
         else:
+            # An even better way to do this: Put a method on the *tincture*
+            # objects (or ordinary objects) that returns the appropriate
+            # list of lists of positions.  Then things like "two bars" or
+            # "three bends" can be subclasses and work the same way and
+            # supply information for "between" them; "between" at this
+            # point might as well be a synonym for "and".
+           
             # The organization should be by background first, then number, I think.
             # First, how to shift things.  I *think* we only need shiftto if
             # we're being countercharged.
