@@ -79,7 +79,8 @@ class Ordinary:
                                                    attributes={"xlink:href":"#%s"%self.clipPath.attributes["id"],
                                                                "stroke":self.fimbriation,
                                                                "stroke-width":"4",
-                                                               "fill":"none"}))
+                                                               "fill":"none",
+                                                               "transform":self.clipPathElt.attributes.get("transform")}))
 
    def process(self): pass
 
@@ -522,11 +523,12 @@ class ExtCharge(Charge):
         self.clipPathElt.addElement(SVGdraw.use(self.path))
 
     def do_fimbriation(self):
-        self.maingroup.addElement(SVGdraw.SVGelement('use',
-                                                     attributes={"xlink:href":"%s"%self.path,
-                                                               "stroke":self.fimbriation,
-                                                               "stroke-width":"2",
-                                                               "fill":"none"}))
+       self.maingroup.addElement(SVGdraw.SVGelement('use',
+                                                    attributes={"xlink:href":"%s"%self.path,
+                                                                "stroke":self.fimbriation,
+                                                                "stroke-width":"2",
+                                                                "fill":"none",
+                                                                "transform":self.clipPathElt.attributes.get("transform")}))
 
 
 def hasinstance(lst,cls):
