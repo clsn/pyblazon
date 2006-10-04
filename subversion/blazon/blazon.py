@@ -449,10 +449,13 @@ class ChargeGroup:            # Kind of an invisible ordinary
 
             # Wish there were a better way to work this out than trial and error
             # Defaults:
-            defaultplacements=[[],[],
-                               [(-15,0),(15,0)],
-                               [(-15,-15),(15,-15),(0,10)],
-                               [(-15,-15),(15,-15),(-15,15),(15,15)]
+            defaultplacements=[[],[],    # 0 charges, 1 charge ...
+                               [(-15,0),(15,0)],            # 2
+                               [(-15,-15),(15,-15),(0,10)], # 3
+                               # and so on
+                               [(-15,-15),(15,-15),(-15,15),(15,15)], 
+                               # 5 -> in saltire:
+                               [(-20,-20),(20,-20),(0,0),(-20,20),(20,20)]
                                ]
                 
             if isinstance(self.parent.tincture,PerBend) or hasinstance(self.parent.charges,Bend) or isinstance(self.parent.tincture,PerBendSinister) or hasinstance(self.parent.charges,BendSinister):
