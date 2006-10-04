@@ -165,7 +165,7 @@ class Fretty(Ermine):
         # pattern.addElement(self.color1.fill(SVGdraw.rect(x="0",y="0",width="22",
 #                                                         height="22")))
         group=SVGdraw.group()
-        group.attributes["stroke"]="black"
+        group.attributes["stroke"]="#888888"
         group.attributes["stroke-width"]=".1"
         rect1=self.color2.fill(SVGdraw.rect(x="-2",y="-20",
                                             width="4",height="50"))

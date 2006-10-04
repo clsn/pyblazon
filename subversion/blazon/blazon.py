@@ -58,6 +58,7 @@ class Ordinary:
                                           id=('Clip%04d'%Ordinary.id))
       Ordinary.id=Ordinary.id+1
       self.svg.addElement(self.clipPathElt)
+      self.svg.attributes["xmlns:xlink"]="http://www.w3.org/1999/xlink"
       self.maingroup=SVGdraw.group()
       self.maingroup.attributes["clip-path"]="url(#%s)"%self.clipPathElt.attributes["id"]
       self.baseRect=SVGdraw.rect(x=-Ordinary.FESSPTX,
