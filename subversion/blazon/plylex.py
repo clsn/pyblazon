@@ -40,7 +40,7 @@ def t_CHARGE(t):
     return t
 
 # Hmm.  How to handle "*in* a bordure..." ?
-t_ORDINARY=r"(fesse?|pale|cross|saltire|bend[ ]sinister|bend|pile|chevron|bordure)"
+t_ORDINARY=r"(fesse?|pale|cross|saltire|bend[ ]sinister|bend|pile|chevron|bordure|base)"
 
 # Chief is not an ordinary
 t_CHIEF=r"chief"
@@ -101,6 +101,7 @@ lookupdict={
     "chevron": blazon.Chevron,
     "bend sinister": blazon.BendSinister,
     "chief": blazon.Chief,
+    "base": blazon.Base,
     "roundel": blazon.Roundel,
     "lozenge": blazon.Lozenge,
     "fleur.de.lis": (lambda *a: blazon.ExtCharge("fleur")),

@@ -345,9 +345,21 @@ class Pile(Ordinary):
         p.line(Ordinary.FESSPTX/2,-Ordinary.FESSPTY)
         p.makeline(*Ordinary.BASEPT)
         p.makeline(-Ordinary.FESSPTX/2,-Ordinary.FESSPTY,align=1)
-        p.closepath
+        p.closepath()
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
+
+class Base(Ordinary):
+   def process(self):
+      p=partLine()
+      p.lineType=self.lineType
+      p.move(-Ordinary.WIDTH,25)
+      p.makelinerel(Ordinary.WIDTH*3,0)
+      p.vline(Ordinary.HEIGHT)
+      p.hline(-Ordinary.WIDTH*3)
+      p.closepath()
+      self.clipPath=SVGdraw.path(p)
+      self.clipPathElt.addElement(self.clipPath)
 
 class ChargeGroup:            # Kind of an invisible ordinary
     def __init__(self,num=None,charge=None):
