@@ -343,15 +343,35 @@ class Pile(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
-class ChargeGroup:
+class ChargeGroup:            # Kind of an invisible ordinary
     def __init__(self,num=None,charge=None):
-        self.elts=[]
+        self.charges=[]
+        self.svg=SVGdraw.svg(x=-Ordinary.FESSPTX,
+                             y=-Ordinary.FESSPTY,
+                             width=Ordinary.WIDTH,
+                             height=Ordinary.HEIGHT,
+                             viewBox=(-Ordinary.FESSPTX,
+                                      -Ordinary.FESSPTY,
+                                      Ordinary.WIDTH,
+                                      Ordinary.HEIGHT))
+        self.maingroup=SVGdraw.group()
+        self.svg.addElement(self.maingroup)
         if num and charge:
            self.numcharges(num,charge)
 
     def numcharges(self,num,charge):
         for i in range(0,num):
-            self.elts.append(copy.deepcopy(charge))
+            self.charges.append(copy.deepcopy(charge))
+
+    def finalizeSVG(self):
+        # Simplified finalizeSVG for ChargeGroup.
+        self.process()
+        for charge in self.charges:
+            charge.parent=self.parent
+            self.maingroup.addElement(charge.finalizeSVG())
+        return self.svg
+
+    def process(self):
         self.arrange()
 
     def arrange(self):
@@ -359,46 +379,58 @@ class ChargeGroup:
         # TODO: check for sibling ordinaries to be "between", or parent
         # ordinaries to be "on", or "in pale/fesse/bend/cross/saltire"
         # And scaling?
-        num=len(self.elts)
+        num=len(self.charges)
         if num<1:
             # nothing to do!
             pass
         elif num==1:
             # only for completeness
-            obj=self.elts[0]
+            obj=self.charges[0]
             obj.moveto(Ordinary.FESSEPT)
             # Maybe scale it?
             obj.scale(2)
         elif num==2 or num==3:
-            self.elts[0].moveto(Ordinary.DEXSIDE)
-            self.elts[1].moveto(Ordinary.SINSIDE)
-            if num==3:
-                self.elts[0].moveto((0,-10))
-                self.elts[1].moveto((0,-10))
-                self.elts[2].moveto(Ordinary.FESSEPT)
-                self.elts[2].moveto((0,15))
+            if isinstance(self.parent.tincture,PerBend) or hasinstance(self.parent.charges,Bend):
+                self.charges[0].moveto((25,-25))
+                self.charges[1].moveto((-21,21))
+            elif isinstance(self.parent.tincture,PerBendSinister) or hasinstance(self.parent.charges,BendSinister):
+                self.charges[0].moveto((-25,-25))
+                self.charges[1].moveto((21,21))
+            elif isinstance(self.parent.tincture,PerFesse) or hasinstance(self.parent.charges,Fesse):
+                self.charges[0].moveto((0,-30))
+                self.charges[1].moveto((0,30))
+            elif isinstance(self.parent,Chief) or hasinstance(self.parent.charges,Pale):
+                self.charges[0].moveto((-25,0))
+                self.charges[1].moveto((25,0))
+            else:
+                self.charges[0].moveto(Ordinary.DEXSIDE)
+                self.charges[1].moveto(Ordinary.SINSIDE)
+                if num==3:
+                    self.charges[0].moveto((0,-10))
+                    self.charges[1].moveto((0,-10))
+                    self.charges[2].moveto((0,15))
         elif num > 3 and num < 6:
            # Scale the charges down a bit so they don't merge
-           for elt in self.elts:
+           for elt in self.charges:
               elt.scale(0.8)
            if num==4:
-              self.elts[0].moveto(Ordinary.DEXSIDE)
-              self.elts[1].moveto(Ordinary.SINSIDE)
-              self.elts[2].moveto(Ordinary.DEXSIDE)
-              self.elts[3].moveto(Ordinary.SINSIDE)
-              self.elts[0].moveto((0,-25))
-              self.elts[1].moveto((0,-25))
-              self.elts[2].moveto((0,20))
-              self.elts[3].moveto((0,20))
+              self.charges[0].moveto(Ordinary.DEXSIDE)
+              self.charges[1].moveto(Ordinary.SINSIDE)
+              self.charges[2].moveto(Ordinary.DEXSIDE)
+              self.charges[3].moveto(Ordinary.SINSIDE)
+              self.charges[0].moveto((0,-25))
+              self.charges[1].moveto((0,-25))
+              self.charges[2].moveto((0,20))
+              self.charges[3].moveto((0,20))
            if num==5:
-              self.elts[0].moveto(Ordinary.DEXSIDE)
-              self.elts[1].moveto(Ordinary.SINSIDE)
-              self.elts[3].moveto(Ordinary.DEXSIDE)
-              self.elts[4].moveto(Ordinary.SINSIDE)
-              self.elts[0].moveto((-10,-25))
-              self.elts[1].moveto((10,-25))
-              self.elts[3].moveto((-10,20))
-              self.elts[4].moveto((10,20))
+              self.charges[0].moveto(Ordinary.DEXSIDE)
+              self.charges[1].moveto(Ordinary.SINSIDE)
+              self.charges[3].moveto(Ordinary.DEXSIDE)
+              self.charges[4].moveto(Ordinary.SINSIDE)
+              self.charges[0].moveto((-10,-25))
+              self.charges[1].moveto((10,-25))
+              self.charges[3].moveto((-10,20))
+              self.charges[4].moveto((10,20))
         else:                           # Too damn many.
             raise "Too many elements in charge group: %d"%num
         
@@ -468,6 +500,12 @@ class ExtCharge(Charge):
                                                                "stroke-width":"2",
                                                                "fill":"none"}))
 
+
+def hasinstance(lst,cls):
+    for i in lst:
+        if isinstance(i,cls):
+            return True
+    return False
 
 # Other ideas...:
 
