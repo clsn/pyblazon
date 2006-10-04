@@ -295,6 +295,7 @@ class Bordure(Ordinary):
       # Is there a more elegant way?
       pdata=SVGdraw.pathdata()
       pdata.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
+      pdata.vline(Ordinary.HEIGHT/3-Ordinary.FESSPTY)
       pdata.bezier(-Ordinary.FESSPTX,
                    Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
                    0,Ordinary.HEIGHT-Ordinary.FESSPTY,
@@ -302,7 +303,8 @@ class Bordure(Ordinary):
       pdata.bezier(0,Ordinary.HEIGHT-Ordinary.FESSPTY,
                    Ordinary.FESSPTX,
                    Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
-                   Ordinary.FESSPTX,-Ordinary.FESSPTY)
+                   Ordinary.FESSPTX,Ordinary.HEIGHT/3-Ordinary.FESSPTY)
+      pdata.vline(-Ordinary.FESSPTY)
       pdata.closepath()
       self.clipPath=SVGdraw.path(pdata)
       self.clipPath.attributes["transform"]=" scale(.75)"
