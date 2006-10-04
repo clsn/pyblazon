@@ -22,7 +22,7 @@ def t_COLOR(t):
     return t
 
 def t_AND(t):
-    r"and"
+    r"(and|between)"                    # FOR NOW, between is a synonym of and.
     return t
 
 t_OF=r"of"
@@ -36,7 +36,7 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"(roundel|roundels|lozenge|lozenges|fleur.de.lis|fleurs.de.lis|cross.formy|crosses.formy|cross.pattee|crosses.pattee|cross-crosslet|cross-crosslets|mullet|mullets)"
+    r"(roundels?|lozenges?|fleurs?.de.lis|cross(es)?.formy|cross(es)?.pattee|cross-crosslets?|mullets?)"
     return t
 
 # Hmm.  How to handle "*in* a bordure..." ?
@@ -102,23 +102,15 @@ lookupdict={
     "bend sinister": blazon.BendSinister,
     "chief": blazon.Chief,
     "base": blazon.Base,
-    "label": blazon.Label,
-    "labels": blazon.Label,
-    "lable": blazon.Label,
-    "lables": blazon.Label,
-    "roundel": blazon.Roundel,
-    "roundels": blazon.Roundel,
-    "lozenge": blazon.Lozenge,
-    "fleur.de.lis": (lambda *a: blazon.ExtCharge("fleur")),
-    "fleurs.de.lis": (lambda *a: blazon.ExtCharge("fleur")),
-    "cross.formy": (lambda *a: blazon.ExtCharge("formy")),
-    "crosses.formy": (lambda *a: blazon.ExtCharge("formy")),
-    "cross.pattee": (lambda *a: blazon.ExtCharge("formy")),
-    "crosses.pattee": (lambda *a: blazon.ExtCharge("formy")),
-    "cross-crosslet": (lambda *a: blazon.ExtCharge("crosscrosslet")),
-    "cross-crosslets": (lambda *a: blazon.ExtCharge("crosscrosslet")),
-    "mullet": (lambda *a: blazon.ExtCharge("mullet")),
-    "mullets": (lambda *a: blazon.ExtCharge("mullet")),
+    "labels?": blazon.Label,
+    "lables?": blazon.Label,
+    "roundels?": blazon.Roundel,
+    "lozenges?": blazon.Lozenge,
+    "fleurs?.de.lis": (lambda *a: blazon.ExtCharge("fleur")),
+    "cross(es)?.formy": (lambda *a: blazon.ExtCharge("formy")),
+    "cross(es)?.pattee": (lambda *a: blazon.ExtCharge("formy")),
+    "cross-crosslets?": (lambda *a: blazon.ExtCharge("crosscrosslet")),
+    "mullets?": (lambda *a: blazon.ExtCharge("mullet")),
     "bordure": blazon.Bordure,
     "paly": tinctures.Paly,
     "barry": tinctures.Barry,

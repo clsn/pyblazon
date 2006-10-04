@@ -531,7 +531,8 @@ class Charge(Ordinary):
 
 class Roundel(Charge):
    def process(self):
-      self.clipPathElt.addElement(SVGdraw.circle(cx=0,cy=0,r=12))
+      self.clipPath=SVGdraw.circle(cx=0,cy=0,r=12)
+      self.clipPathElt.addElement(self.clipPath)
 
 class Lozenge(Charge):
    def process(self):
