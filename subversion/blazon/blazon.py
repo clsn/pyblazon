@@ -480,7 +480,9 @@ class Lozenge(Charge):
 class ExtCharge(Charge):
     paths={
         "fleur":"data/Fleur.svg#fleur",
-        "formy":"data/Cross-Pattee-Heraldry.svg#formy"
+        "formy":"data/Cross-Pattee-Heraldry.svg#formy",
+        "crosscrosslet":"data/Cross-Crosslet-Heraldry.svg#cross-crosslet",
+        "mullet":"data/Cross-Pattee-Heraldry.svg#mullet"
         }
     
     def __init__(self,name,*args,**kwargs):
