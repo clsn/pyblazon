@@ -1,7 +1,6 @@
 Remove items from here as soon as they are implemented.
 
 Vital:
-- support all tinctures, even the unusual ones
 - support all charges that are simple, geometrical figures
 - a charge or a group "between" a group
 - charges upon ordinaries
@@ -27,3 +26,24 @@ Wishlist:
 - marshalling
 - support for other shield shapes
 - support for using a flag instead of a shield
+
+Naming:
+The project should have a name. Suggestions thus far:
+
+arj's favourites:
+10. Dovetail
+15. Coronet
+20. Saltire
+30. Albion
+40. Rampant
+50. Bezant
+60. Ermine
+
+clsn's favourites:
+
+Other suggestion (non-ordered, ATM): Gyron, Hatchment, Wyvern, Pheon, Estoile
+Rejected names: Fusil, Pile
+
+Gratuitous acronyms would be nice, but is not a
+requirement. Uniqueness of the name *is* a requirement. Search
+Freshmeat/Sourceforge to check for collisions.
