@@ -147,6 +147,7 @@ class Field(Ordinary):
       #        self.svg.attributes["transform"]="scale(1,-1)"
       self.pdata=SVGdraw.pathdata()
       self.pdata.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
+      self.pdata.vline(Ordinary.HEIGHT/3-Ordinary.FESSPTY)
       self.pdata.bezier(-Ordinary.FESSPTX,
                         Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
                         0,Ordinary.HEIGHT-Ordinary.FESSPTY,
@@ -154,7 +155,9 @@ class Field(Ordinary):
       self.pdata.bezier(0,Ordinary.HEIGHT-Ordinary.FESSPTY,
                         Ordinary.FESSPTX,
                         Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
-                        Ordinary.FESSPTX,-Ordinary.FESSPTY)
+                        #Ordinary.FESSPTX,-Ordinary.FESSPTY)
+                        Ordinary.FESSPTX,Ordinary.HEIGHT/3-Ordinary.FESSPTY)
+      self.pdata.vline(-Ordinary.FESSPTY)
       self.pdata.closepath()
       self.charges=[]
       self.setup(tincture)
@@ -416,7 +419,6 @@ class ChargeGroup:            # Kind of an invisible ordinary
                             [(25,-25),(-21,21)], # num==2
                             [(5,-33),(-18,18),(30,-15)] # num==3
                             ]
-                sys.stderr.write("Around the Bend!\n")
                 # BendSinister is just like Bend, with x-coords negated.
                 if isinstance(self.parent.tincture,PerBendSinister) or hasinstance(self.parent.charges,BendSinister):
                     for i in range(0,len(placements)):
