@@ -386,68 +386,94 @@ class ChargeGroup:            # Kind of an invisible ordinary
         elif num==1:
             # only for completeness
             obj=self.charges[0]
-            obj.moveto(Ordinary.FESSEPT)
+            obj.shiftto(Ordinary.FESSEPT)
             # Maybe scale it?
-            obj.scale(2)
-        elif num==2 or num==3:
-            if isinstance(self.parent.tincture,PerBend) or hasinstance(self.parent.charges,Bend):
-                self.charges[0].moveto((25,-25))
-                self.charges[1].moveto((-21,21))
-            elif isinstance(self.parent.tincture,PerBendSinister) or hasinstance(self.parent.charges,BendSinister):
-                self.charges[0].moveto((-25,-25))
-                self.charges[1].moveto((21,21))
-            elif isinstance(self.parent.tincture,PerFesse) or hasinstance(self.parent.charges,Fesse):
-                self.charges[0].moveto((0,-30))
-                self.charges[1].moveto((0,30))
-            elif isinstance(self.parent,Chief) or hasinstance(self.parent.charges,Pale):
-                self.charges[0].moveto((-25,0))
-                self.charges[1].moveto((25,0))
+            obj.resize(2)
+        else:
+            # The organization should be by background first, then number, I think.
+            # First, how to shift things.  I *think* we only need shiftto if
+            # we're being countercharged.
+            # I think we'll only be using resize and not scale here.
+            if isinstance(self.charges[0].tincture,Countercharged):
+                def move(obj,location):
+                    obj.shiftto(location)
             else:
-                self.charges[0].moveto(Ordinary.DEXSIDE)
-                self.charges[1].moveto(Ordinary.SINSIDE)
-                if num==3:
-                    self.charges[0].moveto((0,-10))
-                    self.charges[1].moveto((0,-10))
-                    self.charges[2].moveto((0,15))
-        elif num > 3 and num < 6:
-           # Scale the charges down a bit so they don't merge
-           for elt in self.charges:
-              elt.scale(0.8)
-           if num==4:
-              self.charges[0].moveto(Ordinary.DEXSIDE)
-              self.charges[1].moveto(Ordinary.SINSIDE)
-              self.charges[2].moveto(Ordinary.DEXSIDE)
-              self.charges[3].moveto(Ordinary.SINSIDE)
-              self.charges[0].moveto((0,-25))
-              self.charges[1].moveto((0,-25))
-              self.charges[2].moveto((0,20))
-              self.charges[3].moveto((0,20))
-           if num==5:
-              self.charges[0].moveto(Ordinary.DEXSIDE)
-              self.charges[1].moveto(Ordinary.SINSIDE)
-              self.charges[3].moveto(Ordinary.DEXSIDE)
-              self.charges[4].moveto(Ordinary.SINSIDE)
-              self.charges[0].moveto((-10,-25))
-              self.charges[1].moveto((10,-25))
-              self.charges[3].moveto((-10,20))
-              self.charges[4].moveto((10,20))
-        else:                           # Too damn many.
-            raise "Too many elements in charge group: %d"%num
-        
+                def move(obj,location):
+                    obj.moveto(location)
+
+            # Wish there were a better way to work this out than trial and error
+            # Defaults:
+            defaultplacements=[[],[],
+                               [(-15,0),(15,0)],
+                               [(-15,-15),(15,-15),(0,10)],
+                               [(-15,-15),(15,-15),(-15,15),(15,15)]
+                               ]
+                
+            if isinstance(self.parent.tincture,PerBend) or hasinstance(self.parent.charges,Bend) or isinstance(self.parent.tincture,PerBendSinister) or hasinstance(self.parent.charges,BendSinister):
+                # Arrangements for things around a Bend!
+                placements=[[],          # not used: num==0
+                            [],          # not used: num==1
+                            [(25,-25),(-21,21)], # num==2
+                            [(5,-33),(-18,18),(30,-15)] # num==3
+                            ]
+                sys.stderr.write("Around the Bend!\n")
+                # BendSinister is just like Bend, with x-coords negated.
+                if isinstance(self.parent.tincture,PerBendSinister) or hasinstance(self.parent.charges,BendSinister):
+                    for i in range(0,len(placements)):
+                        for j in range(0,len(placements[i])):
+                            placements[i][j]=(-placements[i][j][0],
+                                              placements[i][j][1])
+            elif isinstance(self.parent.tincture,PerFesse) or hasinstance(self.parent.charges,Fesse):
+                placements=[[],[],
+                            [(0,-25),(0,25)],
+                            [(-20,-25),(20,-25),(0,25)]
+                            ]
+            elif isinstance(self.parent.tincture,PerChevron) or hasinstance(self.parent.charges,Chevron):
+                placements=[[],[],
+                            [(-25,-18),(25,-18)],
+                            [(-25,-18),(25,-18),(0,28)]
+                            ]
+            # And so on... !!!
+            else:
+                placements=defaultplacements
+
+            if num>=len(placements):
+                # I dunno... Fake it somehow?
+                placements=defaultplacements # and try again.
+            if num>len(placements):
+                raise "Too many objects"
+            for i in range(0,num):
+                move(self.charges[i], placements[num][i]);
+                    
 
 class Charge(Ordinary):
     def moveto(self,*args):
         # Remember, args[0] is a tuple!
         if not self.svg.attributes.has_key("transform"):
             self.svg.attributes["transform"]=""
-        self.svg.attributes["transform"]+=" translate(%d,%d)" % args[0]
+        self.svg.attributes["transform"]+=" translate(%.4f,%.4f)" % args[0]
+
+    # Lousy name, but we need a *different* kind of moving, to slide
+    # the outline but not the innards/tincture.
+    def shiftto(self,*args):
+        if not self.clipPathElt.attributes.has_key("transform"):
+            self.clipPathElt.attributes["transform"]=""
+        self.clipPathElt.attributes["transform"]+=" translate(%.4f,%.4f)"%args[0]
 
     def scale(self,x,y=None):
-       if y==None:
+       if not y:                        # I can't scale by 0 anyway.
           y=x
        if not self.svg.attributes.has_key("transform"):
           self.svg.attributes["transform"]=""
        self.svg.attributes["transform"] += " scale(%.2f,%.2f)"%(x,y)
+
+    # Same as shiftto: changes the size of the outline only. 
+    def resize(self,x,y=None):
+        if not y:
+            y=x
+        if not self.clipPathElt.attributes.has_key("transform"):
+            self.clipPathElt.attributes["transform"]=""
+        self.clipPathElt.attributes["transform"] += " scale(%.2f,%.2f)"%(x,y)
               
     def dexterchief(self):
         self.moveto(Ordinary.DEXCHIEF)
@@ -460,11 +486,7 @@ class Charge(Ordinary):
 
 class Roundel(Charge):
    def process(self):
-      self.clipPathElt.addElement(SVGdraw.circle(cx=0,cy=0,r=40))
-      if not self.maingroup.attributes.has_key("transform"):
-         self.maingroup.attributes["transform"]=""
-         # This is not handled well.  but it's a start.
-      self.maingroup.attributes["transform"] +=" scale(.3)"
+      self.clipPathElt.addElement(SVGdraw.circle(cx=0,cy=0,r=12))
 
 class Lozenge(Charge):
    def process(self):
