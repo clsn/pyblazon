@@ -11,11 +11,13 @@ from plylex import tokens,lookup
 class Globals:
     colorless=[]
     colors=[]
+    shield=None
 
 def p_blazon_1(p):
     'blazon : treatment'
     shield=blazon.Field()
     shield.tincture=p[1]
+    Globals.shield=shield
     p[0]=shield
     return shield
 
@@ -27,6 +29,7 @@ def p_blazon_2(p):
     if p[3]:
         shield.addChief(p[3])
     p[0]=shield
+    Globals.shield=shield
     return shield
 
 def p_treatment_1(p):
@@ -58,6 +61,14 @@ def p_treatment_6(p):
 def p_treatment_7(p):
     "treatment : QUARTERLY treatment AND treatment"
     p[0]=lookup(p[1])(p[2],p[4])
+
+def p_treatment_8(p):
+    "treatment : OF THE CARDINAL"
+    # Not sure we can assume field is in colors[0], but maybe okay.
+    d={"field":1, "first":1, "second":2, "third":3, "fourth":4, "fifth":5,
+       "sixth":6, "seventh":7, "eighth":8, "ninth":9, "tenth":10}
+    n=d[p[3]]
+    p[0]=Globals.colors[n-1]
 
 def p_opttreatment(p):
     """opttreatment : treatment
@@ -191,7 +202,7 @@ def p_error(p):
     ""
     pass
 
-yacc.yacc()
+yacc.yacc(method="LALR")
 
 if __name__=="__main__":
 #    line=sys.stdin.readline()

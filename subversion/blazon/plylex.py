@@ -10,7 +10,7 @@ import tinctures
 tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED","ALTERED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
-        "CHARGED","WITH")
+        "CHARGED","WITH","THE","CARDINAL")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -30,6 +30,11 @@ t_OF=r"of"
 t_EACH=r"each"
 t_CHARGED=r"charged"
 t_WITH=r"with"
+t_THE=r"the"
+def t_CARDINAL(t):
+    r"(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|field)"
+    # Field isn't really a cardinal, but it's just as easy
+    return t
 
 def t_LINEY(t):
     r"(paly|barry|bendy(.sinister)?|gyronny)"
