@@ -4,6 +4,7 @@ import blazon
 import sys
 import yacc
 import tinctures
+import copy
 
 from plylex import tokens,lookup
 
@@ -86,8 +87,12 @@ def p_grouporcharge(p):
     p[0]=p[1]
 
 def p_group(p):
-    "group : amount charge"
+    """group : amount charge
+             | amount charge EACH CHARGED WITH charges"""
     p[0]=blazon.ChargeGroup(p[1],p[2])
+    if len(p)>3:
+        for elt in p[0].charges:
+            elt.extendCharges(copy.deepcopy(p[6]))
 
 def p_ordinary(p):
     """ordinary : ORDINARY

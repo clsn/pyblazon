@@ -87,11 +87,13 @@ class Ordinary:
    def addCharge(self,charge):
       charge.parent=self
       self.charges.append(charge)
+      # This'll be useful down the road.
+      if not charge.maingroup.attributes.has_key("transform"):
+         charge.maingroup.attributes["transform"]=""
 
    def extendCharges(self,charges):
       for elt in charges:
-         elt.parent=self
-      self.charges.extend(charges)
+         self.addCharge(elt)
 
    def invert(self):
       if not hasattr(self,"clipTransforms"):
@@ -206,8 +208,19 @@ class Cross(Ordinary):
     def process(self):
         p=partLine()
         p.lineType=self.lineType
-        p.rect(-10,-Ordinary.HEIGHT,20,Ordinary.HEIGHT*3)
-        p.rect(-Ordinary.WIDTH,-10,Ordinary.WIDTH*3,20)
+        p.move(-10,-Ordinary.HEIGHT)
+        p.makeline(-10,-10)
+        p.makeline(-Ordinary.WIDTH,-10)
+        p.line(-Ordinary.WIDTH,10)
+        p.makeline(-10,10)
+        p.makeline(-10,Ordinary.HEIGHT)
+        p.line(10,Ordinary.HEIGHT)
+        p.makeline(10,10)
+        p.makeline(Ordinary.WIDTH,10)
+        p.line(Ordinary.WIDTH,-10)
+        p.makeline(10,-10)
+        p.makeline(10,-Ordinary.HEIGHT)
+        p.closepath()
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
@@ -222,14 +235,9 @@ class Fesse(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
         
-class Saltire(Ordinary):
+class Saltire(Cross):
     def process(self):
-        p=partLine()
-        p.lineType=self.lineType
-        p.rect(-10,-Ordinary.HEIGHT,20,Ordinary.HEIGHT*3)
-        p.rect(-Ordinary.WIDTH,-10,Ordinary.WIDTH*3,20)
-        self.clipPath=SVGdraw.path(p)
-        self.clipPathElt.addElement(self.clipPath)
+        Cross.process(self)
         self.clipPath.attributes["transform"]="rotate(45)"
 
 class Pale(Ordinary):
@@ -288,6 +296,10 @@ class Chief(Ordinary):
            self.maingroup.attributes["transform"]="translate(0,%f)"%(-Ordinary.FESSPTY+11)
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
+
+    def addCharge(self,charge):
+       Ordinary.addCharge(self,charge)
+       charge.maingroup.attributes["transform"]+=" scale(.7,.66)"
 
 class Bordure(Ordinary):
    # Doing lines of partition is going to be hard with this one.
@@ -536,6 +548,11 @@ class Roundel(Charge):
    def process(self):
       self.clipPath=SVGdraw.circle(cx=0,cy=0,r=12)
       self.clipPathElt.addElement(self.clipPath)
+
+   def addCharge(self,charge):
+      Ordinary.addCharge(self,charge)
+      charge.maingroup.attributes["transform"]+=" scale(.4)"
+
 
 class Lozenge(Charge):
    def process(self):

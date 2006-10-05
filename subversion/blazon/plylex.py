@@ -9,7 +9,8 @@ import tinctures
 
 tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED","ALTERED",
-        "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS")
+        "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
+        "CHARGED","WITH")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -26,6 +27,9 @@ def t_AND(t):
     return t
 
 t_OF=r"of"
+t_EACH=r"each"
+t_CHARGED=r"charged"
+t_WITH=r"with"
 
 def t_LINEY(t):
     r"(paly|barry|bendy(.sinister)?|gyronny)"
