@@ -114,6 +114,9 @@ def p_group(p):
     if len(p)>3:
         for elt in p[0].charges:
             elt.extendCharges(copy.deepcopy(p[6]))
+    if not p[2].tincture:
+        Globals.colorless.extend(p[0].charges)
+            
 
 def p_ordinary(p):
     """ordinary : ORDINARY
@@ -132,6 +135,7 @@ def p_charge_1(p):
     res.lineType=p[4]
     if not p[5]:
         Globals.colorless.append(res)
+        res.tincture=None
     else:
         res.tincture=p[5]
     p[6](res)
