@@ -3,19 +3,16 @@ Remove items from here as soon as they are implemented.
 Vital:
 - support all charges that are simple, geometrical figures
 - a charge or a group "between" a group
-- charges upon ordinaries
+- charges upon ordinaries (GETTING THERE)
 - charges to end up in the conventional places according to divisions of the
   field. E.g. two annulets on a field parted per bend is supposed to go in
-  the sinister chief and dexter base, not (by default) per fess.
+  the sinister chief and dexter base, not (by default) per fess. (GETTING THERE)
 
 Fairly important:
-- countercharging
 - semy of any single charge
 - importing charges from file or database (it would get tedious to specify
-  the outline of, say, a lion, in the source code itself)
-- back-references ("of the first", "as many")
-- define the tincture of multiple charges at the same time
-  ("a foo and a bar argent")
+  the outline of, say, a lion, in the source code itself) (GETTING THERE)
+- back-references ("of the first" (DONE), "as many")
 - possible to specify each quarter in a quartered shield individually
 - thin black lines between everything (or at least the option of having it)
 
@@ -40,8 +37,13 @@ arj's favourites:
 60. Ermine
 
 clsn's favourites:
+(no particular order)
+Hatchment
+Saltire
+Bezant
+Ermine
 
-Other suggestion (non-ordered, ATM): Gyron, Hatchment, Wyvern, Pheon, Estoile
+Other suggestion (non-ordered, ATM): Gyron, Wyvern, Pheon, Estoile
 Rejected names: Fusil, Pile
 
 Gratuitous acronyms would be nice, but is not a

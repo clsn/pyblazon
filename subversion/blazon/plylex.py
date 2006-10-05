@@ -10,7 +10,7 @@ import tinctures
 tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED","ALTERED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
-        "CHARGED","WITH","THE","CARDINAL")
+        "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -31,6 +31,9 @@ t_EACH=r"each"
 t_CHARGED=r"charged"
 t_WITH=r"with"
 t_THE=r"the"
+t_SEMY=r"semy"
+t_SEMYDELIS=r"semy.de.lis"
+
 def t_CARDINAL(t):
     r"(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|field)"
     # Field isn't really a cardinal, but it's just as easy
@@ -94,7 +97,7 @@ def t_NUMWORD(t):
 
 
 def t_error(t):
-    print "illegal character: %s"%t.value[0]
+    sys.stderr.write("illegal character: %s\n"%t.value[0])
     t.skip(1)
 
 

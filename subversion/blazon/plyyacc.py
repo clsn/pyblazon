@@ -70,6 +70,16 @@ def p_treatment_8(p):
     n=d[p[3]]
     p[0]=Globals.colors[n-1]
 
+def p_treatment_9(p):
+    """treatment : COLOR SEMY OF charge
+                 | COLOR SEMYDELIS treatment"""
+    if len(p)==5:
+        p[0]=tinctures.Semy(tinctures.Tincture(p[1]),p[4])
+    else:
+        f=blazon.ExtCharge("fleur")
+        f.tincture=p[3]
+        p[0]=tinctures.Semy(tinctures.Tincture(p[1]),f)
+
 def p_opttreatment(p):
     """opttreatment : treatment
                     | empty"""

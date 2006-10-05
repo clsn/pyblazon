@@ -196,6 +196,42 @@ class Fretty(Ermine):
                              fill="url(#%s)"%pattern.attributes["id"])
         newelt.addElement(newbase)
         return newelt
+
+class Semy(Fur):
+    def __init__(self,background,charge):
+        self.background=background
+        self.charge=charge
+
+    def fill(self,elt):
+        pattern=SVGdraw.SVGelement('pattern',attributes=
+                                   {"height":"20", "width":"20",
+                                    "patternUnits": "userSpaceOnUse",
+                                    "patternContentUnits": "userSpaceOnUse",
+                                    "id": "semy%04d"%blazon.Ordinary.id})
+        blazon.Ordinary.id+=1
+        # Just in case we try to countercharge it.  It doesn't work anyway.
+        self.colors=(self.background,self.charge.tincture)
+        charge2=copy.deepcopy(self.charge)
+        self.charge.moveto((5,15))
+        self.charge.scale(.3)
+        charge2.moveto((15,5))
+        charge2.scale(.3)
+        #pattern.addElement(SVGdraw.rect(0,0,30,30,stroke="black",
+        #                                stroke_width=".3",fill="none"))
+        pattern.addElement(self.charge.finalizeSVG())
+        pattern.addElement(charge2.finalizeSVG())
+        blazon.Ordinary.defs.append(pattern)
+        newelt=SVGdraw.group()
+        elt=self.background.fill(elt)
+        newelt.addElement(elt)
+        newbase=SVGdraw.rect(x=-blazon.Ordinary.FESSPTX,
+                             y=-blazon.Ordinary.FESSPTY,
+                             width=blazon.Ordinary.WIDTH,
+                             height=blazon.Ordinary.HEIGHT,
+                             fill="url(#%s)"%pattern.attributes["id"])
+        newelt.addElement(newbase)
+        return newelt
+        
                            
 # I wonder if this'll work...
 
