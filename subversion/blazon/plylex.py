@@ -10,7 +10,7 @@ import tinctures
 tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED","ALTERED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
-        "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS")
+        "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -95,6 +95,10 @@ def t_NUMWORD(t):
              "twenty":20}[t.value]
     return t
 
+def t_WORD(t):
+    r"points"
+    # Word that's required but doesn't mean much.
+    return t
 
 def t_error(t):
     sys.stderr.write("illegal character: %s\n"%t.value[0])
@@ -122,7 +126,7 @@ lookupdict={
     "cross(es)?.formy": (lambda *a: blazon.ExtCharge("formy")),
     "cross(es)?.pattee": (lambda *a: blazon.ExtCharge("formy")),
     "cross-crosslets?": (lambda *a: blazon.ExtCharge("crosscrosslet")),
-    "mullets?": (lambda *a: blazon.ExtCharge("mullet")),
+    "mullets?": (lambda *a: blazon.ExtCharge("mullet",extension=a)),
     "bordure": blazon.Bordure,
     "paly": tinctures.Paly,
     "barry": tinctures.Barry,

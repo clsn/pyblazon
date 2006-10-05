@@ -118,8 +118,12 @@ def p_group(p):
 def p_ordinary(p):
     """ordinary : ORDINARY
                 | CHIEF
-                | CHARGE"""
-    p[0]=lookup(p[1])()
+                | CHARGE
+                | CHARGE OF amount WORD"""
+    if len(p)>2:
+        p[0]=lookup(p[1])(p[3])
+    else:
+        p[0]=lookup(p[1])()
 
 def p_charge_1(p):
     "charge : optA ordinary optinverted optlinetype opttreatment optfimbriation"

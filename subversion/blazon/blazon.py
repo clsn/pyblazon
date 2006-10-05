@@ -574,9 +574,11 @@ class ExtCharge(Charge):
         }
     
     def __init__(self,name,*args,**kwargs):
-        self.setup(*args,**kwargs)
+        self.setup(*args)
         try:
             self.path=ExtCharge.paths[name]
+            if kwargs.get("extension"): # Not sure this is so great.
+               self.path+=str(kwargs["extension"][0])
         except KeyError:
             self.path=name              # Punt.
 
