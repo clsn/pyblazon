@@ -66,7 +66,7 @@ def p_treatment_8(p):
     "treatment : OF THE CARDINAL"
     # Not sure we can assume field is in colors[0], but maybe okay.
     d={"field":1, "first":1, "second":2, "third":3, "fourth":4, "fifth":5,
-       "sixth":6, "seventh":7, "eighth":8, "ninth":9, "tenth":10}
+       "sixth":6, "seventh":7, "eighth":8, "ninth":9, "tenth":10, "last":0}
     n=d[p[3]]
     p[0]=Globals.colors[n-1]
 

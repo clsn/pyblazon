@@ -35,8 +35,8 @@ t_SEMY=r"semy"
 t_SEMYDELIS=r"semy.de.lis"
 
 def t_CARDINAL(t):
-    r"(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|field)"
-    # Field isn't really a cardinal, but it's just as easy
+    r"(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|field|last)"
+    # Field and last aren't really cardinals, but it's just as easy
     return t
 
 def t_LINEY(t):
