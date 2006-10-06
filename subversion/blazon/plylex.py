@@ -40,7 +40,7 @@ def t_CARDINAL(t):
     return t
 
 def t_LINEY(t):
-    r"(paly|barry|bendy(.sinister)?|gyronny)"
+    r"(paly|barry|bendy(.sinister)?|gyronny|checky|lozengy|pily)"
     return t
 
 def t_QUARTERLY(t):
@@ -132,6 +132,8 @@ lookupdict={
     "mullets?": (lambda *a: blazon.ExtCharge("mullet",extension=a)),
     "bordure": blazon.Bordure,
     "paly": tinctures.Paly,
+    "pily": tinctures.Pily,
+    "barrypily": tinctures.BarryPily,
     "barry": tinctures.Barry,
     "bendy": tinctures.Bendy,
     "bendy.sinister": tinctures.BendySinister,
@@ -154,6 +156,12 @@ lookupdict={
     "per chevron": tinctures.PerChevron,
     "quarterly": tinctures.PerCross,
     "quartered": tinctures.PerCross,
+    "checky": (lambda num,col1,col2,**kw:
+               tinctures.Paly(num,tinctures.Barry(num,col1,col2),
+                              tinctures.Barry(num,col2,col1))),
+    "lozengy": (lambda num,col1,col2,**kw:
+                tinctures.Bendy(num,tinctures.BendySinister(num,col1,col2),
+                                tinctures.BendySinister(num,col2,col1))),
     "countercha[rn]ged": tinctures.Countercharged
     }
 

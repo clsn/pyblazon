@@ -12,6 +12,7 @@ Fairly important:
 - semy of any single charge
 - importing charges from file or database (it would get tedious to specify
   the outline of, say, a lion, in the source code itself) (GETTING THERE)
+  - Going to need some more powerful equipment for more general case.
 - back-references ("of the first" (DONE), "as many")
 - possible to specify each quarter in a quartered shield individually
 - thin black lines between everything (or at least the option of having it)

@@ -14,7 +14,7 @@ class Globals:
     shield=None
 
 def p_blazon_1(p):
-    'blazon : treatment'
+    'blazon : fulltreatment'
     shield=blazon.Field()
     shield.tincture=p[1]
     Globals.shield=shield
@@ -22,7 +22,7 @@ def p_blazon_1(p):
     return shield
 
 def p_blazon_2(p):
-    "blazon : treatment charges chief"
+    "blazon : fulltreatment charges chief"
     shield=blazon.Field()
     shield.tincture=p[1]
     shield.extendCharges(p[2])
@@ -32,18 +32,31 @@ def p_blazon_2(p):
     Globals.shield=shield
     return shield
 
+def p_fulltreatment_1(p):
+    "fulltreatment : treatment"
+    p[0]=p[1]
+
+def p_fulltreatment_2(p):
+    "fulltreatment : PARTYPER ORDINARY optlinetype fulltreatment AND fulltreatment"
+    p[0]=lookup("per "+p[2])(p[4],p[6],linetype=p[3])
+
 def p_treatment_1(p):
     "treatment : COLOR"
     p[0]=tinctures.Tincture(p[1])
     Globals.colors.append(p[0])
 
-def p_treatment_2(p):
-    "treatment : PARTYPER ORDINARY optlinetype treatment AND treatment"
-    p[0]=lookup("per "+p[2])(p[4],p[6],linetype=p[3])
-
-def p_treatment_3(p):
-    "treatment : LINEY optlinetype optamt treatment AND treatment"
+def p_fulltreatment_3(p):
+    "fulltreatment : LINEY optlinetype optamt treatment AND treatment"
     p[0]=lookup(p[1])(p[3],p[4],p[6],linetype=p[2])
+
+def p_fulltreatment_4(p):
+    "fulltreatment : LINEY LINEY treatment AND treatment"
+    # special case for barrypily:
+    check=lookup(p[1]+p[2])
+    if issubclass(check,tinctures.Tincture):
+        p[0]=check(0,p[3],p[5])
+    else:
+        p[0]=lookup(p[1])(0,lookup(p[2])(0,p[3],p[5]),lookup(p[2])(0,p[5],p[3]))
 
 def p_treatment_4(p):
     """treatment : FUR
@@ -59,7 +72,7 @@ def p_treatment_6(p):
     p[0]=lookup(p[2])(p[1],p[3])
 
 def p_treatment_7(p):
-    "treatment : QUARTERLY treatment AND treatment"
+    "treatment : QUARTERLY fulltreatment AND fulltreatment"
     p[0]=lookup(p[1])(p[2],p[4])
 
 def p_treatment_8(p):
@@ -81,7 +94,7 @@ def p_treatment_9(p):
         p[0]=tinctures.Semy(tinctures.Tincture(p[1]),f)
 
 def p_opttreatment(p):
-    """opttreatment : treatment
+    """opttreatment : fulltreatment
                     | empty"""
     p[0]=p[1]
     if p[1]:

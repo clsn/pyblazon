@@ -268,10 +268,13 @@ class Paly(Tincture):
                 width,2*blazon.Ordinary.HEIGHT)
       self.path=SVGdraw.path(p)
       
-   def __init__(self,bars=6,color1="argent",color2="sable",linetype="plain"):
+   def __init__(self,bars=8,color1="argent",color2="sable",linetype="plain"):
       self.parseColors(color1,color2)
       self.lineType=linetype
-      self.pieces=bars
+      if bars:
+          self.pieces=bars
+      else:
+          self.pieces=8
             
    def fill(self, elt):
       self.assemble()
@@ -304,6 +307,29 @@ class Barry(Paly):
          p.rect(-blazon.Ordinary.WIDTH, -blazon.Ordinary.FESSPTY+i*height,
                 3*blazon.Ordinary.WIDTH, height)
       self.path=SVGdraw.path(p)
+
+class Pily(Paly):
+    def assemble(self):
+        p=partLine(linetype=self.lineType)
+        width=float(blazon.Ordinary.WIDTH)/self.pieces
+        for i in range(0,self.pieces):
+            p.move(-blazon.Ordinary.FESSPTX+i*width,-blazon.Ordinary.FESSPTY)
+            p.makelinerel(width/2,blazon.Ordinary.HEIGHT)
+            p.makelinerel(width/2,-blazon.Ordinary.HEIGHT)
+            p.closepath()
+        self.path=SVGdraw.path(p)
+
+class BarryPily(Pily):
+    # Same as above, but horizontal
+    def assemble(self):
+        p=partLine(linetype=self.lineType)
+        height=float(blazon.Ordinary.HEIGHT)/self.pieces
+        for i in range(0,self.pieces):
+            p.move(-blazon.Ordinary.FESSPTX,-blazon.Ordinary.FESSPTY+i*height)
+            p.makelinerel(blazon.Ordinary.WIDTH,height/2)
+            p.makelinerel(-blazon.Ordinary.WIDTH,height/2)
+            p.closepath()
+        self.path=SVGdraw.path(p)
 
 class Bendy(Paly):
    def assemble(self):
