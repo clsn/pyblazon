@@ -45,6 +45,7 @@ class Ordinary:
       self.tincture=Tincture(tincture)
       self.lineType=linetype
       self.charges=[]
+      self.fimbriation_width=4          # default
       if not hasattr(self,"svg"):
          self.svg=SVGdraw.svg(x=-Ordinary.FESSPTX,
                               y=-Ordinary.FESSPTY,
@@ -78,7 +79,7 @@ class Ordinary:
       self.maingroup.addElement(SVGdraw.SVGelement('use',
                                                    attributes={"xlink:href":"#%s"%self.clipPath.attributes["id"],
                                                                "stroke":self.fimbriation,
-                                                               "stroke-width":"4",
+                                                               "stroke-width":self.fimbriation_width,
                                                                "fill":"none",
                                                                "transform":self.clipPathElt.attributes.get("transform")}))
 
@@ -569,6 +570,7 @@ class Annulet(Charge):
    def process(self):
       # self.clipPath is used for fimbriation, which at this point is
       # so wide it overwhelms the annulet.  Woops.
+      self.fimbriation_width=2
       self.clipPath=SVGdraw.group()
       self.clipPath.attributes["id"]="ClipPath%04d"%Ordinary.id
       Ordinary.id+=1
@@ -583,22 +585,24 @@ class Annulet(Charge):
 
 class ExtCharge(Charge):
     paths={
-        "fleur":"data/Fleur.svg#fleur",
-        "formy":"data/Cross-Pattee-Heraldry.svg#formy",
-        "pommee":"data/Cross-Pattee-Heraldry.svg#pommee",
-        "bottony":"data/Cross-Pattee-Heraldry.svg#bottony",
-        "crosscrosslet":"data/Cross-Crosslet-Heraldry.svg#cross-crosslet",
-        "mullet":"data/Cross-Pattee-Heraldry.svg#mullet"
+        "fleur":("data/Fleur.svg#fleur",4,None),
+        "formy":("data/Cross-Pattee-Heraldry.svg#formy",30,None),
+        "pommee":("data/Cross-Pattee-Heraldry.svg#pommee",300,None),
+        "bottony":("data/Cross-Pattee-Heraldry.svg#bottony",20,None),
+        "crosscrosslet":("data/Cross-Crosslet-Heraldry.svg#cross-crosslet",2,None),
+        "mullet":("data/Cross-Pattee-Heraldry.svg#mullet",2,None)
         }
     
     def __init__(self,name,*args,**kwargs):
         self.setup(*args)
         try:
-            self.path=ExtCharge.paths[name]
+            info=ExtCharge.paths[name]
+            (self.path,self.fimbriation_width,self.tincture)=info
             if kwargs.get("extension"): # Not sure this is so great.
                self.path+=str(kwargs["extension"][0])
         except KeyError:
             self.path=name              # Punt.
+            
 
     def process(self):
         self.clipPathElt.addElement(SVGdraw.use(self.path))
@@ -607,7 +611,7 @@ class ExtCharge(Charge):
        self.maingroup.addElement(SVGdraw.SVGelement('use',
                                                     attributes={"xlink:href":"%s"%self.path,
                                                                 "stroke":self.fimbriation,
-                                                                "stroke-width":"2",
+                                                                "stroke-width":self.fimbriation_width,
                                                                 "fill":"none",
                                                                 "transform":self.clipPathElt.attributes.get("transform")}))
 
