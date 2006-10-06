@@ -567,15 +567,19 @@ class Lozenge(Charge):
 
 class Annulet(Charge):
    def process(self):
-      self.clipPath1=SVGdraw.circle(cx=0,cy=0,r=12)
+      # self.clipPath is used for fimbriation, which at this point is
+      # so wide it overwhelms the annulet.  Woops.
+      self.clipPath=SVGdraw.group()
+      self.clipPath.attributes["id"]="ClipPath%04d"%Ordinary.id
+      Ordinary.id+=1
+      self.clipPath.addElement(SVGdraw.circle(cx=0,cy=0,r=12))
       # We want to draw the second path counter-clockwise, so that it will
       # turn into a hole.
-      # Just guessing that having a negative radius means it will draw the
-      # circle backwards.
-      # Well, apparently not. FIXME later.
-      self.clipPath2=SVGdraw.circle(cx=0,cy=0,r=-8)
-      self.clipPathElt.addElement(self.clipPath1)
-      self.clipPathElt.addElement(self.clipPath2)
+      # Apparently just drawing it is enough, just be sure to set
+      # the clip-rule to evenodd.
+      self.clipPath.addElement(SVGdraw.circle(cx=0,cy=0,r=8))
+      self.clipPathElt.addElement(self.clipPath)
+      self.clipPathElt.attributes["clip-rule"]="evenodd"
 
 class ExtCharge(Charge):
     paths={
