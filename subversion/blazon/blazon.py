@@ -569,6 +569,8 @@ class ExtCharge(Charge):
     paths={
         "fleur":"data/Fleur.svg#fleur",
         "formy":"data/Cross-Pattee-Heraldry.svg#formy",
+        "pommee":"data/Cross-Pattee-Heraldry.svg#pommee",
+        "bottony":"data/Cross-Pattee-Heraldry.svg#bottony",
         "crosscrosslet":"data/Cross-Crosslet-Heraldry.svg#cross-crosslet",
         "mullet":"data/Cross-Pattee-Heraldry.svg#mullet"
         }
