@@ -565,6 +565,18 @@ class Lozenge(Charge):
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
 
+class Annulet(Charge):
+   def process(self):
+      self.clipPath1=SVGdraw.circle(cx=0,cy=0,r=12)
+      # We want to draw the second path counter-clockwise, so that it will
+      # turn into a hole.
+      # Just guessing that having a negative radius means it will draw the
+      # circle backwards.
+      # Well, apparently not. FIXME later.
+      self.clipPath2=SVGdraw.circle(cx=0,cy=0,r=-8)
+      self.clipPathElt.addElement(self.clipPath1)
+      self.clipPathElt.addElement(self.clipPath2)
+
 class ExtCharge(Charge):
     paths={
         "fleur":"data/Fleur.svg#fleur",
