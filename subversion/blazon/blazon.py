@@ -241,6 +241,22 @@ class Saltire(Cross):
         Cross.process(self)
         self.clipPath.attributes["transform"]="rotate(45)"
 
+class Pall(Ordinary):
+    def process(self):
+        wd=7*math.cos(math.pi/4)
+        p=partLine(-Ordinary.WIDTH-wd, -Ordinary.WIDTH+wd)
+        p.makeline(-wd*2,0,align=1)
+        p.makeline(-wd*2,Ordinary.HEIGHT)
+        p.relhline(4*wd)
+        p.makeline(2*wd,0,align=1)
+        p.makeline(Ordinary.WIDTH+wd, -Ordinary.WIDTH+wd)
+        p.relline(-2*wd,-2*wd)
+        p.makeline(0,-wd*2,align=1)
+        p.makeline(-Ordinary.WIDTH+wd, -Ordinary.WIDTH-wd)
+        p.closepath()
+        self.clipPath=SVGdraw.path(p)
+        self.clipPathElt.addElement(self.clipPath)
+
 class Pale(Ordinary):
     def process(self):
         p=partLine()
@@ -342,10 +358,6 @@ class Chevron(Ordinary):
         p.closepath
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
-
-class Pall(Ordinary):
-   pass
-   # TODO: UNFINISHED!!!
 
 class Pile(Ordinary):
     def process(self):

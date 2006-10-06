@@ -382,6 +382,55 @@ class PerBendSinister(BendySinister):
     def __init__(self,*args,**kwargs):
         BendySinister.__init__(self,2,*args,**kwargs)
 
+class PerPall(Paly):
+    def __init__(self,color1="argent",color2="sable",color3="gules",linetype="plain"):
+        # Boy am I lazy
+        self.parseColors(color1,color3)
+        hold=self.colors[1]
+        self.parseColors(color1,color2)
+        self.colors=(self.colors[0],self.colors[1],hold)
+        self.lineType=linetype
+
+    def assemble(self):
+        p=partLine()
+        p.lineType=self.lineType
+        p.move(0,blazon.Ordinary.HEIGHT)
+        p.makeline(0,0,align=1)
+        p.makeline(-blazon.Ordinary.WIDTH, -blazon.Ordinary.WIDTH)
+        p.vline(blazon.Ordinary.HEIGHT)
+        p.closepath()
+        self.path1=SVGdraw.path(p)
+        p=partLine()
+        p.lineType=self.lineType
+        p.move(0,blazon.Ordinary.HEIGHT)
+        p.makeline(0,0,align=1,shift=-1)
+        p.makeline(blazon.Ordinary.WIDTH, -blazon.Ordinary.WIDTH)
+        p.vline(blazon.Ordinary.HEIGHT)
+        p.closepath()
+        self.path2=SVGdraw.path(p)
+
+    def fill(self,elt):
+        self.assemble()
+        self.fg1=blazon.Ordinary()
+        self.fg1.clipPath=self.path1
+        self.fg1.clipPathElt.addElement(self.path1)
+        self.fg1.tincture=self.colors[1]
+        self.fg2=blazon.Ordinary()
+        self.fg2.clipPath=self.path2
+        self.fg2.clipPathElt.addElement(self.path2)
+        self.fg2.tincture=self.colors[2]
+        self.bg=SVGdraw.rect(-blazon.Ordinary.FESSPTX,
+                             -blazon.Ordinary.FESSPTY,
+                             blazon.Ordinary.WIDTH,
+                             blazon.Ordinary.HEIGHT)
+        self.bg=self.colors[0].fill(self.bg)
+        g=SVGdraw.group()
+        g.addElement(self.bg)
+        g.addElement(self.fg1.finalizeSVG())
+        g.addElement(self.fg2.finalizeSVG())
+        return g
+        
+
 class PerCross(Paly):
    def __init__(self,color1="argent",color2="sable",linetype="plain"):
       # reverse order of colors  so I don't have to bother rewriting assemble()

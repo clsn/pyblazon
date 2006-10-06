@@ -10,7 +10,8 @@ import tinctures
 tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED","ALTERED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
-        "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD")
+        "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
+        "PALL")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -53,6 +54,8 @@ def t_CHARGE(t):
 
 # Hmm.  How to handle "*in* a bordure..." ?
 t_ORDINARY=r"(fesse?|pale|cross|saltire|bend[ ]sinister|bend|pile|chevron|bordure|base|label)"
+
+t_PALL=r"pall"
 
 # Chief is not an ordinary
 t_CHIEF=r"chief"
@@ -118,6 +121,7 @@ lookupdict={
     "bend sinister": blazon.BendSinister,
     "chief": blazon.Chief,
     "base": blazon.Base,
+    "pall": blazon.Pall,
     "labels?": blazon.Label,
     "lables?": blazon.Label,
     "roundels?": blazon.Roundel,
@@ -154,6 +158,7 @@ lookupdict={
     "per bend": tinctures.PerBend,
     "per bend sinister": tinctures.PerBendSinister,
     "per chevron": tinctures.PerChevron,
+    "per pall": tinctures.PerPall,
     "quarterly": tinctures.PerCross,
     "quartered": tinctures.PerCross,
     "checky": (lambda num,col1,col2,**kw:

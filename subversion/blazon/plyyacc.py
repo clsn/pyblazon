@@ -40,6 +40,11 @@ def p_fulltreatment_2(p):
     "fulltreatment : PARTYPER ORDINARY optlinetype fulltreatment AND fulltreatment"
     p[0]=lookup("per "+p[2])(p[4],p[6],linetype=p[3])
 
+def p_fulltreatment_2_1(p):
+    "fulltreatment : PARTYPER PALL optlinetype fulltreatment fulltreatment AND fulltreatment"
+    p[0]=lookup("per "+p[2])(p[4],p[5],p[7],linetype=p[3])
+
+
 def p_treatment_1(p):
     "treatment : COLOR"
     p[0]=tinctures.Tincture(p[1])
@@ -133,6 +138,7 @@ def p_group(p):
 
 def p_ordinary(p):
     """ordinary : ORDINARY
+                | PALL
                 | CHIEF
                 | CHARGE
                 | CHARGE OF amount WORD"""
