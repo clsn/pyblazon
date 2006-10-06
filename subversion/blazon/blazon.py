@@ -557,26 +557,30 @@ class Charge(Ordinary):
     def chief(self):
         self.moveto(Ordinary.CHIEFPT)
 
+    def addCharge(self,charge):
+        Ordinary.addCharge(self,charge)
+        charge.maingroup.attributes["transform"]+=" scale(.4)"
+
 class Roundel(Charge):
    def process(self):
       self.clipPath=SVGdraw.circle(cx=0,cy=0,r=12)
       self.clipPathElt.addElement(self.clipPath)
 
-   def addCharge(self,charge):
-      Ordinary.addCharge(self,charge)
-      charge.maingroup.attributes["transform"]+=" scale(.4)"
-
-
 class Lozenge(Charge):
    def process(self):
       p=SVGdraw.pathdata()
-      p.move(0,-20)
-      p.line(15,0)
-      p.line(0,20)
-      p.line(-15,0)
+      p.move(0,-15)
+      p.line(10,0)
+      p.line(0,15)
+      p.line(-10,0)
       p.closepath()
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
+
+class Billet(Charge):
+    def process(self):
+        self.clipPath=SVGdraw.rect(-10,-15,20,30)
+        self.clipPathElt.addElement(self.clipPath)
 
 class Annulet(Charge):
    def process(self):

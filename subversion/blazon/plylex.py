@@ -49,7 +49,7 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"(roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony)|cross-crosslets?|mullets?)"
+    r"(roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony)|cross-crosslets?|mullets?|billets?)"
     return t
 
 # Hmm.  How to handle "*in* a bordure..." ?
@@ -125,6 +125,7 @@ lookupdict={
     "labels?": blazon.Label,
     "lables?": blazon.Label,
     "roundels?": blazon.Roundel,
+    "billets?": blazon.Billet,
     "annulets?": blazon.Annulet,
     "lozenges?": blazon.Lozenge,
     "fleurs?.de.lis": (lambda *a: blazon.ExtCharge("fleur")),
