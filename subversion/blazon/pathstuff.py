@@ -143,8 +143,6 @@ class partLine:
             # sys.stderr.write("delX: %d, delY: %d\n" % (delX, delY))
             (uptoX,uptoY)=(self.curX,self.curY)
             # WRONG: need to account for waviness
-            # Doesn't yet QUITE do the job.  Dancetty and wavy don't
-            # seem to be able to look good at the same time.
             if align:
                 rem=leng%wavelength
                 (remX,remY)=(rem*math.cos(angle),
@@ -161,7 +159,7 @@ class partLine:
                              (amplitude*math.sin(angle+math.pi/2)))
             # sys.stderr.write("shiftX: %d, shiftY: %d\n"%(shiftX,shiftY))
             if self.lineType in ["indented","dancetty","wavy"]:
-                for i in range(1,int(leng/wavelength)):
+                for i in range(1,int(leng/wavelength)+1):
                     uptoX+=delX
                     uptoY+=delY
                     if self.lineType == "wavy":
@@ -181,7 +179,7 @@ class partLine:
                     self.path.append(" L"+str(x)+","+str(y))
             elif self.lineType == "embattled":
                 # I'm going to assume equal up/down lengths
-                for i in range(1,int(leng/wavelength)):
+                for i in range(1,int(leng/wavelength)+1):
                     self.path.append(" L"+str(uptoX+shiftX*direction)+
                                      ","+str(uptoY+shiftY*direction))
                     uptoX+=delX
