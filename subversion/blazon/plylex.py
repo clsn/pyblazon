@@ -11,7 +11,7 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED","ALTERED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
-        "PALL")
+        "PALL","WITHIN","BORDURE")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -35,6 +35,7 @@ t_THE=r"the"
 t_SEMY=r"semy"
 t_SEMYDELIS=r"semy.de.lis"
 # t_QUARTERED=r"quartered"
+t_WITHIN=r"within"
 
 def t_CARDINAL(t):
     r"(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|field|last)"
@@ -54,7 +55,8 @@ def t_CHARGE(t):
     return t
 
 # Hmm.  How to handle "*in* a bordure..." ?
-t_ORDINARY=r"(fesse?|pale|cross|saltire|bend[ ]sinister|bend|pile|chevron|bordure|base|label)"
+t_BORDURE=r"bordure"
+t_ORDINARY=r"(fesse?|pale|cross|saltire|bend[ ]sinister|bend|pile|chevron|base|label)"
 
 t_PALL=r"pall"
 

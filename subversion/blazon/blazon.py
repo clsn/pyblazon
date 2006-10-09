@@ -176,19 +176,21 @@ class Field(Ordinary):
    def addChief(self, chief):
       """Add a chief, depressing the rest of the field"""
       self.chief=chief                  # Have to handle this later.
+
+   def addBordure(self,bordure):
+      self.addCharge(bordure)      # But maybe in the future be clever with
+                                        # scaling?
       
    def __repr__(self):
+      if not self.maingroup.attributes.has_key("transform"):
+         self.maingroup.attributes["transform"]=""
       if hasattr(self,"chief"):
-         # Do I need to worry to *append* rather than replace the transform?
          # Hm.  Somehow I need add something outside the main group
          # AFTER things have happened...
-         #
-         # TODO: Currently this doesn't work when the chief is filled with
-         # a pattern.  The pattern def happens *after* the chief.
          g=SVGdraw.group()
          g.attributes["clip-path"]=self.maingroup.attributes["clip-path"]
          g.addElement(self.maingroup)
-         self.maingroup.attributes["transform"]="scale(1,.8) translate(0,15)"
+         self.maingroup.attributes["transform"]+=" scale(1,.8) translate(0,15)"
          self.newmaingroup=g
          g2=SVGdraw.group()
          g2.attributes["clip-path"]=self.maingroup.attributes["clip-path"]

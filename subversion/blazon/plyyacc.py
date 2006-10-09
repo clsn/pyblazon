@@ -22,12 +22,14 @@ def p_blazon_1(p):
     return shield
 
 def p_blazon_2(p):
-    "blazon : fulltreatment charges chief"
+    "blazon : fulltreatment charges bordure chief"
     shield=blazon.Field()
     shield.tincture=p[1]
     shield.extendCharges(p[2])
     if p[3]:
-        shield.addChief(p[3])
+        shield.addBordure(p[3])
+    if p[4]:
+        shield.addChief(p[4])
     p[0]=shield
     Globals.shield=shield
     return shield
@@ -146,6 +148,7 @@ def p_ordinary(p):
                 | PALL
                 | CHIEF
                 | CHARGE
+                | BORDURE
                 | CHARGE OF amount WORD"""
     if len(p)>2:
         p[0]=lookup(p[1])(p[3])
@@ -169,6 +172,19 @@ def p_charge_2(p):
     "charge : ON A charge optA grouporcharge"
     p[3].addCharge(p[5])
     p[0]=p[3]
+
+def p_bordure(p):
+    """bordure : empty
+               | WITHIN A BORDURE optlinetype opttreatment"""
+    if len(p)<=2:
+        p[0]=None
+    else:
+        p[0]=blazon.Bordure()
+        if not(p[5]):
+            Globals.colorless.append(p[0])
+        else:
+            p[0].tincture=p[5]
+        p[0].lineType=p[4]
 
 def p_chief(p):
     """chief : empty
