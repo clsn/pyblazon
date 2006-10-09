@@ -4,29 +4,27 @@ This software requires the following:
 - Python
 - the Python base library
 - SVGDraw
-- YAPPS
+- PLY
 
-YAPPS is available as the Debian package yapps2. SVGDraw is not
-packaged yet as far as we know, but it is available at
+In Debian, PLY is packaged as python-ply (still only in unstable). It
+is also available from http://www.dabeaz.com/ply/ .
+SVGDraw is not packaged yet as far as we know, but it is available at
 http://www2.sfk.nl/svg .
 
-When you have installed all of the above, run "make". This will
-generate parse.py from parse.yap.
-
 Usage:
-   python blazon.py <blazon>
+   python gen.py <blazon>
 
 Example:
-   python blazon.py Vert a saltire argent.
+   python gen.py Vert a saltire argent.
 
 Though, to actually view the shield, you need to save the SVG output
 with redirection, e.g.:
 
-   python blazon.py Vert a saltire argent. > test.svg
+   python gen.py Vert a saltire argent. > test.svg
 
 Or pipe it into a viewer, such as:
 
-   python blazon.py Vert a saltire argent. | rsvg-view --stdin
+   python gen.py Vert a saltire argent. | rsvg-view --stdin
 
 If you are unfamiliar with blazonry, the Wikipedia article
 http://en.wikipedia.org/wiki/Blazon is a good starting point. Some
@@ -56,3 +54,15 @@ To run the regression tests, do:
 It should output a lot of stuff, but end with OK. If it ends with
 FAILED, you need to figure out if the production code or the test code
 is wrong, and fix accordingly.
+
+An easy way of adding a new gold standard shield is to add the blazon
+at the end of gsblazons.txt, but prepended by an existing image file
+(which of course will give a bogus result). For instance:
+
+   1.png Azure semy-de-lis or.
+
+When you run the test suite again, you will get an error (because the
+new image looks nothing at all like 1.png). But do not despair! Simply
+copy the newly generated tests/gsshields/out.png to an unused
+filename, and updated gsblazons.txt accordingly, and rerun. There
+should be no test failures this time.
