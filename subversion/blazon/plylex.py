@@ -6,6 +6,7 @@ import re
 import blazon
 import sys
 import tinctures
+import copy
 
 tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED","ALTERED",
@@ -178,13 +179,18 @@ lookupdict={
     "per chevron": tinctures.PerChevron,
     "per pall": tinctures.PerPall,
     "quarterly": tinctures.PerCross,
-#    "quartered": tinctures.PerCross,
+    # "quartered": tinctures.PerCross,
+    # Need to make *copies* of the tinctures,
+    # lest they contain references to charges (Semy) which then get doubly
+    # shrunk.
     "checky": (lambda num,col1,col2,**kw:
                tinctures.Paly(num,tinctures.Barry(num,col1,col2),
-                              tinctures.Barry(num,col2,col1))),
+                              tinctures.Barry(num,copy.deepcopy(col2),
+                                              copy.deepcopy(col1)))),
     "lozengy": (lambda num,col1,col2,**kw:
                 tinctures.Bendy(num,tinctures.BendySinister(num,col1,col2),
-                                tinctures.BendySinister(num,col2,col1))),
+                                tinctures.BendySinister(num,copy.deepcopy(col2),
+                                                        copy.deepcopy(col1)))),
     "countercha[rn]ged": tinctures.Countercharged
     }
 
