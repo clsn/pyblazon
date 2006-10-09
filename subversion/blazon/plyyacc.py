@@ -98,10 +98,11 @@ def p_treatment_8(p):
 def p_treatment_9(p):
     """treatment : COLOR SEMY OF charge
                  | COLOR SEMYDELIS treatment"""
+    # The last is actually syntactically like ALTERED
     if len(p)==5:
         p[0]=tinctures.Semy(tinctures.Tincture(p[1]),p[4])
     else:
-        f=blazon.ExtCharge("fleur")
+        f=lookup(p[2])()
         f.tincture=p[3]
         p[0]=tinctures.Semy(tinctures.Tincture(p[1]),f)
 

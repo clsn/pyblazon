@@ -617,6 +617,7 @@ class ExtCharge(Charge):
         "formy":("data/Cross-Pattee-Heraldry.svg#formy",30,None),
         "pommee":("data/Cross-Pattee-Heraldry.svg#pommee",300,None),
         "bottony":("data/Cross-Pattee-Heraldry.svg#bottony",20,None),
+        "goute":("data/Cross-Pattee-Heraldry.svg#goute",1,None),
         "crosscrosslet":("data/Cross-Crosslet-Heraldry.svg#cross-crosslet",2,None),
         "mullet":("data/Cross-Pattee-Heraldry.svg#mullet",2,None)
         }

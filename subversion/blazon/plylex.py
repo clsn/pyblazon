@@ -33,7 +33,10 @@ t_CHARGED=r"charged"
 t_WITH=r"with"
 t_THE=r"the"
 t_SEMY=r"semy"
-t_SEMYDELIS=r"semy.de.lis"
+def t_SEMYDELIS(t):
+    r"(semy.de.lis|billety|gutty)"
+    return t
+
 # t_QUARTERED=r"quartered"
 t_WITHIN=r"within"
 
@@ -51,7 +54,7 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"(roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony)|cross-crosslets?|mullets?|billets?)"
+    r"(roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony)|cross-crosslets?|mullets?|billets?|goutes?)"
     return t
 
 # Hmm.  How to handle "*in* a bordure..." ?
@@ -132,12 +135,16 @@ lookupdict={
     "annulets?": blazon.Annulet,
     "lozenges?": blazon.Lozenge,
     "fleurs?.de.lis": (lambda *a: blazon.ExtCharge("fleur")),
+    "goutes?": (lambda *a: blazon.ExtCharge("goute")),
     "cross(es)?.formy": (lambda *a: blazon.ExtCharge("formy")),
     "cross(es)?.pattee": (lambda *a: blazon.ExtCharge("formy")),
     "cross(es)?.pommee": (lambda *a: blazon.ExtCharge("pommee")),
     "cross(es)?.bottony": (lambda *a: blazon.ExtCharge("bottony")),
     "cross-crosslets?": (lambda *a: blazon.ExtCharge("crosscrosslet")),
     "mullets?": (lambda *a: blazon.ExtCharge("mullet",extension=a)),
+    "semy.de.lis": (lambda *a: blazon.ExtCharge("fleur")),
+    "gutty": (lambda *a: blazon.ExtCharge("goute")),
+    "billety": blazon.Billet,
     "bordure": blazon.Bordure,
     "paly": tinctures.Paly,
     "pily": tinctures.Pily,

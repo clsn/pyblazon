@@ -204,26 +204,21 @@ class partLine:
             #Rayonny doesn't quite work yet.
 #             elif self.lineType == "rayonny":
 #                 for i in range(0,int(leng/wavelength)):
-#                     uptoX+=delX
-#                     uptoY+=delY
 #                     midX=delX/2+shiftX*direction
 #                     midY=delY/2+shiftY*direction
 #                     # Make these q soon.
 #                     # Try to keep the math straight here....
-#                     self.path.append(" l%.3f,%.3f l%.3f,%.3f l%.3f,%.3f"%
-#                                      (midX/3+delX/3,
-#                                       midY/3+delY/3,
-#                                       2*midX/3-delX/3,
-#                                       2*midY/3-delY/3,
-#                                       midX,midY))
-#                     (midX,midY)=(delX/2-shiftX*direction,
-#                                  delY/2-shiftY*direction)
-#                     self.path.append(" l%.3f,%.3f l%.3f,%.3f l%.3f,%.3f"%
-#                                      (midX/3+delX/3,
-#                                       midY/3+delY/3,
-#                                       2*midX/3-delX/3,
-#                                       2*midY/3-delY/3,
-#                                       midX,midY))
+#                     self.path.append("L%.4f,%.4f %.4f,%.4f"%
+#                                      (uptoX+midX/3-delX/4,
+#                                       uptoY+midY/3-delY/4,
+#                                       uptoX+midX,uptoY+midY))
+#                     self.path.append("l%.4f,%.4f"%
+#                                      (delX/2-shiftX*direction,
+#                                       delY/2-shiftY*direction))
+#                     uptoX+=delX
+#                     uptoY+=delY
+#                     # direction*=-1
+#                 self.path.append(" L%.4f,%.4f"%(x,y))
             else:                       # Just pretend it's plain.
                 self.line(x,y)
             self.update(x,y)
