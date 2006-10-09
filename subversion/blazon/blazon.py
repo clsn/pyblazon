@@ -452,7 +452,7 @@ class ChargeGroup:            # Kind of an invisible ordinary
             obj=self.charges[0]
             obj.shiftto(Ordinary.FESSEPT)
             # Maybe scale it?
-            obj.resize(2)
+            #obj.resize(2)
         else:
             # An even better way to do this: Put a method on the *tincture*
             # objects (or ordinary objects) that returns the appropriate
@@ -482,7 +482,8 @@ class ChargeGroup:            # Kind of an invisible ordinary
                                # 5 -> in saltire:
                                [(-20,-20),(20,-20),(0,0),(-20,20),(20,20)]
                                ]
-                
+            #scales=[1,1,
+            #        .4,.3,.3]
             if isinstance(self.parent.tincture,PerBend) or hasinstance(self.parent.charges,Bend) or isinstance(self.parent.tincture,PerBendSinister) or hasinstance(self.parent.charges,BendSinister):
                 # Arrangements for things around a Bend!
                 placements=[[],          # not used: num==0
@@ -515,8 +516,10 @@ class ChargeGroup:            # Kind of an invisible ordinary
                 placements=defaultplacements # and try again.
             if num>len(placements):
                 raise "Too many objects"
+            #scale=scales[num]
             for i in range(0,num):
-                move(self.charges[i], placements[num][i]);
+                move(self.charges[i], placements[num][i])
+                #self.charges[i].resize(scale)
                     
 
 class Charge(Ordinary):
@@ -563,7 +566,7 @@ class Charge(Ordinary):
 
 class Roundel(Charge):
    def process(self):
-      self.clipPath=SVGdraw.circle(cx=0,cy=0,r=12)
+      self.clipPath=SVGdraw.circle(cx=0,cy=0,r=12) # make it 36
       self.clipPathElt.addElement(self.clipPath)
 
 class Lozenge(Charge):
@@ -584,7 +587,7 @@ class Billet(Charge):
 
 class Annulet(Charge):
    def process(self):
-      # self.clipPath is used for fimbriation, which at this point is
+      # self.clipPath is used for fimbriation, which at 4 is
       # so wide it overwhelms the annulet.  Woops.
       self.fimbriation_width=2
       self.clipPath=SVGdraw.group()
@@ -600,6 +603,7 @@ class Annulet(Charge):
       self.clipPathElt.attributes["clip-rule"]="evenodd"
 
 class ExtCharge(Charge):
+    # Path, fimbriation-width, and default tincture (for "proper")
     paths={
         "fleur":("data/Fleur.svg#fleur",4,None),
         "formy":("data/Cross-Pattee-Heraldry.svg#formy",30,None),

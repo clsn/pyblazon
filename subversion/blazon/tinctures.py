@@ -11,32 +11,35 @@ import math
 class Pattern: pass                     # gyronny, checky, etc.
 
 class Tincture:                         # Metal or color.
-   lookup={ "azure" : "blue",
-            "gules" : "red",
-            "or" : "yellow",
-            "argent" : "white",
-            "sable" : "black",
-            "vert" : "green",
-            "purpure" : "purple",
-            "tenné" : "#cd5700",
-            "tenne" : "#cd5700",
-            "tawny" : "#cd5700",
-            "sanguine" : "#c00000",
-            "murrey" : "#800040",
-            "bleu celeste" : "#8080ff",
-            "none" : "none"
-            }
+    lookup={ "azure" : "blue",
+             "gules" : "red",
+             "or" : "yellow",
+             "argent" : "white",
+             "sable" : "black",
+             "vert" : "green",
+             "purpure" : "purple",
+             "tenné" : "#cd5700",
+             "tenne" : "#cd5700",
+             "tawny" : "#cd5700",
+             "sanguine" : "#c00000",
+             "murrey" : "#800040",
+             "bleu celeste" : "#8080ff",
+             "none" : "none"
+             }
    
-   def __init__(self,color):
-      try:
-         self.color=Tincture.lookup[color]
-      except KeyError:
-         sys.stderr.write("Invalid tincture: %s\n"%color)
-         self.color="white"
+    def __init__(self,color):
+        try:
+            self.color=Tincture.lookup[color]
+        except KeyError:
+            sys.stderr.write("Invalid tincture: %s\n"%color)
+            self.color="white"
 
-   def fill(self, elt):
-      elt.attributes["fill"]=self.color
-      return elt
+    def fill(self, elt):
+        elt.attributes["fill"]=self.color
+        return elt
+
+    def invert(self):
+        pass
 
 class Fur(Tincture): pass
 
@@ -390,6 +393,7 @@ class PerPall(Paly):
         self.parseColors(color1,color2)
         self.colors=(self.colors[0],self.colors[1],hold)
         self.lineType=linetype
+        self.inverted=False
 
     def assemble(self):
         p=partLine()
@@ -408,6 +412,11 @@ class PerPall(Paly):
         p.vline(blazon.Ordinary.HEIGHT)
         p.closepath()
         self.path2=SVGdraw.path(p)
+        if self.inverted:
+            # Have to rearrange the colors too
+            self.colors=(self.colors[2],self.colors[1],self.colors[0])
+            self.path1.attributes["transform"]="rotate(180)"
+            self.path2.attributes["transform"]="rotate(180)"
 
     def fill(self,elt):
         self.assemble()
@@ -429,6 +438,9 @@ class PerPall(Paly):
         g.addElement(self.fg1.finalizeSVG())
         g.addElement(self.fg2.finalizeSVG())
         return g
+
+    def invert(self):
+        self.inverted=True
         
 
 class PerCross(Paly):
@@ -475,20 +487,27 @@ class Gyronny(Paly):
         self.path.attributes["fill-rule"]="evenodd"
 
 class PerChevron(Paly):
-   def __init__(self,color1="argent", color2="sable", linetype="plain"):
-      self.parseColors(color1,color2)
-      self.lineType=linetype
+    def __init__(self,color1="argent", color2="sable", linetype="plain"):
+        self.parseColors(color1,color2)
+        self.lineType=linetype
+        self.inverted=False
    
-   def assemble(self):
-      p=partLine(linetype=self.lineType)
-      p.move(-blazon.Ordinary.FESSPTX,35)
-      p.makeline(0,-5,1)
-      p.makeline(blazon.Ordinary.FESSPTX,35,shift=-1)
-      p.relvline(blazon.Ordinary.FESSPTY)
-      p.relhline(-blazon.Ordinary.WIDTH)
-      p.closepath()
-      self.path=SVGdraw.path(p)
+    def assemble(self):
+        p=partLine(linetype=self.lineType)
+        p.move(-blazon.Ordinary.FESSPTX,35)
+        p.makeline(0,-5,1)
+        p.makeline(blazon.Ordinary.FESSPTX,35,shift=-1)
+        p.relvline(blazon.Ordinary.FESSPTY)
+        p.relhline(-blazon.Ordinary.WIDTH)
+        p.closepath()
+        self.path=SVGdraw.path(p)
+        if self.inverted:
+            self.path.attributes["transform"]="rotate(180)"
 
+    def invert(self):
+        self.inverted=True
+
+       
 class Chevronny(Paly):
     def assemble(self):
         p=partLine(linetype=self.lineType)

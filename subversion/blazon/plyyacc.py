@@ -37,13 +37,14 @@ def p_fulltreatment_1(p):
     p[0]=p[1]
 
 def p_fulltreatment_2(p):
-    "fulltreatment : PARTYPER ORDINARY optlinetype fulltreatment AND fulltreatment"
-    p[0]=lookup("per "+p[2])(p[4],p[6],linetype=p[3])
+    "fulltreatment : PARTYPER ORDINARY optinverted optlinetype fulltreatment AND fulltreatment"
+    p[0]=lookup("per "+p[2])(p[5],p[7],linetype=p[4])
+    p[3](p[0])
 
 def p_fulltreatment_2_1(p):
-    "fulltreatment : PARTYPER PALL optlinetype fulltreatment fulltreatment AND fulltreatment"
-    p[0]=lookup("per "+p[2])(p[4],p[5],p[7],linetype=p[3])
-
+    "fulltreatment : PARTYPER PALL optinverted optlinetype fulltreatment fulltreatment AND fulltreatment"
+    p[0]=lookup("per "+p[2])(p[5],p[6],p[8],linetype=p[4])
+    p[3](p[0])
 
 def p_treatment_1(p):
     "treatment : COLOR"
