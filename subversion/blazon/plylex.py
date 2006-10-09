@@ -34,6 +34,7 @@ t_WITH=r"with"
 t_THE=r"the"
 t_SEMY=r"semy"
 t_SEMYDELIS=r"semy.de.lis"
+# t_QUARTERED=r"quartered"
 
 def t_CARDINAL(t):
     r"(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|field|last)"
@@ -45,7 +46,7 @@ def t_LINEY(t):
     return t
 
 def t_QUARTERLY(t):
-    r"(quarterly|quartered)"
+    r"quarterly"
     return t
 
 def t_CHARGE(t):
@@ -90,12 +91,12 @@ def t_NUM(t):
 
 
 def t_NUMWORD(t):
-    r"(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty)"
+    r"(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty|I|II|III|IV)"
     t.value={"one":1, "two":2, "three":3, "four":4, "five":5, "six":6,
              "seven":7, "eight":8, "nine":9, "ten":10, "eleven":11,
              "twelve":12, "thirteen":13, "fourteen":14, "fifteen":15,
              "sixteen":16, "seventeen":17, "eighteen":18, "nineteen":19,
-             "twenty":20}[t.value]
+             "twenty":20,"I":1,"II":2,"III":3,"IV":4}[t.value]
     return t
 
 def t_WORD(t):
@@ -155,6 +156,12 @@ lookupdict={
     "vairy": tinctures.Vair,
     "per cross": tinctures.PerCross,
     "per saltire": tinctures.PerSaltire,
+    # Parker mentions the following, but possibly it only applies
+    # to the field, not to ordinaries.
+    # Unfortunately, ATM it won't work, probably because the crummy lexer
+    # can't handle both quartered in this sense, and quartered in the sense
+    # of t_QUARTERLY.
+    "per saltire quartered": tinctures.PerSaltire,
     "per fesse?": tinctures.PerFesse,
     "per pale": tinctures.PerPale,
     "per bend": tinctures.PerBend,
@@ -162,7 +169,7 @@ lookupdict={
     "per chevron": tinctures.PerChevron,
     "per pall": tinctures.PerPall,
     "quarterly": tinctures.PerCross,
-    "quartered": tinctures.PerCross,
+#    "quartered": tinctures.PerCross,
     "checky": (lambda num,col1,col2,**kw:
                tinctures.Paly(num,tinctures.Barry(num,col1,col2),
                               tinctures.Barry(num,col2,col1))),

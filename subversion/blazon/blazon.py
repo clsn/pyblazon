@@ -507,6 +507,12 @@ class ChargeGroup:            # Kind of an invisible ordinary
                             [(-25,-18),(25,-18)],
                             [(-25,-18),(25,-18),(0,28)]
                             ]
+            elif isinstance(self.parent.tincture,PerSaltire):
+               placements=[[],[],
+                           [(-25,0),(25,0)], # Just guessing that two -> in fesse
+                           [(-15,-15),(15,-15),(0,10)], # Gee, I have no idea. Default, perhaps?
+                           [(0,-25),(25,0),(0,25),(-25,0)] # Four is the important case IMHO.
+                           ]
             # And so on... !!!
             else:
                 placements=defaultplacements
