@@ -58,7 +58,11 @@ def p_fulltreatment_4(p):
     "fulltreatment : LINEY LINEY treatment AND treatment"
     # special case for barrypily:
     check=lookup(p[1]+p[2])
-    if issubclass(check,tinctures.Tincture):
+    try:
+        test=issubclass(check,tinctures.Tincture)
+    except:
+        test=False
+    if test:
         p[0]=check(0,p[3],p[5])
     else:
         p[0]=lookup(p[1])(0,lookup(p[2])(0,p[3],p[5]),lookup(p[2])(0,p[5],p[3]))

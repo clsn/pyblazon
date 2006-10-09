@@ -118,7 +118,7 @@ class partLine:
         # be easier to do when the whole functioning of this method is made
         # neater.
 
-        if not hasattr(self,"lineType") or self.lineType == "plain":
+        if not hasattr(self,"lineType") or not self.lineType or self.lineType == "plain":
             self.line(x,y)
         else:
             # Calculate the direct line and offset vector here.

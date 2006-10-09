@@ -41,7 +41,7 @@ def t_CARDINAL(t):
     return t
 
 def t_LINEY(t):
-    r"(paly|barry|bendy(.sinister)?|gyronny|checky|lozengy|pily)"
+    r"(paly|barry|bendy(.sinister)?|gyronny|checky|lozengy|pily|chevronny)"
     return t
 
 def t_QUARTERLY(t):
@@ -140,6 +140,7 @@ lookupdict={
     "pily": tinctures.Pily,
     "barrypily": tinctures.BarryPily,
     "barry": tinctures.Barry,
+    "chevronny": tinctures.Chevronny,
     "bendy": tinctures.Bendy,
     "bendy.sinister": tinctures.BendySinister,
     "gyronny": tinctures.Gyronny,

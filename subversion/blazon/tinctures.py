@@ -403,7 +403,7 @@ class PerPall(Paly):
         p=partLine()
         p.lineType=self.lineType
         p.move(0,blazon.Ordinary.HEIGHT)
-        p.makeline(0,0,align=1,shift=-1)
+        p.makeline(0,0,align=1,shift=1)
         p.makeline(blazon.Ordinary.WIDTH, -blazon.Ordinary.WIDTH)
         p.vline(blazon.Ordinary.HEIGHT)
         p.closepath()
@@ -483,13 +483,27 @@ class PerChevron(Paly):
       p=partLine(linetype=self.lineType)
       p.move(-blazon.Ordinary.FESSPTX,35)
       p.makeline(0,-5,1)
-      p.makeline(blazon.Ordinary.FESSPTX,35)
+      p.makeline(blazon.Ordinary.FESSPTX,35,shift=-1)
       p.relvline(blazon.Ordinary.FESSPTY)
       p.relhline(-blazon.Ordinary.WIDTH)
       p.closepath()
       self.path=SVGdraw.path(p)
 
-# Leaving Chevronny for another day...
+class Chevronny(Paly):
+    def assemble(self):
+        p=partLine(linetype=self.lineType)
+        height=float(blazon.Ordinary.HEIGHT)/self.pieces
+        #"Chevronny of n" doesn't make all that much sense anyway.
+        for i in range(0,self.pieces+2,2):
+            p.move(-blazon.Ordinary.FESSPTX,
+                   blazon.Ordinary.FESSPTY-(i-2)*height)
+            p.makelinerel(blazon.Ordinary.FESSPTX,-25,align=1)
+            p.makelinerel(blazon.Ordinary.FESSPTX,25)
+            p.relvline(-height)
+            p.makelinerel(-blazon.Ordinary.FESSPTX,-25,align=1)
+            p.makelinerel(-blazon.Ordinary.FESSPTX,25)
+            p.closepath()
+        self.path=SVGdraw.path(p)
 
 # Barry-bendy and paly-bendy are easy now: just do:
 # paly of 8 barry of 8 or and sable and barry of 8 sable and or

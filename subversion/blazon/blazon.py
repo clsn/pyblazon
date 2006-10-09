@@ -350,11 +350,11 @@ class Chevron(Ordinary):
         p=partLine()
         p.lineType=self.lineType
         p.move(-Ordinary.FESSPTX,20)
-        p.makeline(0,-20,1)
+        p.makeline(0,-20,align=1,shift=-1)
         p.makeline(Ordinary.FESSPTX,20)
-        p.relvline(30)
-        p.makeline(0,10)
-        p.makeline(-Ordinary.FESSPTX,50)
+        p.relvline(25)
+        p.makeline(0,5,align=1)
+        p.makeline(-Ordinary.FESSPTX,45,shift=-1)
         p.closepath
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
@@ -368,8 +368,8 @@ class Pile(Ordinary):
         # Need to draw more outside the box in case it is inverted
         p.line(0,-Ordinary.HEIGHT*2)
         p.line(Ordinary.FESSPTX/2,-Ordinary.FESSPTY)
-        p.makeline(*Ordinary.BASEPT)
-        p.makeline(-Ordinary.FESSPTX/2,-Ordinary.FESSPTY,align=1)
+        p.makeline(Ordinary.BASEPT[0],Ordinary.BASEPT[1],align=1)
+        p.makeline(-Ordinary.FESSPTX/2,-Ordinary.FESSPTY,align=0)
         p.closepath()
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
