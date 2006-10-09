@@ -40,7 +40,7 @@ class Ordinary:
    def __init__(self,*args,**kwargs):
       self.setup(*args,**kwargs)
 
-   def setup(self,tincture="argent",linetype="plain"):
+   def setup(self,tincture="none",linetype="plain"):
       self.done=False
       self.tincture=Tincture(tincture)
       self.lineType=linetype
@@ -73,6 +73,10 @@ class Ordinary:
       # Only plain colors ATM
       # sys.stderr.write("fimbriating with %s\n"%color)
       self.fimbriation=Tincture.lookup[color]
+
+   def void(self,color):
+      self.fimbriate(color)
+      self.tincture=Tincture("none")
 
    # Is this too brittle a way to do it?
    def do_fimbriation(self):

@@ -97,14 +97,17 @@ def p_treatment_8(p):
 
 def p_treatment_9(p):
     """treatment : COLOR SEMY OF charge
-                 | COLOR SEMYDELIS treatment"""
-    # The last is actually syntactically like ALTERED
+                 | COLOR SEMYDELIS treatment
+                 | COLOR BEZANTY"""
+    # The second is actually syntactically like ALTERED
     if len(p)==5:
         p[0]=tinctures.Semy(tinctures.Tincture(p[1]),p[4])
-    else:
+    elif len(p)==4:
         f=lookup(p[2])()
         f.tincture=p[3]
         p[0]=tinctures.Semy(tinctures.Tincture(p[1]),f)
+    else:                               # len(p)==3
+        p[0]=tinctures.Semy(tinctures.Tincture(p[1]),lookup(p[2])())
 
 def p_opttreatment(p):
     """opttreatment : fulltreatment
@@ -162,8 +165,9 @@ def p_charge_1(p):
     p[3](res)
     res.lineType=p[4]
     if not p[5]:
-        Globals.colorless.append(res)
-        res.tincture=None
+        if not res.tincture.color or res.tincture.color == "none":
+            Globals.colorless.append(res)
+            res.tincture=None
     else:
         res.tincture=p[5]
     p[6](res)
@@ -241,7 +245,10 @@ def p_optfimbriation(p):
         p[0]=lambda x:x
     else:
         col=p[2]
-        p[0]=lambda x:x.fimbriate(col)
+        if p[1]=="voided":
+            p[0]=lambda x:x.void(col)
+        else:
+            p[0]=lambda x:x.fimbriate(col)
 
 def p_optand(p):
     """optand : AND

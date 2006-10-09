@@ -12,7 +12,7 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED","ALTERED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
-        "PALL","WITHIN","BORDURE")
+        "PALL","WITHIN","BORDURE","BEZANTY")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -20,12 +20,17 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
 
 t_ignore=" \n\t"
 
+# The gutty colors don't work quite right yet...
 def t_COLOR(t):
-    r"(or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste)"    
+    r"((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|de.larmes|de.poix|de.sang|d'huile|d'eau)"
     return t
 
 def t_AND(t):
     r"(and|between)"                    # FOR NOW, between is a synonym of and.
+    return t
+
+def t_BEZANTY(t):
+    r"bezanty|platey|hurty"
     return t
 
 t_OF=r"of"
@@ -55,7 +60,7 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"(roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony)|cross-crosslets?|mullets?|billets?|goutes?)"
+    r"(roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony)|cross-crosslets?|mullets?|billets?|goutes?|bezants?|plates?|ogress(es)?|pellets?|torteaux?|hurts?|golpes?|pomes?)"
     return t
 
 # Hmm.  How to handle "*in* a bordure..." ?
@@ -81,7 +86,7 @@ def t_ALTERED(t):
 t_FUR=r"(vair.in.pale|vair|counter.vair|ermines?|erminois|pean)"
 
 t_PARTYPER=r"(party[ ]per|per)"
-t_FIMBRIATED=r"fimbriated"
+t_FIMBRIATED=r"fimbriated|voided"
 t_INVERTED=r"inverted"
 t_COUNTERCHARGED=r"countercha[rn]ged"
 
@@ -132,6 +137,14 @@ lookupdict={
     "labels?": blazon.Label,
     "lables?": blazon.Label,
     "roundels?": blazon.Roundel,
+    "bezant[ys]?" : (lambda *a: blazon.Roundel(tincture="or")),
+    "plate[ys]?" : (lambda *a: blazon.Roundel(tincture="argent")),
+    "ogress(es)?" : (lambda *a: blazon.Roundel(tincture="sable")),
+    "pellet[sy]?" : (lambda *a: blazon.Roundel(tincture="sable")),
+    "torteaux?" : (lambda *a: blazon.Roundel(tincture="gules")),
+    "hurt[ys]?" : (lambda *a: blazon.Roundel(tincture="azure")),
+    "golpes?" : (lambda *a: blazon.Roundel(tincture="purpure")),
+    "pomes?" : (lambda *a: blazon.Roundel(tincture="vert")),
     "billets?": blazon.Billet,
     "annulets?": blazon.Annulet,
     "lozenges?": blazon.Lozenge,

@@ -12,11 +12,17 @@ class Pattern: pass                     # gyronny, checky, etc.
 
 class Tincture:                         # Metal or color.
     lookup={ "azure" : "blue",
+             "de larmes" : "blue",
              "gules" : "red",
+             "de sang" : "red",
              "or" : "yellow",
+             "d'or" : "yellow",
              "argent" : "white",
+             "d'eau" : "white",
              "sable" : "black",
+             "de poix" : "black",
              "vert" : "green",
+             "d'huile" : "green",
              "purpure" : "purple",
              "tenné" : "#cd5700",
              "tenne" : "#cd5700",
