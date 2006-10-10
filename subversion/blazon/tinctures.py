@@ -222,9 +222,9 @@ class Semy(Fur):
         self.colors=(self.background,self.charge.tincture)
         charge2=copy.deepcopy(self.charge)
         self.charge.moveto((5,15))
-        self.charge.scale(.3)
+        self.charge.scale(.1)
         charge2.moveto((15,5))
-        charge2.scale(.3)
+        charge2.scale(.1)
         #pattern.addElement(SVGdraw.rect(0,0,30,30,stroke="black",
         #                                stroke_width=".3",fill="none"))
         pattern.addElement(self.charge.finalizeSVG())
