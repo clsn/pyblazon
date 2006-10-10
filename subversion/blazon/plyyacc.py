@@ -131,10 +131,13 @@ def p_charges(p):
     else:
         p[0]=p[1]+[p[3]]
 
-def p_grouporcharge(p):
-    """grouporcharge : group
-                     | charge"""
+def p_grouporcharge_a(p):
+    """grouporcharge : group"""
     p[0]=p[1]
+
+def p_grouporcharge_b(p):
+    """grouporcharge : charge"""
+    p[0]=blazon.ChargeGroup(1,p[1])
 
 def p_group(p):
     """group : amount charge

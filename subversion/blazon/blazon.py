@@ -146,7 +146,6 @@ class Ordinary:
 
    def patternContents(self,num):
       "return a list of [scale, pos1, pos2...] for num charges rendered on this ordinary or charge."
-      sys.stderr.write("In patternContents of a %s.\n"%self.__class__)
       for elt in self.charges:
          try:
             rv=elt.patternSiblings(num)
@@ -161,6 +160,15 @@ class Ordinary:
       except:
          pass
       return None
+
+   def moveto(self,*a):
+      pass
+   def shiftto(self,*a):
+      pass
+   def scale(self,*a):
+      pass
+   def resize(self,*a):
+      pass
 
 class Field(Ordinary):
    def __init__(self,tincture="argent"):
@@ -264,7 +272,6 @@ class Cross(Ordinary):
                  [.4,(-26,-26),(26,-26),(-26,26)], # ???
                  [.3,(-26,-26),(26,-26),(-26,26),(26,26)] # 4 charges
                  ]
-       sys.stderr.write("Being consulted in patternSiblings(%d)\n"%num)
        try:
           return patterns[num]
        except:
@@ -691,15 +698,12 @@ class ChargeGroup:            # Kind of an invisible ordinary
                            [.35, (-21,-21),(21,-21),(0,0),(-21,21),(21,21)]
                            ]
         placements=None
-        sys.stderr.write("in arrange.  self=%s, parent=%s.\n"%(self.__class__,
-                                                               self.parent.__class__))
         try:
            placements=charges[0].patternWithOthers(len(self.charges))
         except:
            pass
         if not placements:
            try:
-              sys.stderr.write("About to try parent.patternContents of a %s\n"%self.parent.__class__)
               placements=self.parent.patternContents(len(self.charges))
            except:
               pass
@@ -712,7 +716,6 @@ class ChargeGroup:            # Kind of an invisible ordinary
            raise "Too many objects"
         scale=placements[0]
         for i in range(1,num+1):
-           sys.stderr.write("About to move something to %s\n"%str(placements[i]))
            move(self.charges[i-1], placements[i])
            self.charges[i-1].resize(scale)
                     
