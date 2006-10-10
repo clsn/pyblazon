@@ -162,7 +162,8 @@ class Ordinary:
          pass
       return None
 
-   def invertPattern(self,pat):
+   @staticmethod
+   def invertPattern(pat):
       for i in range(1,len(pat)):
          pat[i]=(pat[i][0],-pat[i][1])
 
@@ -260,7 +261,8 @@ class Cross(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
-    def patternContents(self,num):
+    @staticmethod
+    def patternContents(num):
        patterns=[[.3],[.3,(0,0)],             # 0,1
                  [.25,(-30,0),(30,0)],
                  [.25,(-30,0),(30,0),(0,0)], # ???
@@ -271,7 +273,8 @@ class Cross(Ordinary):
        except:
           return None
 
-    def patternSiblings(self,num):
+    @staticmethod
+    def patternSiblings(num):
        patterns=[[.4],[.4,(-26,-26)],   # ???
                  [.4,(-26,-26),(26,-26)], # ???
                  [.4,(-26,-26),(26,-26),(-26,26)], # ???
@@ -293,7 +296,8 @@ class Fesse(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
-    def patternContents(self,num):
+    @staticmethod
+    def patternContents(num):
        patterns=[[.5],[.5,(0,0)],
                  [.5,(-20,0),(20,0)],
                  [.35,(-28,0),(28,0),(0,0)],
@@ -304,6 +308,7 @@ class Fesse(Ordinary):
        except:
           return None
 
+    @staticmethod
     def patternSiblings(self,num):
        patterns=[[.3],[.3,(0,-33)],
                  [.3,(0,-33),(0,33)],
@@ -323,7 +328,8 @@ class Saltire(Cross):
         Cross.process(self)
         self.clipPath.attributes["transform"]="rotate(45)"
 
-    def patternContents(self,num):
+    @staticmethod
+    def patternContents(num):
        patterns=[[.25],[.25,(0,0)],
                  [.25,(-26,-26),(26,-26)],
                  [.25,(-26,-26),(0,0),(26,-26)],
@@ -336,8 +342,9 @@ class Saltire(Cross):
           return None
 
     # This works okay for patternSiblings, actually.
-    def patternSiblings(self,num):
-       return Cross.patternContents(self,num)
+    @staticmethod
+    def patternSiblings(num):
+       return Cross.patternContents(num)
 
 class Pall(Ordinary):
     def process(self):
@@ -355,7 +362,8 @@ class Pall(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
-    def patternSiblings(self,num):
+    @staticmethod
+    def patternSiblings(num):
        patterns=[[.35],[.35,(0,-30)],
                  [.35,(-30,0),(30,0)],
                  [.35,(-30,0),(30,0),(0,-30)]
@@ -368,7 +376,8 @@ class Pall(Ordinary):
           self.invertPattern(res)
        return res
 
-    def patternContents(self,num):
+    @staticmethod
+    def patternContents(num):
        patterns=[[.3],[.27,(0,0)],
                  [.2,(-25,-25),(25,-25)],
                  [.2,(-25,-25),(25,-25),(0,25)],
@@ -390,7 +399,8 @@ class Pale(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
-    def patternSiblings(self,num):
+    @staticmethod
+    def patternSiblings(num):
        patterns=[[.4],[.4,(-26,0)],
                  [.4,(-26,0),(26,0)],
                  [.3,(-26,-26),(-26,26),(26,0)], # ???
@@ -403,7 +413,8 @@ class Pale(Ordinary):
        except:
           return None
 
-    def patternContents(self,num):
+    @staticmethod
+    def patternContents(num):
        patterns=[[.25],[.25,(0,0)],
                  [.25,(0,-30),(0,30)],
                  [.25,(0,-30),(0,30),(0,0)],
@@ -435,7 +446,8 @@ class Bend(Ordinary):
         # Hrm.  But now the outer clipping path (?) is clipping the end of
         # the bend??
 
-    def patternSiblings(self,num):
+    @staticmethod
+    def patternSiblings(num):
        patterns=[[.4],[.4,(26,-26)],
                  [.4,(26,-26),(-23,23)],
                  [.35,(-23,23),(8,-32),(32,-8)],
@@ -448,7 +460,8 @@ class Bend(Ordinary):
        except:
           return None
 
-    def patternContents(self,num):
+    @staticmethod
+    def patternContents(num):
        # Should have something to rotate the charges too...
        patterns=[[.25],[.25,(0,0)],
                  [.25,(-30,-30),(26,26)],
@@ -471,7 +484,8 @@ class Bendlet(Bend):
        self.clipPath=p
        self.clipPathElt.addElement(p)
 
-    def patternWithOthers(self,num):
+    @staticmethod
+    def patternWithOthers(num):
        patterns=[[1],[1,(0,0)],
                  [1,(7,-7),(-7,7)],
                  [1,(-10,10),(0,0),(10,-10)],
@@ -498,8 +512,9 @@ class BendSinister(Bend):
         self.setup(*args,**kwargs)
         self.transform="rotate(45)"
 
-    def patternContents(self,num):
-       b=Bend.patternContents(self,num)
+    @staticmethod
+    def patternContents(num):
+       b=Bend.patternContents(num)
        if not b:
           return None
        rv=[]
@@ -508,8 +523,9 @@ class BendSinister(Bend):
           rv.append((-b[i][0],b[i][1]))
        return rv
 
-    def patternSiblings(self,num):
-       b=Bend.patternSiblings(self,num)
+    @staticmethod
+    def patternSiblings(num):
+       b=Bend.patternSiblings(num)
        rv=[]
        rv.append(b[0])
        for i in range(1,len(b)):
@@ -529,8 +545,9 @@ class BendletSinister(BendSinister,Bendlet):
    def shiftto(self,a):
       Bendlet.shiftto(self,a)
 
-   def patternWithOthers(self,num):
-      res=Bendlet.patternWithOthers(self,num)
+   @staticmethod
+   def patternWithOthers(num):
+      res=Bendlet.patternWithOthers(num)
       for i in range(1,len(res)):       # Skip the scale...
          res[i]=(-res[i][0],res[i][1])
       return res
@@ -559,7 +576,8 @@ class Chief(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
-    def patternContents(self,num):
+    @staticmethod
+    def patternContents(num):
        # Chief doesn't need a patternSiblings.
        # Also note that Chief is translated, so everything is around the origin.
        patterns=[[.25],[.25,(0,0)],
@@ -616,7 +634,8 @@ class Chevron(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
-    def patternContents(self,num):
+    @staticmethod
+    def patternContents(num):
        patterns=[[.25],[.25,(0,-5)],
                  [.25,(-20,9),(20,9)],
                  [.25,(-25,12),(25,12),(0,-5)],
@@ -631,7 +650,8 @@ class Chevron(Ordinary):
           return None
        return res
 
-    def patternSiblings(self,num):
+    @staticmethod
+    def patternSiblings(num):
        patterns=[[.35],[.4,(0,32)],
                  [.3,(-33,-10),(33,-10)],
                  [.3,(-33,-10),(33,-10),(0,30)]
@@ -660,7 +680,8 @@ class Pile(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
-    def patternWithOthers(self,num):
+    @staticmethod
+    def patternWithOthers(num):
        if num<=1:
           return [1,(0,0)]
        res=[]
@@ -668,6 +689,31 @@ class Pile(Ordinary):
        for i in range(0,num):
           res.append((90.0/num*((num-1.0)/2-i),0))
        return res
+
+    @staticmethod
+    def patternSiblings(num):
+       patterns=[[.4],[.4,(-27,10)],
+                 [.4,(-27,10),(27,10)],
+                 [.3,(-30,-15),(-30,15),(30,-15)], # ???
+                 [.3,(-30,-15),(-30,15),(30,-15),(30,15)]
+                 ]
+       try:
+          return patterns[num]
+       except:
+          return None
+
+    @staticmethod
+    def patternContents(num):
+       # Argh.  I think I want to be able to scale different elements
+       # differently!
+       patterns=[[.4],[.4,(0,-15)],
+                 [.4,(0,-25),(0,25)],
+                 [.3,(0,-30),(0,0),(0,30)]
+                 ]
+       try:
+          return patterns[num]
+       except:
+          return None
 
     def moveto(self,loc):
        if not self.svg.attributes.has_key("transform"):
