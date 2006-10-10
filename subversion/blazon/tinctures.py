@@ -378,18 +378,34 @@ class PerPale(Paly):
         # Per Pale is just Paly of two!!
         Paly.__init__(self,2,*args,**kwargs)
 
+    def patternContents(self,num):
+        foo=blazon.Pale()
+        return foo.patternSiblings(num)
+
 class PerFesse(Barry):
     def __init__(self,*args,**kwargs):
         Barry.__init__(self,2,*args,**kwargs)
+
+    def patternContents(self,num):
+        foo=blazon.Fesse()
+        return foo.patternSiblings(num)
 
 class PerBend(Bendy):
     def __init__(self,*args,**kwargs):
         # Winds up in the wrong place. :(
         Bendy.__init__(self,2,*args,**kwargs)
 
+    def patternContents(self,num):
+        foo=blazon.Bend()
+        return foo.patternSiblings(num)
+
 class PerBendSinister(BendySinister):
     def __init__(self,*args,**kwargs):
         BendySinister.__init__(self,2,*args,**kwargs)
+
+    def patternContents(self,num):
+        foo=blazon.BendSinister()
+        return foo.patternSiblings(num)
 
 class PerPall(Paly):
     def __init__(self,color1="argent",color2="sable",color3="gules",linetype="plain"):
@@ -447,14 +463,21 @@ class PerPall(Paly):
 
     def invert(self):
         self.inverted=True
-        
+
+    def patternContents(self,num):
+        foo=blazon.Pall()
+        return foo.patternSiblings(num)        
 
 class PerCross(Paly):
    def __init__(self,color1="argent",color2="sable",linetype="plain"):
       # reverse order of colors  so I don't have to bother rewriting assemble()
       self.parseColors(color2,color1)
       self.lineType=linetype
-   
+
+   def patternContents(self,num):
+       foo=blazon.Cross()
+       return foo.patternSiblings(num)        
+
    def assemble(self):
       p=partLine()
       p.lineType=self.lineType
@@ -472,6 +495,11 @@ class PerSaltire(PerCross):
    def assemble(self):
       PerCross.assemble(self)
       self.path.attributes["transform"]="rotate(-45)"
+
+   def patternContents(self,num):
+       foo=blazon.Saltire()
+       return foo.patternSiblings(num)        
+
 
 # start with default: Gyronny of eight.
 class Gyronny(Paly):
@@ -497,6 +525,10 @@ class PerChevron(Paly):
         self.parseColors(color1,color2)
         self.lineType=linetype
         self.inverted=False
+
+    def patternContents(self,num):
+        foo=blazon.Chevron()
+        return foo.patternSiblings(num)
    
     def assemble(self):
         p=partLine(linetype=self.lineType)

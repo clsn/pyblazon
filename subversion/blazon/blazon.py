@@ -148,6 +148,7 @@ class Ordinary:
       "return a list of [scale, pos1, pos2...] for num charges rendered on this ordinary or charge."
       for elt in self.charges:
          try:
+            sys.stderr.write("Trying patternsiblings on a %s\n"%elt.__class__)
             rv=elt.patternSiblings(num)
             if rv:
                return rv
@@ -705,19 +706,31 @@ class ChargeGroup:            # Kind of an invisible ordinary
         if not placements:
            try:
               placements=self.parent.patternContents(len(self.charges))
+              sys.stderr.write("Placements: %s\n"%str(placements))
            except:
               pass
         if not placements:
-           placements=defaultplacements
+           try:
+              placements=defaultplacements[num]
+           except:
+              pass
         if num>=len(placements):
            # I dunno... Fake it somehow?
-           placements=defaultplacements # and try again.
+           try:
+              placements=defaultplacements[num] # and try again.
+           except:
+              pass
         if num>len(placements):
            raise "Too many objects"
         scale=placements[0]
         for i in range(1,num+1):
+           sys.stderr.write("About to move something to %s\n"%str(placements[i]))
            move(self.charges[i-1], placements[i])
            self.charges[i-1].resize(scale)
+
+    def patternSiblings(self,num):
+       # Just use the first charge.
+       return self.charges[0].patternSiblings(num)
                     
 
 class Charge(Ordinary):
