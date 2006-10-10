@@ -661,6 +661,8 @@ class Pile(Ordinary):
         self.clipPathElt.addElement(self.clipPath)
 
     def patternWithOthers(self,num):
+       if num<=1:
+          return [1,(0,0)]
        res=[]
        res.append(2.0/num)
        for i in range(0,num):
@@ -672,10 +674,15 @@ class Pile(Ordinary):
           self.svg.attributes["transform"]=""
        self.svg.attributes["transform"]+=" translate(%.4f,%.4f)"%loc
 
+    def shiftto(self,loc):
+       if not self.clipPathElt.attributes.has_key("transform"):
+          self.clipPathElt.attributes["transform"]=""
+       self.clipPathElt.attributes["transform"]+=" translate(%.4f,%.4f)"%loc
+
     def resize(self,factor):
-       if not self.svg.attributes.has_key("transform"):
-          self.svg.attributes["transform"]=""
-       self.svg.attributes["transform"]+=" scale(%.4f,1)"%factor
+       if not self.clipPathElt.attributes.has_key("transform"):
+          self.clipPathElt.attributes["transform"]=""
+       self.clipPathElt.attributes["transform"]+=" scale(%.4f,1)"%factor
        
 class Base(Ordinary):
    def process(self):
