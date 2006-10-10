@@ -101,6 +101,7 @@ class Ordinary:
          self.addCharge(elt)
 
    def invert(self):
+      self.inverted=True
       if not hasattr(self,"clipTransforms"):
          self.clipTransforms=""
       self.clipTransforms += " rotate(180)"
@@ -148,7 +149,6 @@ class Ordinary:
       "return a list of [scale, pos1, pos2...] for num charges rendered on this ordinary or charge."
       for elt in self.charges:
          try:
-            sys.stderr.write("Trying patternsiblings on a %s\n"%elt.__class__)
             rv=elt.patternSiblings(num)
             if rv:
                return rv
@@ -161,6 +161,10 @@ class Ordinary:
       except:
          pass
       return None
+
+   def invertPattern(self,pat):
+      for i in range(1,len(pat)):
+         pat[i]=(pat[i][0],-pat[i][1])
 
    def moveto(self,*a):
       pass
@@ -357,9 +361,12 @@ class Pall(Ordinary):
                  [.35,(-30,0),(30,0),(0,-30)]
                  ]
        try:
-          return patterns[num]
+          res=patterns[num]
        except:
           return None
+       if hasattr(self,"inverted") and self.inverted:
+          self.invertPattern(res)
+       return res
 
     def patternContents(self,num):
        patterns=[[.3],[.27,(0,0)],
@@ -368,7 +375,10 @@ class Pall(Ordinary):
                  [.2,(-25,-25),(25,-25),(0,25),(0,0)]
                  ]
        try:
-          return patterns[num]
+          res=patterns[num]
+          if hasattr(self,"inverted") and self.inverted:
+             self.invertPattern(res)
+          return res
        except:
           return None
 
@@ -449,7 +459,40 @@ class Bend(Ordinary):
           return patterns[num]
        except:
           return None
-       
+
+
+class Bendlet(Bend):
+    def process(self):
+       r=partLine()
+       r.lineType=self.lineType
+       r.rect(-5,-Ordinary.HEIGHT,10,Ordinary.HEIGHT*3)
+       p=SVGdraw.path(r)
+       p.attributes["transform"]=self.transform
+       self.clipPath=p
+       self.clipPathElt.addElement(p)
+
+    def patternWithOthers(self,num):
+       patterns=[[1],[1,(0,0)],
+                 [1,(7,-7),(-7,7)],
+                 [1,(-10,10),(0,0),(10,-10)],
+                 [1,(-21,21),(-7,7),(7,-7),(21,-21)],
+                 [1,(-24,24),(-12,12),(0,0),(12,-12),(24,-24)]
+                 ]
+       try:
+          return patterns[num]
+       except:
+          return None
+
+    def moveto(self,coords):
+       if not self.svg.attributes.has_key("transform"):
+          self.svg.attributes["transform"]=""
+       self.svg.attributes["transform"]+=" translate(%.4f,%.4f)"%coords
+
+    def shiftto(self,coords):
+       if not self.clipPathElt.attributes.has_key("transform"):
+          self.clipPathElt.attributes["transform"]=""
+       self.clipPathElt.attributes["transform"]+=" translate(0,%.4f)"%coords[1]
+   
 class BendSinister(Bend):
     def __init__(self,*args,**kwargs):
         self.setup(*args,**kwargs)
@@ -472,6 +515,25 @@ class BendSinister(Bend):
        for i in range(1,len(b)):
           rv.append((-b[i][0],b[i][1]))
        return rv
+
+class BendletSinister(BendSinister,Bendlet):
+   def __init__(self,*args,**kwargs):
+      BendSinister.__init__(self,*args,**kwargs)
+
+   def process(self):
+      Bendlet.process(self)
+
+   def moveto(self,a):
+      Bendlet.moveto(self,a)
+
+   def shiftto(self,a):
+      Bendlet.shiftto(self,a)
+
+   def patternWithOthers(self,num):
+      res=Bendlet.patternWithOthers(self,num)
+      for i in range(1,len(res)):       # Skip the scale...
+         res[i]=(-res[i][0],res[i][1])
+      return res
 
 class Chief(Ordinary):
     # Chiefs will also have to be handled specially, as they ordinarily
@@ -562,9 +624,12 @@ class Chevron(Ordinary):
                  [.25,(-33,18.5),(33,18.5),(-17,5.5),(17,5.5),(0,-5)]
                  ]
        try:
-          return patterns[num]
+          res=patterns[num]
+          if hasattr(self,"inverted") and self.inverted:
+            self.invertPattern(res)
        except:
           return None
+       return res
 
     def patternSiblings(self,num):
        patterns=[[.35],[.4,(0,32)],
@@ -572,9 +637,12 @@ class Chevron(Ordinary):
                  [.3,(-33,-10),(33,-10),(0,30)]
                  ]
        try:
-          return patterns[num]
+          res=patterns[num]
+          if hasattr(self,"inverted") and self.inverted:
+             self.invertPattern(res)
        except:
           return None
+       return res
        
 
 class Pile(Ordinary):
@@ -649,8 +717,8 @@ class ChargeGroup:            # Kind of an invisible ordinary
         # Simplified finalizeSVG for ChargeGroup.
         self.process()
         for charge in self.charges:
-            charge.parent=self.parent
-            self.maingroup.addElement(charge.finalizeSVG())
+           charge.parent=self.parent
+           self.maingroup.addElement(charge.finalizeSVG())
         return self.svg
 
     def process(self):
@@ -700,13 +768,12 @@ class ChargeGroup:            # Kind of an invisible ordinary
                            ]
         placements=None
         try:
-           placements=charges[0].patternWithOthers(len(self.charges))
+           placements=self.charges[0].patternWithOthers(len(self.charges))
         except:
            pass
         if not placements:
            try:
               placements=self.parent.patternContents(len(self.charges))
-              sys.stderr.write("Placements: %s\n"%str(placements))
            except:
               pass
         if not placements:
@@ -724,7 +791,6 @@ class ChargeGroup:            # Kind of an invisible ordinary
            raise "Too many objects"
         scale=placements[0]
         for i in range(1,num+1):
-           sys.stderr.write("About to move something to %s\n"%str(placements[i]))
            move(self.charges[i-1], placements[i])
            self.charges[i-1].resize(scale)
 

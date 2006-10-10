@@ -13,6 +13,11 @@ class Globals:
     colors=[]
     shield=None
 
+def fillin(col):
+    for obj in Globals.colorless:
+        obj.tincture=col
+    Globals.colorless=[]
+
 def p_blazon_1(p):
     'blazon : fulltreatment'
     shield=blazon.Field()
@@ -37,25 +42,30 @@ def p_blazon_2(p):
 def p_fulltreatment_1(p):
     "fulltreatment : treatment"
     p[0]=p[1]
-
+    fillin(p[0])
+    
 def p_fulltreatment_2(p):
     "fulltreatment : PARTYPER ORDINARY optinverted optlinetype fulltreatment AND fulltreatment"
     p[0]=lookup("per "+p[2])(p[5],p[7],linetype=p[4])
     p[3](p[0])
+    fillin(p[0])
 
 def p_fulltreatment_2_1(p):
     "fulltreatment : PARTYPER PALL optinverted optlinetype fulltreatment fulltreatment AND fulltreatment"
     p[0]=lookup("per "+p[2])(p[5],p[6],p[8],linetype=p[4])
     p[3](p[0])
+    fillin(p[0])
 
 def p_treatment_1(p):
     "treatment : COLOR"
     p[0]=tinctures.Tincture(p[1])
     Globals.colors.append(p[0])
+    fillin(p[0])
 
 def p_fulltreatment_3(p):
     "fulltreatment : LINEY optlinetype optamt treatment AND treatment"
     p[0]=lookup(p[1])(p[3],p[4],p[6],linetype=p[2])
+    fillin(p[0])
 
 def p_fulltreatment_4(p):
     "fulltreatment : LINEY LINEY treatment AND treatment"
@@ -69,23 +79,28 @@ def p_fulltreatment_4(p):
         p[0]=check(0,p[3],p[5])
     else:
         p[0]=lookup(p[1])(0,lookup(p[2])(0,p[3],p[5]),lookup(p[2])(0,p[5],p[3]))
+    fillin(p[0])
 
 def p_treatment_4(p):
     """treatment : FUR
                  | COUNTERCHARGED"""
     p[0]=lookup(p[1])()
+    fillin(p[0])
 
 def p_treatment_5(p):
     "treatment : FURRY treatment AND treatment"
     p[0]=lookup(p[1])(p[2],p[4])
+    fillin(p[0])
 
 def p_treatment_6(p):
     "treatment : treatment ALTERED treatment"
     p[0]=lookup(p[2])(p[1],p[3])
+    fillin(p[0])
 
 def p_treatment_7(p):
     "treatment : QUARTERLY fulltreatment AND fulltreatment"
     p[0]=lookup(p[1])(p[2],p[4])
+    fillin(p[0])
 
 def p_treatment_8(p):
     "treatment : OF THE CARDINAL"
@@ -94,6 +109,7 @@ def p_treatment_8(p):
        "sixth":6, "seventh":7, "eighth":8, "ninth":9, "tenth":10, "last":0}
     n=d[p[3]]
     p[0]=Globals.colors[n-1]
+    fillin(p[0])
 
 def p_treatment_9(p):
     """treatment : COLOR SEMY OF charge
@@ -108,15 +124,12 @@ def p_treatment_9(p):
         p[0]=tinctures.Semy(tinctures.Tincture(p[1]),f)
     else:                               # len(p)==3
         p[0]=tinctures.Semy(tinctures.Tincture(p[1]),lookup(p[2])())
+    fillin(p[0])
 
 def p_opttreatment(p):
     """opttreatment : fulltreatment
                     | empty"""
     p[0]=p[1]
-    if p[1]:
-        for obj in Globals.colorless:
-            obj.tincture=p[1]
-        Globals.colorless=[]
 
 def p_optlinetype(p):
     """optlinetype : LINETYPE
@@ -138,6 +151,8 @@ def p_grouporcharge_a(p):
 def p_grouporcharge_b(p):
     """grouporcharge : charge"""
     p[0]=blazon.ChargeGroup(1,p[1])
+    if not p[1].tincture:
+        Globals.colorless.append(p[0].charges[0])
 
 def p_group(p):
     """group : amount charge
@@ -168,7 +183,7 @@ def p_charge_1(p):
     p[3](res)
     res.lineType=p[4]
     if not p[5]:
-        if not res.tincture.color or res.tincture.color == "none":
+        if not res.tincture or not res.tincture.color or res.tincture.color == "none":
             Globals.colorless.append(res)
             res.tincture=None
     else:

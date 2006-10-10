@@ -65,7 +65,7 @@ def t_CHARGE(t):
 
 # Hmm.  How to handle "*in* a bordure..." ?
 t_BORDURE=r"bordure"
-t_ORDINARY=r"(fesse?|pale|cross|saltire|bend[ ]sinister|bend|pile|chevron|base|label)"
+t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|pile|chevron|base|label)"
 
 t_PALL=r"pall"
 
@@ -128,6 +128,8 @@ lookupdict={
     "cross": blazon.Cross,
     "saltire": blazon.Saltire,
     "bend" : blazon.Bend,
+    "bendlets?" : blazon.Bendlet,
+    "bendlets?.sinister" : blazon.BendletSinister,
     "pile": blazon.Pile,
     "chevron": blazon.Chevron,
     "bend sinister": blazon.BendSinister,
