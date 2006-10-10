@@ -165,7 +165,9 @@ class Ordinary:
    @staticmethod
    def invertPattern(pat):
       for i in range(1,len(pat)):
-         pat[i]=(pat[i][0],-pat[i][1])
+         x=list(pat[i])
+         x[1]*=-1
+         pat[i]=tuple(x)
 
    def moveto(self,*a):
       pass
@@ -690,30 +692,34 @@ class Pile(Ordinary):
           res.append((90.0/num*((num-1.0)/2-i),0))
        return res
 
-    @staticmethod
-    def patternSiblings(num):
+    def patternSiblings(self,num):
        patterns=[[.4],[.4,(-27,10)],
                  [.4,(-27,10),(27,10)],
                  [.3,(-30,-15),(-30,15),(30,-15)], # ???
                  [.3,(-30,-15),(-30,15),(30,-15),(30,15)]
                  ]
        try:
-          return patterns[num]
+          res=patterns[num]
        except:
           return None
+       if hasattr(self,"inverted") and self.inverted:
+          self.invertPattern(res)
+       return res
 
-    @staticmethod
-    def patternContents(num):
+    def patternContents(self,num):
        # Argh.  I think I want to be able to scale different elements
        # differently!
        patterns=[[.4],[.4,(0,-15)],
-                 [.4,(0,-25),(0,25)],
-                 [.3,(0,-30),(0,0),(0,30)]
+                 [.4,(0,-25),(0,15,(.2,))],
+                 [.3,(0,-33,(.4,)),(0,-5),(0,15,(.2,))]
                  ]
        try:
-          return patterns[num]
+          res=patterns[num]
        except:
           return None
+       if hasattr(self,"inverted") and self.inverted:
+          self.invertPattern(res)
+       return res
 
     def moveto(self,loc):
        if not self.svg.attributes.has_key("transform"):
@@ -725,10 +731,11 @@ class Pile(Ordinary):
           self.clipPathElt.attributes["transform"]=""
        self.clipPathElt.attributes["transform"]+=" translate(%.4f,%.4f)"%loc
 
-    def resize(self,factor):
+    def resize(self,x,y=None):
+       # I don't really care about y anyway.
        if not self.clipPathElt.attributes.has_key("transform"):
           self.clipPathElt.attributes["transform"]=""
-       self.clipPathElt.attributes["transform"]+=" scale(%.4f,1)"%factor
+       self.clipPathElt.attributes["transform"]+=" scale(%.4f,1)"%x
        
 class Base(Ordinary):
    def process(self):
@@ -860,9 +867,14 @@ class ChargeGroup:            # Kind of an invisible ordinary
         if num>len(placements):
            raise "Too many objects"
         scale=placements[0]
+        if type(scale) is not type(()):
+           scale=(scale,scale)
         for i in range(1,num+1):
-           move(self.charges[i-1], placements[i])
-           self.charges[i-1].resize(scale)
+           move(self.charges[i-1], (placements[i][0],placements[i][1]))
+           if len(placements[i])>2 and len(placements[2]):
+              self.charges[i-1].resize(*placements[i][2])
+           else:
+              self.charges[i-1].resize(*scale)
 
     def patternSiblings(self,num):
        # Just use the first charge.
