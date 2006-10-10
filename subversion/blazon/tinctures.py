@@ -270,7 +270,7 @@ class Paly(Tincture):
       width=float(blazon.Ordinary.WIDTH)/self.pieces
       # Make the lines a tiny bit too wide, so paly wavy doesn't show
       # an extra bit.
-      if self.pieces>4 and self.lineType <> "plain":
+      if self.lineType <> "plain":
          width*=1.03
       for i in range(1,self.pieces,2):
          p.rect(-blazon.Ordinary.FESSPTX+i*width,-blazon.Ordinary.HEIGHT,

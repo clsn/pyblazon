@@ -660,6 +660,23 @@ class Pile(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
+    def patternWithOthers(self,num):
+       res=[]
+       res.append(2.0/num)
+       for i in range(0,num):
+          res.append((90.0/num*((num-1.0)/2-i),0))
+       return res
+
+    def moveto(self,loc):
+       if not self.svg.attributes.has_key("transform"):
+          self.svg.attributes["transform"]=""
+       self.svg.attributes["transform"]+=" translate(%.4f,%.4f)"%loc
+
+    def resize(self,factor):
+       if not self.svg.attributes.has_key("transform"):
+          self.svg.attributes["transform"]=""
+       self.svg.attributes["transform"]+=" scale(%.4f,1)"%factor
+       
 class Base(Ordinary):
    def process(self):
       p=partLine()
