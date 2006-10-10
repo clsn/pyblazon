@@ -144,6 +144,23 @@ class Ordinary:
       # self.done=True
       return self.svg
 
+   def patternContents(self,num):
+      "return a list of [scale, pos1, pos2...] for num charges rendered on this ordinary or charge."
+      sys.stderr.write("In patternContents of a %s.\n"%self.__class__)
+      for elt in self.charges:
+         try:
+            rv=elt.patternSiblings(num)
+            if rv:
+               return rv
+         except:
+            pass
+      try:
+         rv=self.tincture.patternContents(num)
+         if rv:
+            return rv
+      except:
+         pass
+      return None
 
 class Field(Ordinary):
    def __init__(self,tincture="argent"):
@@ -210,7 +227,6 @@ class Field(Ordinary):
       return drawing.toXml()
 
 
-
 class Cross(Ordinary):
     def process(self):
         p=partLine()
@@ -231,6 +247,29 @@ class Cross(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
+    def patternContents(self,num):
+       patterns=[[.3],[.3,(0,0)],             # 0,1
+                 [.25,(-30,0),(30,0)],
+                 [.25,(-30,0),(30,0),(0,0)], # ???
+                 [.25,(-30,0),(30,0),(0,30),(0,-30)],
+                 [.25,(-30,0),(30,0),(0,30),(0,-30),(0,0)]]
+       try:
+          return patterns[num]
+       except:
+          return None
+
+    def patternSiblings(self,num):
+       patterns=[[.4],[.4,(-26,-26)],   # ???
+                 [.4,(-26,-26),(26,-26)], # ???
+                 [.4,(-26,-26),(26,-26),(-26,26)], # ???
+                 [.3,(-26,-26),(26,-26),(-26,26),(26,26)] # 4 charges
+                 ]
+       sys.stderr.write("Being consulted in patternSiblings(%d)\n"%num)
+       try:
+          return patterns[num]
+       except:
+          return None
+
 
 class Fesse(Ordinary):
     def process(self):
@@ -241,11 +280,52 @@ class Fesse(Ordinary):
         p.rect(-Ordinary.WIDTH,-20,Ordinary.WIDTH*3,40)
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
+
+    def patternContents(self,num):
+       patterns=[[.5],[.5,(0,0)],
+                 [.5,(-20,0),(20,0)],
+                 [.35,(-28,0),(28,0),(0,0)],
+                 [.29,(-33,0),(-11,0),(11,0),(33,0)]
+                ]
+       try:
+          return patterns[num]
+       except:
+          return None
+
+    def patternSiblings(self,num):
+       patterns=[[.3],[.3,(0,-33)],
+                 [.3,(0,-33),(0,33)],
+                 [.3,(-33,-33),(33,-33),(0,33)],
+                 [.3,(-33,-33),(33,-33),(33,33),(-33,33)],
+                 [.3,(-33,-33),(0,-33),(33,-33),(-20,33),(20,33)],
+                 [.3,(-33,-33),(0,-33),(33,-33),(-20,33),(0,44),(20,33)]
+                ]
+       try:
+          return patterns[num]
+       except:
+          return None
+                 
         
 class Saltire(Cross):
     def process(self):
         Cross.process(self)
         self.clipPath.attributes["transform"]="rotate(45)"
+
+    def patternContents(self,num):
+       patterns=[[.25],[.25,(0,0)],
+                 [.25,(-26,-26),(26,-26)],
+                 [.25,(-26,-26),(0,0),(26,-26)],
+                 [.25,(-26,-26),(-26,26),(26,-26),(26,26)],
+                 [.25,(-26,-26),(-26,26),(26,-26),(26,26),(0,0)]
+                 ]
+       try:
+          return patterns[num]
+       except:
+          return None
+
+    # This works okay for patternSiblings, actually.
+    def patternSiblings(self,num):
+       return Cross.patternContents(self,num)
 
 class Pall(Ordinary):
     def process(self):
@@ -263,6 +343,27 @@ class Pall(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
+    def patternSiblings(self,num):
+       patterns=[[.35],[.35,(0,-30)],
+                 [.35,(-30,0),(30,0)],
+                 [.35,(-30,0),(30,0),(0,-30)]
+                 ]
+       try:
+          return patterns[num]
+       except:
+          return None
+
+    def patternContents(self,num):
+       patterns=[[.3],[.27,(0,0)],
+                 [.2,(-25,-25),(25,-25)],
+                 [.2,(-25,-25),(25,-25),(0,25)],
+                 [.2,(-25,-25),(25,-25),(0,25),(0,0)]
+                 ]
+       try:
+          return patterns[num]
+       except:
+          return None
+
 class Pale(Ordinary):
     def process(self):
         p=partLine()
@@ -270,6 +371,31 @@ class Pale(Ordinary):
         p.rect(-10,-Ordinary.HEIGHT,20,Ordinary.HEIGHT*3)
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
+
+    def patternSiblings(self,num):
+       patterns=[[.4],[.4,(-26,0)],
+                 [.4,(-26,0),(26,0)],
+                 [.3,(-26,-26),(-26,26),(26,0)], # ???
+                 [.3,(-26,-26),(-26,26),(26,-26),(26,26)],
+                 [.3,(-26,-26),(-26,26),(26,-26),(26,26),(-26,0)],
+                 [.3,(-26,-26),(-26,26),(26,-26),(26,26),(-26,0),(26,0)]
+                 ]
+       try:
+          return patterns[num]
+       except:
+          return None
+
+    def patternContents(self,num):
+       patterns=[[.25],[.25,(0,0)],
+                 [.25,(0,-30),(0,30)],
+                 [.25,(0,-30),(0,30),(0,0)],
+                 [.25,(0,-36),(0,12),(0,-12),(0,36)],
+                 [.25,(0,-40),(0,-20),(0,0),(0,20),(0,40)]
+                 ]
+       try:
+          return patterns[num]
+       except:
+          return None
 
 class Bend(Ordinary):
     def __init__(self,*args,**kwargs):
@@ -291,10 +417,53 @@ class Bend(Ordinary):
         # Hrm.  But now the outer clipping path (?) is clipping the end of
         # the bend??
 
+    def patternSiblings(self,num):
+       patterns=[[.4],[.4,(26,-26)],
+                 [.4,(26,-26),(-23,23)],
+                 [.35,(-23,23),(8,-32),(32,-8)],
+                 [.35,(8,-32),(32,-8),(-7,29),(-29,7)],
+                 [.3,(8,-32),(32,-32),(32,-8),(-7,29),(-29,7)],
+                 [.3,(8,-32),(32,-32),(32,-8),(0,40),(-23,23),(-33,0)],
+                 ]
+       try:
+          return patterns[num]
+       except:
+          return None
+
+    def patternContents(self,num):
+       # Should have something to rotate the charges too...
+       patterns=[[.25],[.25,(0,0)],
+                 [.25,(-30,-30),(26,26)],
+                 [.25,(-30,-30),(26,26),(0,0)],
+                 [.25,(-30,-30),(-12,-12),(8,8),(26,26)]
+                 ]
+       try:
+          return patterns[num]
+       except:
+          return None
+       
 class BendSinister(Bend):
     def __init__(self,*args,**kwargs):
         self.setup(*args,**kwargs)
         self.transform="rotate(45)"
+
+    def patternContents(self,num):
+       b=Bend.patternContents(self,num)
+       if not b:
+          return None
+       rv=[]
+       rv.append(b[0])
+       for i in range(1,len(b)):
+          rv.append((-b[i][0],b[i][1]))
+       return rv
+
+    def patternSiblings(self,num):
+       b=Bend.patternSiblings(self,num)
+       rv=[]
+       rv.append(b[0])
+       for i in range(1,len(b)):
+          rv.append((-b[i][0],b[i][1]))
+       return rv
 
 class Chief(Ordinary):
     # Chiefs will also have to be handled specially, as they ordinarily
@@ -320,9 +489,19 @@ class Chief(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
-    def addCharge(self,charge):
-       Ordinary.addCharge(self,charge)
-       charge.maingroup.attributes["transform"]+=" scale(.7,.66)"
+    def patternContents(self,num):
+       # Chief doesn't need a patternSiblings.
+       # Also note that Chief is translated, so everything is around the origin.
+       patterns=[[.25],[.25,(0,0)],
+                 [.25,(-20,0),(20,0)],
+                 [.25,(-30,0),(0,0),(30,0)],
+                 [.25,(-33,0),(-11,0),(11,0),(33,0)],
+                 [.2,(-34,0),(-17,0),(0,0),(17,0),(34,0)]
+                 ]
+       try:
+          return patterns[num]
+       except:
+          return None
 
 class Bordure(Ordinary):
    # Doing lines of partition is going to be hard with this one.
@@ -350,6 +529,8 @@ class Bordure(Ordinary):
       self.clipPathElt.attributes["fill-rule"]="evenodd"
       self.clipPathElt.addElement(self.clipPath)
 
+      # Ugh.  pattern{Contents,Siblings} is going to be tough on this one.
+
 
 class Chevron(Ordinary):
     def process(self):
@@ -364,6 +545,29 @@ class Chevron(Ordinary):
         p.closepath
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
+
+    def patternContents(self,num):
+       patterns=[[.25],[.25,(0,-5)],
+                 [.25,(-20,9),(20,9)],
+                 [.25,(-25,12),(25,12),(0,-5)],
+                 [.25,(-33,18.5),(33,18.5),(-14,4),(14,4)],
+                 [.25,(-33,18.5),(33,18.5),(-17,5.5),(17,5.5),(0,-5)]
+                 ]
+       try:
+          return patterns[num]
+       except:
+          return None
+
+    def patternSiblings(self,num):
+       patterns=[[.35],[.4,(0,32)],
+                 [.3,(-33,-10),(33,-10)],
+                 [.3,(-33,-10),(33,-10),(0,30)]
+                 ]
+       try:
+          return patterns[num]
+       except:
+          return None
+       
 
 class Pile(Ordinary):
     def process(self):
@@ -450,88 +654,67 @@ class ChargeGroup:            # Kind of an invisible ordinary
         # ordinaries to be "on", or "in pale/fesse/bend/cross/saltire"
         # And scaling?
         num=len(self.charges)
-        if num<1:
-            # nothing to do!
-            pass
-        elif num==1:
-            # only for completeness
-            obj=self.charges[0]
-            obj.shiftto(Ordinary.FESSEPT)
-            # Maybe scale it?
-            #obj.resize(2)
+        # An even better way to do this: Put a method on the *tincture*
+        # objects (or ordinary objects) that returns the appropriate
+        # list of lists of positions.  Then things like "two bars" or
+        # "three bends" can be subclasses and work the same way and
+        # supply information for "between" them; "between" at this
+        # point might as well be a synonym for "and".
+        
+        # OK, I figure we should check (first) with the charge: if it
+        # has a preferred organization, use that (check with the first
+        # charge; worry about if they're different another time).
+        # (second) check with the parent (bends like things in bend,
+        # crosses in cross, etc).  (third) the parent, if it has no
+        # preference itself, should check with its other charges
+        # (ordinaries), and failing that, should check with its
+        # tincture and report that.
+        
+        # The organization should be by background first, then number, I think.
+        # First, how to shift things.  I *think* we only need shiftto if
+        # we're being countercharged.
+        # I think we'll only be using resize and not scale here.
+        if isinstance(self.charges[0].tincture,Countercharged):
+           def move(obj,location):
+              obj.shiftto(location)
         else:
-            # An even better way to do this: Put a method on the *tincture*
-            # objects (or ordinary objects) that returns the appropriate
-            # list of lists of positions.  Then things like "two bars" or
-            # "three bends" can be subclasses and work the same way and
-            # supply information for "between" them; "between" at this
-            # point might as well be a synonym for "and".
-           
-            # The organization should be by background first, then number, I think.
-            # First, how to shift things.  I *think* we only need shiftto if
-            # we're being countercharged.
-            # I think we'll only be using resize and not scale here.
-            if isinstance(self.charges[0].tincture,Countercharged):
-                def move(obj,location):
-                    obj.shiftto(location)
-            else:
-                def move(obj,location):
-                    obj.moveto(location)
-
-            # Wish there were a better way to work this out than trial and error
-            # Defaults:
-            defaultplacements=[[],[],    # 0 charges, 1 charge ...
-                               [(-15,0),(15,0)],            # 2
-                               [(-15,-15),(15,-15),(0,10)], # 3
-                               # and so on
-                               [(-15,-15),(15,-15),(-15,15),(15,15)], 
-                               # 5 -> in saltire:
-                               [(-20,-20),(20,-20),(0,0),(-20,20),(20,20)]
-                               ]
-            #scales=[1,1,
-            #        .4,.3,.3]
-            if isinstance(self.parent.tincture,PerBend) or hasinstance(self.parent.charges,Bend) or isinstance(self.parent.tincture,PerBendSinister) or hasinstance(self.parent.charges,BendSinister):
-                # Arrangements for things around a Bend!
-                placements=[[],          # not used: num==0
-                            [],          # not used: num==1
-                            [(25,-25),(-21,21)], # num==2
-                            [(5,-33),(-18,18),(30,-15)] # num==3
-                            ]
-                # BendSinister is just like Bend, with x-coords negated.
-                if isinstance(self.parent.tincture,PerBendSinister) or hasinstance(self.parent.charges,BendSinister):
-                    for i in range(0,len(placements)):
-                        for j in range(0,len(placements[i])):
-                            placements[i][j]=(-placements[i][j][0],
-                                              placements[i][j][1])
-            elif isinstance(self.parent.tincture,PerFesse) or hasinstance(self.parent.charges,Fesse):
-                placements=[[],[],
-                            [(0,-25),(0,25)],
-                            [(-20,-25),(20,-25),(0,25)]
-                            ]
-            elif isinstance(self.parent.tincture,PerChevron) or hasinstance(self.parent.charges,Chevron):
-                placements=[[],[],
-                            [(-25,-18),(25,-18)],
-                            [(-25,-18),(25,-18),(0,28)]
-                            ]
-            elif isinstance(self.parent.tincture,PerSaltire):
-               placements=[[],[],
-                           [(-25,0),(25,0)], # Just guessing that two -> in fesse
-                           [(-15,-15),(15,-15),(0,10)], # Gee, I have no idea. Default, perhaps?
-                           [(0,-25),(25,0),(0,25),(-25,0)] # Four is the important case IMHO.
+           def move(obj,location):
+              obj.moveto(location)
+        # Wish there were a better way to work this out than trial and error
+        # Defaults:
+        defaultplacements=[[1],[1,(0,0)],    # 0 charges, 1 charge ...
+                           [.5, (-22,0),(22,0)],            # 2
+                           [.5, (-25,-25),(25,-25),(0,20)], # 3
+                           # and so on
+                           [.4, (-22,-22),(22,-22),(-22,22),(22,22)], 
+                           # 5 -> in saltire:
+                           [.35, (-21,-21),(21,-21),(0,0),(-21,21),(21,21)]
                            ]
-            # And so on... !!!
-            else:
-                placements=defaultplacements
-
-            if num>=len(placements):
-                # I dunno... Fake it somehow?
-                placements=defaultplacements # and try again.
-            if num>len(placements):
-                raise "Too many objects"
-            #scale=scales[num]
-            for i in range(0,num):
-                move(self.charges[i], placements[num][i])
-                #self.charges[i].resize(scale)
+        placements=None
+        sys.stderr.write("in arrange.  self=%s, parent=%s.\n"%(self.__class__,
+                                                               self.parent.__class__))
+        try:
+           placements=charges[0].patternWithOthers(len(self.charges))
+        except:
+           pass
+        if not placements:
+           try:
+              sys.stderr.write("About to try parent.patternContents of a %s\n"%self.parent.__class__)
+              placements=self.parent.patternContents(len(self.charges))
+           except:
+              pass
+        if not placements:
+           placements=defaultplacements
+        if num>=len(placements):
+           # I dunno... Fake it somehow?
+           placements=defaultplacements # and try again.
+        if num>len(placements):
+           raise "Too many objects"
+        scale=placements[0]
+        for i in range(1,num+1):
+           sys.stderr.write("About to move something to %s\n"%str(placements[i]))
+           move(self.charges[i-1], placements[i])
+           self.charges[i-1].resize(scale)
                     
 
 class Charge(Ordinary):
@@ -578,23 +761,23 @@ class Charge(Ordinary):
 
 class Roundel(Charge):
    def process(self):
-      self.clipPath=SVGdraw.circle(cx=0,cy=0,r=12) # make it 36
+      self.clipPath=SVGdraw.circle(cx=0,cy=0,r=36) # make it 36
       self.clipPathElt.addElement(self.clipPath)
 
 class Lozenge(Charge):
    def process(self):
       p=SVGdraw.pathdata()
-      p.move(0,-15)
-      p.line(10,0)
-      p.line(0,15)
-      p.line(-10,0)
+      p.move(0,-42)
+      p.line(28,0)
+      p.line(0,42)
+      p.line(-28,0)
       p.closepath()
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
 
 class Billet(Charge):
     def process(self):
-        self.clipPath=SVGdraw.rect(-10,-15,20,30)
+        self.clipPath=SVGdraw.rect(-25,-40,50,80)
         self.clipPathElt.addElement(self.clipPath)
 
 class Annulet(Charge):
@@ -605,12 +788,12 @@ class Annulet(Charge):
       self.clipPath=SVGdraw.group()
       self.clipPath.attributes["id"]="ClipPath%04d"%Ordinary.id
       Ordinary.id+=1
-      self.clipPath.addElement(SVGdraw.circle(cx=0,cy=0,r=12))
+      self.clipPath.addElement(SVGdraw.circle(cx=0,cy=0,r=36))
       # We want to draw the second path counter-clockwise, so that it will
       # turn into a hole.
       # Apparently just drawing it is enough, just be sure to set
       # the clip-rule to evenodd.
-      self.clipPath.addElement(SVGdraw.circle(cx=0,cy=0,r=8))
+      self.clipPath.addElement(SVGdraw.circle(cx=0,cy=0,r=24))
       self.clipPathElt.addElement(self.clipPath)
       self.clipPathElt.attributes["clip-rule"]="evenodd"
 
