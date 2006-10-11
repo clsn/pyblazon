@@ -926,7 +926,25 @@ class ChargeGroup:            # Kind of an invisible ordinary
                            # and so on
                            [.4, (-22,-22),(22,-22),(-22,22),(22,22)], 
                            # 5 -> in saltire:
-                           [.35, (-21,-21),(21,-21),(0,0),(-21,21),(21,21)]
+                           [.35, (-21,-21),(21,-21),(0,0),(-21,21),(21,21)],
+                           # 6 -> in pile:
+                           [.3, (-26,-26),(0,-26),(26,-26),(-13,0),(13,0),(0,26)],
+                           # 7 -> three three and one
+                           [.3, (-26,-26),(0,-26),(26,-26),
+                            (-26,0),(0,0),(26,0),
+                            (0,26)],
+                           # 8 -> four and four
+                           [.2, (-30,-10),(-10,-10),(10,-10),(30,-10),
+                            (-30,10),(-10,10),(10,10),(30,10)],
+                           # 9 -> three three and three
+                           [.3, (-26,-26),(0,-26),(26,-26),
+                            (-26,0),(0,0),(26,0),
+                            (-26,26),(0,26),(26,26)],
+                           # 10 -> in pile
+                           [.3, (-36,-30),(-12,-30),(12,-30),(36,-30),
+                            (-24,-10),(0,-10),(24,-10),
+                            (-12,10),(12,10),
+                            (0,30)]
                            ]
         placements=None
         try:
@@ -943,13 +961,7 @@ class ChargeGroup:            # Kind of an invisible ordinary
               placements=defaultplacements[num]
            except:
               pass
-        if num>=len(placements):
-           # I dunno... Fake it somehow?
-           try:
-              placements=defaultplacements[num] # and try again.
-           except:
-              pass
-        if num>len(placements):
+        if not placements:
            raise "Too many objects"
         scale=placements[0]
         if type(scale) is not type(()):
