@@ -10,7 +10,7 @@ import math
 
 class Pattern: pass                     # gyronny, checky, etc.
 
-class Tincture:                         # Metal or color.
+class Treatment:                         # Metal or color.
     lookup={ "azure" : "blue",
              "de larmes" : "blue",
              "gules" : "red",
@@ -35,7 +35,7 @@ class Tincture:                         # Metal or color.
    
     def __init__(self,color):
         try:
-            self.color=Tincture.lookup[color]
+            self.color=Treatment.lookup[color]
         except KeyError:
             sys.stderr.write("Invalid tincture: %s\n"%color)
             self.color="white"
@@ -47,18 +47,18 @@ class Tincture:                         # Metal or color.
     def invert(self):
         pass
 
-class Fur(Tincture): pass
+class Fur(Treatment): pass
 
 class VairInPale(Fur):
    def __init__(self,color1="argent",color2="azure"):
       try:
          if type(color1) is type("x"):
-            color1=Tincture(color1)
+            color1=Treatment(color1)
          if type(color2) is type("x"):
-            color2=Tincture(color2)
+            color2=Treatment(color2)
       except KeyError:
          sys.stderr.write("Invalid tinctures: %s,%s\n"%(color1,color2))
-         (self.color1,self.color2)=(Tincture("argent"),Tincture("azure"))
+         (self.color1,self.color2)=(Treatment("argent"),Treatment("azure"))
       (self.color1,self.color2)=(color1,color2)
 
    def VairPattern(self):
@@ -123,12 +123,12 @@ class Ermine(Fur):
    def __init__(self,color1="argent",color2="sable"):
       try:
          if type(color1) is type("x"):
-            color1=Tincture(color1)
+            color1=Treatment(color1)
          if type(color2) is type("x"):
-            color2=Tincture(color2)
+            color2=Treatment(color2)
       except KeyError:
          sys.stderr.write("Invalid tinctures: %s,%s\n"%(color1,color2))
-         (self.color1,self.color2)=(Tincture("argent"),Tincture("sable"))
+         (self.color1,self.color2)=(Treatment("argent"),Treatment("sable"))
       (self.color1,self.color2)=(color1,color2)
 
    def fill(self,elt):
@@ -244,7 +244,7 @@ class Semy(Fur):
                            
 # I wonder if this'll work...
 
-class Countercharged(Tincture):
+class Countercharged(Treatment):
     def __init__(self):
         pass
     
@@ -255,13 +255,13 @@ class Countercharged(Tincture):
         elt=realtincture.fill(elt)
         return elt
 
-class Paly(Tincture):
+class Paly(Treatment):
    def parseColors(self,color1,color2):
       """For internal use, to simplify subclasses"""
       if type(color1)==type("x"):
-         color1=Tincture(color1)
+         color1=Treatment(color1)
       if type(color2)==type("x"):
-         color2=Tincture(color2)
+         color2=Treatment(color2)
       self.colors=(color1,color2)
 
    def assemble(self):

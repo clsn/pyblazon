@@ -7,7 +7,7 @@ import copy
 import re
 
 from pathstuff import partLine
-from tinctures import *
+from treatment import *
 
 # For the sake of argument, let's assume the base background SVG is 100x125
 # in user-units, starting from 0,0 at top left.  Most ordinaries will also
@@ -42,7 +42,7 @@ class Ordinary:
 
    def setup(self,tincture="none",linetype="plain"):
       self.done=False
-      self.tincture=Tincture(tincture)
+      self.tincture=Treatment(tincture)
       self.lineType=linetype
       self.charges=[]
       self.fimbriation_width=4          # default
@@ -72,11 +72,11 @@ class Ordinary:
    def fimbriate(self,color):
       # Only plain colors ATM
       # sys.stderr.write("fimbriating with %s\n"%color)
-      self.fimbriation=Tincture.lookup[color]
+      self.fimbriation=Treatment.lookup[color]
 
    def void(self,color):
       self.fimbriate(color)
-      self.tincture=Tincture("none")
+      self.tincture=Treatment("none")
 
    # Is this too brittle a way to do it?
    def do_fimbriation(self):
