@@ -270,7 +270,7 @@ class Paly(Tincture):
       width=float(blazon.Ordinary.WIDTH)/self.pieces
       # Make the lines a tiny bit too wide, so paly wavy doesn't show
       # an extra bit.
-      if self.lineType <> "plain":
+      if self.lineType and self.lineType <> "plain":
          width*=1.03
       for i in range(1,self.pieces,2):
          p.rect(-blazon.Ordinary.FESSPTX+i*width,-blazon.Ordinary.HEIGHT,
@@ -308,7 +308,7 @@ class Barry(Paly):
       height=float(blazon.Ordinary.HEIGHT)/self.pieces
       # Make the lines a LITTLE wider, so "wavy" doesn't show an extra bit
       # at the bottom.
-      if self.pieces>4 and self.lineType <> "plain":
+      if self.pieces>4 and self.lineType and self.lineType <> "plain":
          height*=1.03
       # Problem.  Optical center is at 0.  Geometric center is a little lower,
       # owing to the placement of the coordinates.
