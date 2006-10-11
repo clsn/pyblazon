@@ -62,6 +62,11 @@ def p_treatment_1(p):
     Globals.colors.append(p[0])
     fillin(p[0])
 
+def p_treatment_1_b(p):
+    "treatment : LP fulltreatment RP"
+    # for debugging and creating really weird treatments
+    p[0]=p[2]
+
 def p_fulltreatment_3(p):
     "fulltreatment : LINEY optlinetype optamt treatment AND treatment"
     p[0]=lookup(p[1])(p[3],p[4],p[6],linetype=p[2])
@@ -212,7 +217,9 @@ def p_bordure(p):
 def p_chief(p):
     """chief : empty
              | optand A CHIEF optlinetype opttreatment
-             | optand ON A CHIEF optlinetype opttreatment charges"""
+             | optand ON A CHIEF optlinetype opttreatment charges
+             | CHIEF A CHIEF optlinetype opttreatment"""
+    # The last one is just to force an unambiguous one for debugging.
     if len(p)<=2:
         p[0]=None
     elif len(p)==6:

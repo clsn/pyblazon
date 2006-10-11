@@ -12,7 +12,7 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED","ALTERED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
-        "PALL","WITHIN","BORDURE","BEZANTY")
+        "PALL","WITHIN","BORDURE","BEZANTY","LP","RP")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -39,6 +39,8 @@ t_CHARGED=r"charged"
 t_WITH=r"with"
 t_THE=r"the"
 t_SEMY=r"semy"
+t_LP=r"lp"                              # leftparen
+t_RP=r"rp"                              # rightparen
 def t_SEMYDELIS(t):
     r"(semy.de.lis|billety|gutty)"
     return t
@@ -65,7 +67,7 @@ def t_CHARGE(t):
 
 # Hmm.  How to handle "*in* a bordure..." ?
 t_BORDURE=r"bordure"
-t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron|base|label)"
+t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron|base|label|bars?(.gemelles?)?)"
 
 t_PALL=r"pall"
 
@@ -130,6 +132,8 @@ lookupdict={
     "bend" : blazon.Bend,
     "bendlets?" : blazon.Bendlet,
     "bendlets?.sinister" : blazon.BendletSinister,
+    "bars?" : blazon.Bar,
+    "bars?.gemelles?" : blazon.BarGemelle,
     "piles?": blazon.Pile,
     "chevron": blazon.Chevron,
     "bend sinister": blazon.BendSinister,

@@ -80,12 +80,15 @@ class Ordinary:
 
    # Is this too brittle a way to do it?
    def do_fimbriation(self):
+      t=self.clipPathElt.attributes.get("transform")
+      if not t:
+         t=""
       self.maingroup.addElement(SVGdraw.SVGelement('use',
                                                    attributes={"xlink:href":"#%s"%self.clipPath.attributes["id"],
                                                                "stroke":self.fimbriation,
                                                                "stroke-width":self.fimbriation_width,
                                                                "fill":"none",
-                                                               "transform":self.clipPathElt.attributes.get("transform")}))
+                                                               "transform": t}))
 
    def process(self): pass
 
@@ -169,14 +172,16 @@ class Ordinary:
          x[1]*=-1
          pat[i]=tuple(x)
 
-   def moveto(self,*a):
+
+   def moveto(self,loc):
       pass
-   def shiftto(self,*a):
+   def shiftto(self,loc):
       pass
-   def scale(self,*a):
+   def resize(self,x,y=None):
       pass
-   def resize(self,*a):
+   def scale(self,x,y=None):
       pass
+
 
 class Field(Ordinary):
    def __init__(self,tincture="argent"):
@@ -242,6 +247,48 @@ class Field(Ordinary):
          self.defsElt.addElement(thing)
       return drawing.toXml()
 
+class Charge(Ordinary):
+   def moveto(self,*args):
+      # Remember, args[0] is a tuple!
+      if not self.svg.attributes.has_key("transform"):
+         self.svg.attributes["transform"]=""
+      self.svg.attributes["transform"]+=" translate(%.4f,%.4f)" % args[0]
+         
+   # Lousy name, but we need a *different* kind of moving, to slide
+   # the outline but not the innards/tincture.
+   def shiftto(self,*args):
+      if not self.clipPathElt.attributes.has_key("transform"):
+         self.clipPathElt.attributes["transform"]=""
+      self.clipPathElt.attributes["transform"]+=" translate(%.4f,%.4f)"%args[0]
+
+   def scale(self,x,y=None):
+      if not y:                        # I can't scale by 0 anyway.
+         y=x
+      if not self.svg.attributes.has_key("transform"):
+         self.svg.attributes["transform"]=""
+      self.svg.attributes["transform"] += " scale(%.2f,%.2f)"%(x,y)
+
+   # Same as shiftto: changes the size of the outline only. 
+   def resize(self,x,y=None):
+      if not y:
+         y=x
+      if not self.clipPathElt.attributes.has_key("transform"):
+         self.clipPathElt.attributes["transform"]=""
+      self.clipPathElt.attributes["transform"] += " scale(%.2f,%.2f)"%(x,y)
+              
+   def dexterchief(self):
+      self.moveto(Ordinary.DEXCHIEF)
+
+   def sinisterchief(self):
+      self.moveto(Ordinary.SINCHIEF)
+
+   def chief(self):
+      self.moveto(Ordinary.CHIEFPT)
+
+   def addCharge(self,charge):
+      Ordinary.addCharge(self,charge)
+      charge.maingroup.attributes["transform"]+=" scale(.4)"
+
 
 class Cross(Ordinary):
     def process(self):
@@ -272,7 +319,7 @@ class Cross(Ordinary):
                  [.25,(-30,0),(30,0),(0,30),(0,-30),(0,0)]]
        try:
           return patterns[num]
-       except:
+       except IndexError:
           return None
 
     @staticmethod
@@ -284,7 +331,7 @@ class Cross(Ordinary):
                  ]
        try:
           return patterns[num]
-       except:
+       except IndexError:
           return None
 
 
@@ -307,7 +354,7 @@ class Fesse(Ordinary):
                 ]
        try:
           return patterns[num]
-       except:
+       except IndexError:
           return None
 
     @staticmethod
@@ -321,10 +368,49 @@ class Fesse(Ordinary):
                 ]
        try:
           return patterns[num]
-       except:
+       except IndexError:
           return None
                  
-        
+class Bar(Fesse,Charge):
+   def process(self):
+      p=partLine(-Ordinary.WIDTH, -8)
+      p.lineType=self.lineType
+      p.rect(-Ordinary.WIDTH, -8, Ordinary.WIDTH*3,16)
+      self.clipPath=SVGdraw.path(p)
+      self.clipPathElt.addElement(self.clipPath)
+
+
+   @staticmethod
+   def patternWithOthers(num):
+      patterns=[[1], [1,(0,0)],
+                [1, (0,10), (0,-10)],
+                [1, (0,25), (0,0), (0,-25)],
+                [(1,.6), (0,30), (0,10), (0,-10), (0,-30)],
+                [(1,.5), (0,30), (0,15), (0,0), (0,-15), (0,-30)]
+                ]
+      try:
+         return patterns[num]
+      except IndexError:
+         return None
+
+   def moveto(self,loc):
+      Charge.moveto(self,loc)
+   def shiftto(self,loc):
+      Charge.shiftto(self,loc)
+   def scale(self,x,y=None):
+      Charge.scale(x,y)
+   def resize(self,x,y=None):
+      Charge.resize(self,x,y)
+
+class BarGemelle(Bar):
+   def process(self):
+      p=partLine()
+      p.lineType=self.lineType
+      p.rect(-Ordinary.WIDTH,-6,Ordinary.WIDTH*3,5)
+      p.rect(-Ordinary.WIDTH,1,Ordinary.WIDTH*3,5)
+      self.clipPath=SVGdraw.path(p)
+      self.clipPathElt.addElement(self.clipPath)
+
 class Saltire(Cross):
     def process(self):
         Cross.process(self)
@@ -340,7 +426,7 @@ class Saltire(Cross):
                  ]
        try:
           return patterns[num]
-       except:
+       except IndexError:
           return None
 
     # This works okay for patternSiblings, actually.
@@ -372,7 +458,7 @@ class Pall(Ordinary):
                  ]
        try:
           res=patterns[num]
-       except:
+       except IndexError:
           return None
        if hasattr(self,"inverted") and self.inverted:
           self.invertPattern(res)
@@ -390,7 +476,7 @@ class Pall(Ordinary):
           if hasattr(self,"inverted") and self.inverted:
              self.invertPattern(res)
           return res
-       except:
+       except IndexError:
           return None
 
 class Pale(Ordinary):
@@ -412,7 +498,7 @@ class Pale(Ordinary):
                  ]
        try:
           return patterns[num]
-       except:
+       except IndexError:
           return None
 
     @staticmethod
@@ -425,7 +511,7 @@ class Pale(Ordinary):
                  ]
        try:
           return patterns[num]
-       except:
+       except IndexError:
           return None
 
 class Bend(Ordinary):
@@ -459,7 +545,7 @@ class Bend(Ordinary):
                  ]
        try:
           return patterns[num]
-       except:
+       except IndexError:
           return None
 
     @staticmethod
@@ -472,11 +558,11 @@ class Bend(Ordinary):
                  ]
        try:
           return patterns[num]
-       except:
+       except IndexError:
           return None
 
 
-class Bendlet(Bend):
+class Bendlet(Bend,Charge):
     def process(self):
        r=partLine()
        r.lineType=self.lineType
@@ -496,19 +582,18 @@ class Bendlet(Bend):
                  ]
        try:
           return patterns[num]
-       except:
+       except IndexError:
           return None
 
-    def moveto(self,coords):
-       if not self.svg.attributes.has_key("transform"):
-          self.svg.attributes["transform"]=""
-       self.svg.attributes["transform"]+=" translate(%.4f,%.4f)"%coords
+    def moveto(self,loc):
+       Charge.moveto(self,loc)
+    def shiftto(self,loc):
+       Charge.shiftto(self,loc)
+    def scale(self,x,y=None):
+       Charge.scale(x,y)
+    def resize(self,x,y=None):
+       Charge.resize(self,x,y)
 
-    def shiftto(self,coords):
-       if not self.clipPathElt.attributes.has_key("transform"):
-          self.clipPathElt.attributes["transform"]=""
-       self.clipPathElt.attributes["transform"]+=" translate(0,%.4f)"%coords[1]
-   
 class BendSinister(Bend):
     def __init__(self,*args,**kwargs):
         self.setup(*args,**kwargs)
@@ -541,18 +626,21 @@ class BendletSinister(BendSinister,Bendlet):
    def process(self):
       Bendlet.process(self)
 
-   def moveto(self,a):
-      Bendlet.moveto(self,a)
-
-   def shiftto(self,a):
-      Bendlet.shiftto(self,a)
-
    @staticmethod
    def patternWithOthers(num):
       res=Bendlet.patternWithOthers(num)
       for i in range(1,len(res)):       # Skip the scale...
          res[i]=(-res[i][0],res[i][1])
       return res
+
+   def moveto(self,loc):
+      Charge.moveto(self,loc)
+   def shiftto(self,loc):
+      Charge.shiftto(self,loc)
+   def scale(self,x,y=None):
+      Charge.scale(x,y)
+   def resize(self,x,y=None):
+      Charge.resize(self,x,y)
 
 class Chief(Ordinary):
     # Chiefs will also have to be handled specially, as they ordinarily
@@ -590,7 +678,7 @@ class Chief(Ordinary):
                  ]
        try:
           return patterns[num]
-       except:
+       except IndexError:
           return None
 
 class Bordure(Ordinary):
@@ -648,7 +736,7 @@ class Chevron(Ordinary):
           res=patterns[num]
           if hasattr(self,"inverted") and self.inverted:
             self.invertPattern(res)
-       except:
+       except IndexError:
           return None
        return res
 
@@ -662,12 +750,12 @@ class Chevron(Ordinary):
           res=patterns[num]
           if hasattr(self,"inverted") and self.inverted:
              self.invertPattern(res)
-       except:
+       except IndexError:
           return None
        return res
        
 
-class Pile(Ordinary):
+class Pile(Ordinary,Charge):
     def process(self):
         p=partLine()
         p.lineType=self.lineType
@@ -700,7 +788,7 @@ class Pile(Ordinary):
                  ]
        try:
           res=patterns[num]
-       except:
+       except IndexError:
           return None
        if hasattr(self,"inverted") and self.inverted:
           self.invertPattern(res)
@@ -715,21 +803,18 @@ class Pile(Ordinary):
                  ]
        try:
           res=patterns[num]
-       except:
+       except IndexError:
           return None
        if hasattr(self,"inverted") and self.inverted:
           self.invertPattern(res)
        return res
 
     def moveto(self,loc):
-       if not self.svg.attributes.has_key("transform"):
-          self.svg.attributes["transform"]=""
-       self.svg.attributes["transform"]+=" translate(%.4f,%.4f)"%loc
-
+       Charge.moveto(self,loc)
     def shiftto(self,loc):
-       if not self.clipPathElt.attributes.has_key("transform"):
-          self.clipPathElt.attributes["transform"]=""
-       self.clipPathElt.attributes["transform"]+=" translate(%.4f,%.4f)"%loc
+       Charge.shiftto(self,loc)
+    def scale(self,x,y=None):
+       Charge.scale(x,y)
 
     def resize(self,x,y=None):
        # I don't really care about y anyway.
@@ -881,47 +966,6 @@ class ChargeGroup:            # Kind of an invisible ordinary
        return self.charges[0].patternSiblings(num)
                     
 
-class Charge(Ordinary):
-    def moveto(self,*args):
-        # Remember, args[0] is a tuple!
-        if not self.svg.attributes.has_key("transform"):
-            self.svg.attributes["transform"]=""
-        self.svg.attributes["transform"]+=" translate(%.4f,%.4f)" % args[0]
-
-    # Lousy name, but we need a *different* kind of moving, to slide
-    # the outline but not the innards/tincture.
-    def shiftto(self,*args):
-        if not self.clipPathElt.attributes.has_key("transform"):
-            self.clipPathElt.attributes["transform"]=""
-        self.clipPathElt.attributes["transform"]+=" translate(%.4f,%.4f)"%args[0]
-
-    def scale(self,x,y=None):
-       if not y:                        # I can't scale by 0 anyway.
-          y=x
-       if not self.svg.attributes.has_key("transform"):
-          self.svg.attributes["transform"]=""
-       self.svg.attributes["transform"] += " scale(%.2f,%.2f)"%(x,y)
-
-    # Same as shiftto: changes the size of the outline only. 
-    def resize(self,x,y=None):
-        if not y:
-            y=x
-        if not self.clipPathElt.attributes.has_key("transform"):
-            self.clipPathElt.attributes["transform"]=""
-        self.clipPathElt.attributes["transform"] += " scale(%.2f,%.2f)"%(x,y)
-              
-    def dexterchief(self):
-        self.moveto(Ordinary.DEXCHIEF)
-
-    def sinisterchief(self):
-        self.moveto(Ordinary.SINCHIEF)
-
-    def chief(self):
-        self.moveto(Ordinary.CHIEFPT)
-
-    def addCharge(self,charge):
-        Ordinary.addCharge(self,charge)
-        charge.maingroup.attributes["transform"]+=" scale(.4)"
 
 class Roundel(Charge):
    def process(self):
