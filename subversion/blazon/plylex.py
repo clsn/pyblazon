@@ -62,7 +62,7 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"(roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony)|cross-crosslets?|mullets?|billets?|goutes?|bezants?|plates?|ogress(es)?|pellets?|torteaux?|hurts?|golpes?|pomes?|lions?.passant)"
+    r"(roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony)|cross-crosslets?|mullets?|billets?|goutes?|bezants?|plates?|ogress(es)?|pellets?|torteaux?|hurts?|golpes?|pomes?|lions?.passant|pallets?)"
     return t
 
 # Hmm.  How to handle "*in* a bordure..." ?
@@ -127,6 +127,7 @@ lookupdict={
     "counter.vairy?": tinctures.CounterVair,
     "fesse?": blazon.Fesse,
     "pale" : blazon.Pale,
+    "pallets?" : blazon.Pallet,
     "cross": blazon.Cross,
     "saltire": blazon.Saltire,
     "bend" : blazon.Bend,

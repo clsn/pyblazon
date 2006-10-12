@@ -514,6 +514,37 @@ class Pale(Ordinary):
        except IndexError:
           return None
 
+class Pallet(Pale,Charge):
+   # Or would this be better done as Paly of an odd number?
+   def process(self):
+      p=partLine(linetype=self.lineType)
+      p.rect(-5,-Ordinary.HEIGHT,10,Ordinary.HEIGHT*3)
+      self.clipPath=SVGdraw.path(p)
+      self.clipPathElt.addElement(self.clipPath)
+
+   def patternWithOthers(self,num):
+      patterns=[[1],[1,(0,0)],
+                [1,(-10,0),(10,0)],     
+                [1,(-20,0),(0,0),(20,0)], # They should be wide-spaced.
+                [1,(-30,0),(-10,0),(10,0),(30,0)],
+                [1,(-30,0),(-15,0),(0,0),(15,0),(30,0)],
+                [1,(-35,0),(-21,0),(-7,0),(7,0),(21,0),(35,0)]
+                ]
+      try:
+         return patterns[num]
+      except IndexError:
+         return None
+
+   def moveto(self,loc):
+      Charge.moveto(self,loc)
+   def shiftto(self,loc):
+      Charge.moveto(self,loc)
+   def resize(self,x,y=None):
+      Charge.resize(self,x,y)
+   def scale(self,x,y=None):
+      Charge.scale(self,x,y)
+
+
 class Bend(Ordinary):
     def __init__(self,*args,**kwargs):
         self.setup(*args,**kwargs)
