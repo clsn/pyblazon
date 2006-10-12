@@ -5,7 +5,7 @@ import lex
 import re
 import blazon
 import sys
-import tinctures
+import treatment
 import copy
 
 tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
@@ -124,8 +124,8 @@ def t_error(t):
 
 
 lookupdict={
-    "vair": tinctures.Vair,
-    "counter.vairy?": tinctures.CounterVair,
+    "vair": treatment.Vair,
+    "counter.vairy?": treatment.CounterVair,
     "fesse?": blazon.Fesse,
     "pale" : blazon.Pale,
     "pallets?" : blazon.Pallet,
@@ -175,51 +175,51 @@ lookupdict={
     "gutty": (lambda *a: blazon.ExtCharge("goute")),
     "billety": blazon.Billet,
     "bordure": blazon.Bordure,
-    "paly": tinctures.Paly,
-    "pily": tinctures.Pily,
-    "barrypily": tinctures.BarryPily,
-    "barry": tinctures.Barry,
-    "chevronny": tinctures.Chevronny,
-    "bendy": tinctures.Bendy,
-    "bendy.sinister": tinctures.BendySinister,
-    "gyronny": tinctures.Gyronny,
+    "paly": treatment.Paly,
+    "pily": treatment.Pily,
+    "barrypily": treatment.BarryPily,
+    "barry": treatment.Barry,
+    "chevronny": treatment.Chevronny,
+    "bendy": treatment.Bendy,
+    "bendy.sinister": treatment.BendySinister,
+    "gyronny": treatment.Gyronny,
     "ermine": blazon.Ermine,
     # This is a bit of a hack...
-    "ermines": (lambda *a: tinctures.Ermine("sable","argent")),
-    "erminois": (lambda *a: tinctures.Ermine("or","sable")),
-    "pean": (lambda *a: tinctures.Ermine("sable","or")),
-    "ermined": tinctures.Ermine,
-    "fretty": tinctures.Fretty,
-    "vairy?.in.pale": tinctures.VairInPale,
-    "vairy": tinctures.Vair,
-    "per cross": tinctures.PerCross,
-    "per saltire": tinctures.PerSaltire,
+    "ermines": (lambda *a: treatment.Ermine("sable","argent")),
+    "erminois": (lambda *a: treatment.Ermine("or","sable")),
+    "pean": (lambda *a: treatment.Ermine("sable","or")),
+    "ermined": treatment.Ermine,
+    "fretty": treatment.Fretty,
+    "vairy?.in.pale": treatment.VairInPale,
+    "vairy": treatment.Vair,
+    "per cross": treatment.PerCross,
+    "per saltire": treatment.PerSaltire,
     # Parker mentions the following, but possibly it only applies
     # to the field, not to ordinaries.
     # Unfortunately, ATM it won't work, probably because the crummy lexer
     # can't handle both quartered in this sense, and quartered in the sense
     # of t_QUARTERLY.
-    "per saltire quartered": tinctures.PerSaltire,
-    "per fesse?": tinctures.PerFesse,
-    "per pale": tinctures.PerPale,
-    "per bend": tinctures.PerBend,
-    "per bend sinister": tinctures.PerBendSinister,
-    "per chevron": tinctures.PerChevron,
-    "per pall": tinctures.PerPall,
-    "quarterly": tinctures.PerCross,
-    # "quartered": tinctures.PerCross,
+    "per saltire quartered": treatment.PerSaltire,
+    "per fesse?": treatment.PerFesse,
+    "per pale": treatment.PerPale,
+    "per bend": treatment.PerBend,
+    "per bend sinister": treatment.PerBendSinister,
+    "per chevron": treatment.PerChevron,
+    "per pall": treatment.PerPall,
+    "quarterly": treatment.PerCross,
+    # "quartered": treatment.PerCross,
     # Need to make *copies* of the tinctures,
     # lest they contain references to charges (Semy) which then get doubly
     # shrunk.
     "checky": (lambda num,col1,col2,**kw:
-               tinctures.Paly(num,tinctures.Barry(num,col1,col2),
-                              tinctures.Barry(num,copy.deepcopy(col2),
+               treatment.Paly(num,treatment.Barry(num,col1,col2),
+                              treatment.Barry(num,copy.deepcopy(col2),
                                               copy.deepcopy(col1)))),
     "lozengy": (lambda num,col1,col2,**kw:
-                tinctures.Bendy(num,tinctures.BendySinister(num,col1,col2),
-                                tinctures.BendySinister(num,copy.deepcopy(col2),
+                treatment.Bendy(num,treatment.BendySinister(num,col1,col2),
+                                treatment.BendySinister(num,copy.deepcopy(col2),
                                                         copy.deepcopy(col1)))),
-    "countercha[rn]ged": tinctures.Countercharged
+    "countercha[rn]ged": treatment.Countercharged
     }
 
 def lookup(key):

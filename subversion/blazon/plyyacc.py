@@ -3,7 +3,7 @@
 import blazon
 import sys
 import yacc
-import tinctures
+import treatment
 import copy
 
 from plylex import tokens,lookup
@@ -58,7 +58,7 @@ def p_fulltreatment_2_1(p):
 
 def p_treatment_1(p):
     "treatment : COLOR"
-    p[0]=tinctures.Tincture(p[1])
+    p[0]=treatment.Treatment(p[1])
     Globals.colors.append(p[0])
     fillin(p[0])
 
@@ -77,7 +77,7 @@ def p_fulltreatment_4(p):
     # special case for barrypily:
     check=lookup(p[1]+p[2])
     try:
-        test=issubclass(check,tinctures.Tincture)
+        test=issubclass(check,treatment.Treatment)
     except:
         test=False
     if test:
@@ -122,13 +122,13 @@ def p_treatment_9(p):
                  | COLOR BEZANTY"""
     # The second is actually syntactically like ALTERED
     if len(p)==5:
-        p[0]=tinctures.Semy(tinctures.Tincture(p[1]),p[4])
+        p[0]=treatment.Semy(treatment.Treatment(p[1]),p[4])
     elif len(p)==4:
         f=lookup(p[2])()
         f.tincture=p[3]
-        p[0]=tinctures.Semy(tinctures.Tincture(p[1]),f)
+        p[0]=treatment.Semy(treatment.Treatment(p[1]),f)
     else:                               # len(p)==3
-        p[0]=tinctures.Semy(tinctures.Tincture(p[1]),lookup(p[2])())
+        p[0]=treatment.Semy(treatment.Treatment(p[1]),lookup(p[2])())
     fillin(p[0])
 
 def p_opttreatment(p):

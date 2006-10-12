@@ -285,18 +285,20 @@ class Paly(Treatment):
       else:
           self.pieces=8
             
-   def fill(self, elt):
+   def fill(self, elt,symbol=False):
       self.assemble()
       self.foreground=blazon.Ordinary()        # treat it like an blazon.Ordinary
       self.foreground.clipPath=self.path
       self.foreground.clipPathElt.addElement(self.path)
       self.foreground.tincture=self.colors[1]
-      self.background=SVGdraw.rect(-blazon.Ordinary.FESSPTX,
-                                   -blazon.Ordinary.FESSPTY,
-                                   blazon.Ordinary.WIDTH,
-                                   blazon.Ordinary.HEIGHT)
-      self.background=self.colors[0].fill(self.background)
-   
+      #self.background=SVGdraw.rect(-blazon.Ordinary.FESSPTX,
+      #                             -blazon.Ordinary.FESSPTY,
+      #                             blazon.Ordinary.WIDTH,
+      #                             blazon.Ordinary.HEIGHT)
+      #self.background=self.colors[0].fill(self.background)
+      self.background=self.colors[0].fill(elt)
+      if symbol:
+          self.foreground.clipPathElt.addElement(SVGdraw.use(symbol))
       g=SVGdraw.group()
       g.addElement(self.background)
       g.addElement(self.foreground.finalizeSVG())
@@ -449,11 +451,12 @@ class PerPall(Paly):
         self.fg2.clipPath=self.path2
         self.fg2.clipPathElt.addElement(self.path2)
         self.fg2.tincture=self.colors[2]
-        self.bg=SVGdraw.rect(-blazon.Ordinary.FESSPTX,
-                             -blazon.Ordinary.FESSPTY,
-                             blazon.Ordinary.WIDTH,
-                             blazon.Ordinary.HEIGHT)
-        self.bg=self.colors[0].fill(self.bg)
+        #self.bg=SVGdraw.rect(-blazon.Ordinary.FESSPTX,
+        #                     -blazon.Ordinary.FESSPTY,
+        #                     blazon.Ordinary.WIDTH,
+        #                     blazon.Ordinary.HEIGHT)
+        #self.bg=self.colors[0].fill(self.bg)
+        self.bg=self.colors[0].fill(elt)
         g=SVGdraw.group()
         g.addElement(self.bg)
         g.addElement(self.fg1.finalizeSVG())

@@ -55,13 +55,14 @@ class Ordinary:
                                        -Ordinary.FESSPTY,
                                        Ordinary.WIDTH,
                                        Ordinary.HEIGHT))
-      self.clipPathElt=SVGdraw.SVGelement('clipPath',
-                                          id=('Clip%04d'%Ordinary.id))
+      self.clipPathElt=SVGdraw.SVGelement('mask',
+                                          id=('Clip%04d'%Ordinary.id),
+                                          attributes={"fill":"white"})
       Ordinary.id=Ordinary.id+1
       self.svg.addElement(self.clipPathElt)
       self.svg.attributes["xmlns:xlink"]="http://www.w3.org/1999/xlink"
       self.maingroup=SVGdraw.group()
-      self.maingroup.attributes["clip-path"]="url(#%s)"%self.clipPathElt.attributes["id"]
+      self.maingroup.attributes["mask"]="url(#%s)"%self.clipPathElt.attributes["id"]
       self.baseRect=SVGdraw.rect(x=-Ordinary.FESSPTX,
                                  y=-Ordinary.FESSPTY,
                                  width=Ordinary.WIDTH,
@@ -1100,27 +1101,86 @@ class ExtCharge(Charge):
 
 class Symbol(Charge):
    paths={
-      "lionpassant" : "data/LionPassant.svg#lion",
-      "lionrampant" : "data/LionRampant.svg#lion"
+      "lionpassant" : ("data/LionPassant.svg#lion",Treatment("or")),
+      "lionrampant" : ("data/LionRampant.svg#lion",Treatment("or"))
       }
    
    
    def __init__(self,name,*args,**kwargs):
       self.setup(*args)
       try:
-         self.path=Symbol.paths[name]
+         (self.path,self.color)=Symbol.paths[name]
       except KeyError:
          self.path=name                 # Punt.
+         self.color=Treatment("argent")
 
    def process(self):
-      self.tincture=Treatment("none")   # make the baserect invisible.
+      #self.tincture=Treatment("none")   # make the baserect invisible.
       # use a clipping path that includes everything.
       # essentially the clipping path and the baserect are useless
       # Or should I just rewrite finalizeSVG?
-      self.clipPath=SVGdraw.rect(x=-Ordinary.FESSPTX, y=-Ordinary.FESSPTY,
-                                 width=Ordinary.WIDTH, height=Ordinary.HEIGHT)
+      self.clipPath=SVGdraw.use(self.path)
       self.clipPathElt.addElement(self.clipPath)
       self.maingroup.addElement(SVGdraw.use(self.path))
+
+   def fimbriate(self,treatment):
+      self.fimbriation=Treatment(treatment)
+
+   # This so totally doesn't work.
+   def do_fimbriation(self):
+      self.fimb=SVGdraw.rect(-Ordinary.FESSPTX,
+                             -Ordinary.FESSPTY,
+                             Ordinary.WIDTH,
+                             Ordinary.HEIGHT)
+      self.fimb.attributes["transform"]="scale(1.1)"
+      self.fimb.attributes["mask"]="url(#%s)"%self.clipPathElt.attributes["id"]
+      self.fimb=self.fimbriation.fill(self.fimb)
+
+   def finalizeSVG(self):
+      self.process()
+      if hasattr(self,"clipPath"): 
+         # For fimbriation (at least one way to do it), need an id on the actual
+         # path, not just the group:
+         self.clipPath.attributes["id"]="ClipPath%04d"%Ordinary.id
+         Ordinary.id+=1
+         if hasattr(self,"clipTransforms"):
+            if not self.clipPath.attributes.has_key("transform"):
+               self.clipPath.attributes["transform"]=""
+            self.clipPath.attributes["transform"] += self.clipTransforms
+      if hasattr(self,"fimbriation"):
+           self.do_fimbriation()
+      self.maingroup=self.tincture.fill(self.maingroup)
+      self.maingroup.attributes["mask"]="url(#%s)"%self.clipPathElt.attributes["id"]
+      #newgroup=SVGdraw.group()
+      #mask=SVGdraw.SVGelement('mask',attributes=
+      #                         {"id" : "Mask%04d"%Ordinary.id})
+      #Ordinary.id+=1
+      #g=SVGdraw.group()
+      #g.attributes["fill"]="white"
+      #g.attributes["mask"]=mask.attributes["id"]
+      #g.addElement(SVGdraw.use(self.path))
+      #g.addElement(self.maingroup)
+      #newgroup.addElement(mask)
+      #newgroup.addElement(g)
+      #self.maingroup=newgroup
+      #if hasattr(self,"charges"):
+      #   for charge in self.charges:
+      #      self.maingroup.addElement(charge.finalizeSVG())
+      #if hasattr(self,"newmaingroup"):
+      #   self.maingroup=self.newmaingroup
+      if hasattr(self,"fimbriation"):
+         newmain=SVGdraw.group()
+         newmain.addElement(self.fimb)
+         newmain.addElement(self.maingroup)
+         self.maingroup=newmain
+      self.svg.addElement(self.maingroup)
+      # Add another iteration of the use element, to fill in what was lost
+      # in masking.
+      last=SVGdraw.use(self.path)
+      last.attributes["fill"]="none"
+      self.svg.addElement(last)
+      return self.svg
+
 
    def resize(self,x,y=None):
       if not y:
