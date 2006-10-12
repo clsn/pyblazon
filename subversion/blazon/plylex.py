@@ -39,8 +39,9 @@ t_CHARGED=r"charged"
 t_WITH=r"with"
 t_THE=r"the"
 t_SEMY=r"semy"
-t_LP=r"lp"                              # leftparen
-t_RP=r"rp"                              # rightparen
+t_LP=r"{|lp"                           # leftparen
+t_RP=r"}|rp"                           # rightparen
+    
 def t_SEMYDELIS(t):
     r"(semy.de.lis|billety|gutty)"
     return t
@@ -62,7 +63,7 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"(roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony)|cross-crosslets?|mullets?|billets?|goutes?|bezants?|plates?|ogress(es)?|pellets?|torteaux?|hurts?|golpes?|pomes?|lions?.passant|pallets?)"
+    r"(roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|bezants?|plates?|ogress(es)?|pellets?|torteaux?|hurts?|golpes?|pomes?|lions?.(passant|rampant)|pallets?)"
     return t
 
 # Hmm.  How to handle "*in* a bordure..." ?
@@ -144,6 +145,7 @@ lookupdict={
     "labels?": blazon.Label,
     "lables?": blazon.Label,
     "lions?.passant": (lambda *a: blazon.Symbol("lionpassant")), 
+    "lions?.rampant": (lambda *a: blazon.Symbol("lionrampant")), 
     "roundels?": blazon.Roundel,
     "bezant[ys]?" : (lambda *a: blazon.Roundel(tincture="or")),
     "plate[ys]?" : (lambda *a: blazon.Roundel(tincture="argent")),
@@ -162,6 +164,8 @@ lookupdict={
     "cross(es)?.pattee": (lambda *a: blazon.ExtCharge("formy")),
     "cross(es)?.pommee": (lambda *a: blazon.ExtCharge("pommee")),
     "cross(es)?.bottony": (lambda *a: blazon.ExtCharge("bottony")),
+    "cross(es)?.humetty": (lambda *a: blazon.ExtCharge("humetty")),
+    "cross(es)?.flory": (lambda *a: blazon.ExtCharge("flory")),
     "cross-crosslets?": (lambda *a: blazon.ExtCharge("crosscrosslet")),
     "mullets?": (lambda *a: blazon.ExtCharge("mullet",extension=a)),
     "semy.de.lis": (lambda *a: blazon.ExtCharge("fleur")),

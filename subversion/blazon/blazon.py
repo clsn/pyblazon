@@ -1052,12 +1052,14 @@ class ExtCharge(Charge):
     # Path, fimbriation-width, and default tincture (for "proper")
     paths={
         "fleur":("data/Fleur.svg#fleur",4,None),
-        "formy":("data/Cross-Pattee-Heraldry.svg#formy",30,None),
-        "pommee":("data/Cross-Pattee-Heraldry.svg#pommee",300,None),
-        "bottony":("data/Cross-Pattee-Heraldry.svg#bottony",20,None),
-        "goute":("data/Cross-Pattee-Heraldry.svg#goute",1,None),
+        "formy":("data/Charges.svg#formy",30,None),
+        "pommee":("data/Charges.svg#pommee",300,None),
+        "bottony":("data/Charges.svg#bottony",20,None),
+        "goute":("data/Charges.svg#goute",1,None),
+        "humetty":("data/Charges.svg#humetty",3,None),
+        "flory":("data/Charges.svg#flory",100,None),
         "crosscrosslet":("data/Cross-Crosslet-Heraldry.svg#cross-crosslet",2,None),
-        "mullet":("data/Cross-Pattee-Heraldry.svg#mullet",2,None)
+        "mullet":("data/Charges.svg#mullet",2,None)
         }
     
     def __init__(self,name,*args,**kwargs):
@@ -1088,7 +1090,8 @@ class ExtCharge(Charge):
 
 class Symbol(Charge):
    paths={
-      "lionpassant" : "data/LionPassant.svg#lion"
+      "lionpassant" : "data/LionPassant.svg#lion",
+      "lionrampant" : "data/LionRampant.svg#lion"
       }
    
    
