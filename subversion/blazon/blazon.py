@@ -1052,11 +1052,37 @@ class ExtCharge(Charge):
                                                                 "transform":self.clipPathElt.attributes.get("transform")}))
 
 
-def hasinstance(lst,cls):
-    for i in lst:
-        if isinstance(i,cls):
-            return True
-    return False
+# Another external charge class, this one for things not used as clipping
+# paths?
+
+class Symbol(Charge):
+   paths={
+      "lionpassant" : "data/LionPassant.svg#lion"
+      }
+   
+   
+   def __init__(self,name,*args,**kwargs):
+      self.setup(*args)
+      try:
+         self.path=Symbol.paths[name]
+      except KeyError:
+         self.path=name                 # Punt.
+
+   def process(self):
+      self.tincture=Treatment("none")   # make the baserect invisible.
+      # use a clipping path that includes everything.
+      # essentially the clipping path and the baserect are useless
+      # Or should I just rewrite finalizeSVG?
+      self.clipPath=SVGdraw.rect(x=-Ordinary.FESSPTX, y=-Ordinary.FESSPTY,
+                                 width=Ordinary.WIDTH, height=Ordinary.HEIGHT)
+      self.clipPathElt.addElement(self.clipPath)
+      self.maingroup.addElement(SVGdraw.use(self.path))
+
+   def resize(self,x,y=None):
+      if not y:
+         y=x
+      self.maingroup.attributes["transform"]=" scale(%.3f,%.3f)"%(x,y)
+
 
 # Other ideas...:
 
