@@ -30,7 +30,7 @@ def t_AND(t):
     return t
 
 def t_BEZANTY(t):
-    r"bezanty|platey|hurty"
+    r"bezanty|platey|hurty|tortoilly"
     return t
 
 t_OF=r"of"
@@ -63,7 +63,7 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"(roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|bezants?|plates?|ogress(es)?|pellets?|torteaux?|hurts?|golpes?|pomes?|lions?.(passant|rampant)|pallets?)"
+    r"(roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|bezants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?)"
     return t
 
 # Hmm.  How to handle "*in* a bordure..." ?
@@ -147,14 +147,17 @@ lookupdict={
     "lions?.passant": (lambda *a: blazon.Symbol("lionpassant")), 
     "lions?.rampant": (lambda *a: blazon.Symbol("lionrampant")), 
     "roundels?": blazon.Roundel,
+    "roundles?": blazon.Roundel,
     "bezant[ys]?" : (lambda *a: blazon.Roundel(tincture="or")),
     "plate[ys]?" : (lambda *a: blazon.Roundel(tincture="argent")),
     "ogress(es)?" : (lambda *a: blazon.Roundel(tincture="sable")),
     "pellet[sy]?" : (lambda *a: blazon.Roundel(tincture="sable")),
+    "gunstones?" : (lambda *a: blazon.Roundel(tincture="sable")),
     "torteaux?" : (lambda *a: blazon.Roundel(tincture="gules")),
+    "tortoilly" : (lambda *a: blazon.Roundel(tincture="gules")),
     "hurt[ys]?" : (lambda *a: blazon.Roundel(tincture="azure")),
     "golpes?" : (lambda *a: blazon.Roundel(tincture="purpure")),
-    "pomes?" : (lambda *a: blazon.Roundel(tincture="vert")),
+    "pome(i?s)?" : (lambda *a: blazon.Roundel(tincture="vert")),
     "billets?": blazon.Billet,
     "annulets?": blazon.Annulet,
     "lozenges?": blazon.Lozenge,
