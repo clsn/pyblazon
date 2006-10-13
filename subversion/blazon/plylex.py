@@ -30,7 +30,7 @@ def t_AND(t):
     return t
 
 def t_BEZANTY(t):
-    r"bezanty|platey|hurty|tortoilly"
+    r"bezanty|platey|pellety|hurty|tortoilly"
     return t
 
 t_OF=r"of"
