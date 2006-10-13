@@ -26,6 +26,37 @@ class ChargesAppendTestCase(unittest.TestCase):
         self.assertTrue(shield.charges[0].tincture.color is 'yellow')
 SVGDrawingTests.addTest(ChargesAppendTestCase)
 
+class PerPaleTestCase(unittest.TestCase):
+    def testPerPale(self):
+        shield = blazon.Field()
+        shield.tincture = blazon.PerPale(color1="vert", color2="sable")
+        # Maybe it's silly to test for this, since it's used only internally
+        self.assert_(shield.tincture.pieces is 2)
+        for color in shield.tincture.colors:
+            self.assert_(color.color is "green" or color.color is "black")
+        self.assert_(repr(shield) is not None)
+SVGDrawingTests.addTest(PerPaleTestCase)
+
+class PerFessTestCase(unittest.TestCase):
+    def testPerFess(self):
+        shield = blazon.Field()
+        shield.tincture = blazon.PerPale(color1="argent", color2="gules")
+        # Ditto
+        self.assert_(shield.tincture.pieces is 2)
+        for color in shield.tincture.colors:
+            self.assert_(color.color is "white" or color.color is "red")
+        self.assert_(repr(shield) is not None)
+SVGDrawingTests.addTest(PerFessTestCase)
+        
+class QuarteredTestCase(unittest.TestCase):
+    def testQuartered(self):
+        shield = blazon.Field()
+        shield.tincture = blazon.PerCross(color1="vert", color2="sable")
+        for color in shield.tincture.colors:
+            self.assert_(color.color is "green" or color.color is "black")
+        self.assert_(repr(shield) is not None)
+SVGDrawingTests.addTest(QuarteredTestCase)
+
 # TODO:
 # When charges are in a group, they must not overlap each other.
 # In some specific circumstances, the charges must not cross lines of

@@ -387,6 +387,13 @@ class PerPale(Paly):
 class PerFesse(Barry):
     def __init__(self,*args,**kwargs):
         Barry.__init__(self,2,*args,**kwargs)
+    def assemble(self):
+        p=partLine(linetype=self.lineType)
+        p.rect(-blazon.Ordinary.WIDTH, blazon.Ordinary.FESSEPT[1],
+               blazon.Ordinary.WIDTH*2, blazon.Ordinary.HEIGHT)
+        p.rect(-blazon.Ordinary.WIDTH, blazon.Ordinary.FESSEPT[1],
+               blazon.Ordinary.WIDTH*2, blazon.Ordinary.HEIGHT)
+        self.path=SVGdraw.path(p)
 
     @staticmethod
     def patternContents(num):
