@@ -1127,13 +1127,22 @@ class Symbol(Charge):
       self.fimbriation=Treatment(treatment)
 
    # This so totally doesn't work.
+   # This isn't much of an improvement.
    def do_fimbriation(self):
+      self.fimb=SVGdraw.group()
+      mask=SVGdraw.SVGelement('mask',attributes={"id" : "Mask%04d"%Ordinary.id})
+      Ordinary.id+=1
+      for i in range(0,4):
+         el=SVGdraw.use(self.path)
+         el.attributes["transform"]="translate(%d,%d)"%([-2,2,0,0][i],
+                                                        [0,0,-2,2][i])
+         mask.addElement(el)
+      Ordinary.defs.append(mask)
       self.fimb=SVGdraw.rect(-Ordinary.FESSPTX,
                              -Ordinary.FESSPTY,
                              Ordinary.WIDTH,
                              Ordinary.HEIGHT)
-      self.fimb.attributes["transform"]="scale(1.1)"
-      self.fimb.attributes["mask"]="url(#%s)"%self.clipPathElt.attributes["id"]
+      self.fimb.attributes["mask"]="url(#%s)"%mask.attributes["id"]
       self.fimb=self.fimbriation.fill(self.fimb)
 
    def finalizeSVG(self):
