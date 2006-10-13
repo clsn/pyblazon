@@ -157,7 +157,10 @@ TESTBLAZONFN = "tests/gsshields/gsblazons.txt"
 MAX_DISCREPANCY = 0.05
 
 def PixelsAlmostSame(a, b):
-    return abs(sum(a) - sum(b)) < 13
+    for acolor, bcolor in zip(a, b):
+        if abs(acolor - bcolor) > 6:
+            return False
+    return True
 
 def CompImage(tested, gs):
     xsize, ysize = tested.size
