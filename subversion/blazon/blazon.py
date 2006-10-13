@@ -1041,13 +1041,9 @@ class Annulet(Charge):
       self.clipPath.attributes["id"]="ClipPath%04d"%Ordinary.id
       Ordinary.id+=1
       self.clipPath.addElement(SVGdraw.circle(cx=0,cy=0,r=36))
-      # We want to draw the second path counter-clockwise, so that it will
-      # turn into a hole.
-      # Apparently just drawing it is enough, just be sure to set
-      # the clip-rule to evenodd.
-      self.clipPath.addElement(SVGdraw.circle(cx=0,cy=0,r=24))
+      # Using masks, so all we need to do is draw a black circle inside.
+      self.clipPath.addElement(SVGdraw.circle(cx=0,cy=0,r=24,fill="black"))
       self.clipPathElt.addElement(self.clipPath)
-      self.clipPathElt.attributes["clip-rule"]="evenodd"
 
 """
 These are arj's thoughts on how ExtCharge/Symbol should be merged and changed:
