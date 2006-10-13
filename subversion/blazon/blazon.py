@@ -1183,6 +1183,10 @@ class Symbol(Charge):
       # in masking.
       last=SVGdraw.use(self.path)
       last.attributes["fill"]="none"
+      try:
+         last.attributes["transform"]=self.maingroup.attributes["transform"]
+      except KeyError:
+         pass
       self.svg.addElement(last)
       return self.svg
 
