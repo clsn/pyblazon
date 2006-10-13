@@ -156,13 +156,16 @@ TESTEDIMGFN  = "tests/gsshields/out.png"
 TESTBLAZONFN = "tests/gsshields/gsblazons.txt"
 MAX_DISCREPANCY = 0.05
 
+def PixelsAlmostSame(a, b):
+    return abs(sum(a) - sum(b)) < 13
+
 def CompImage(tested, gs):
     xsize, ysize = tested.size
     area = xsize * ysize
     wrongpixels = 0
     for x in range(xsize):
         for y in range(ysize):
-            if tested.getpixel((x,y)) != gs.getpixel((x,y)):
+            if not PixelsAlmostSame(tested.getpixel((x,y)), gs.getpixel((x,y))):
                 wrongpixels = wrongpixels + 1
     return float(wrongpixels) / float(area)
 
