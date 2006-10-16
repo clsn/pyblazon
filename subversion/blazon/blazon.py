@@ -753,6 +753,25 @@ class Bordure(Ordinary):
       self.clipPathElt.addElement(self.clipPath)
       # Ugh.  pattern{Contents,Siblings} is going to be tough on this one.
 
+      # patternSiblings may not even be relevant.
+
+   @staticmethod                        # Be handy to have this static
+   def patternContents(num):            # for "an orle of marlets"
+      patterns=[[.15],[.15,(0,-44)],
+                [.15,(-43,0),(43,0)],
+                [.15,(-43,-43),(43,-43),(0,52)],
+                [.15,(0,-44),(-43,0),(43,0),(0,52)],
+                [.15,(-43,-43),(43,-43),(-41,10),(41,10),(0,52)],
+                [.15,(-43,-43),(43,-43),(-41,10),(41,10),(0,52),(0,-44)],
+                [.15,(-43,-43),(43,-43),(-44,-5),(44,-5),(0,52),(-31,30),(31,30)],
+                [.15,(-43,-43),(43,-43),(-44,-5),(44,-5),(0,52),(-31,30),(31,30),(0,-44)],
+                [.15,(-43,-43),(43,-43),(-44,-5),(44,-5),(0,52),(-31,30),(31,30),(-15,-44),(15,-44)],
+                [.15,(-43,-43),(43,-43),(-44,-15),(44,-15),(-41,10),(41,10),(-15,-44),(15,-44),(-25,37),(25,37)]
+                ]
+      try:
+         return patterns[num]
+      except IndexError:
+         return None
 
 class Chevron(Ordinary):
     def process(self):

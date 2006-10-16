@@ -212,7 +212,8 @@ def p_charge_2(p):
 
 def p_bordure(p):
     """bordure : empty
-               | WITHIN A BORDURE optlinetype opttreatment"""
+               | WITHIN A BORDURE optlinetype opttreatment
+               | WITHIN A BORDURE optlinetype opttreatment CHARGED WITH charges"""
     if len(p)<=2:
         p[0]=None
     else:
@@ -221,6 +222,8 @@ def p_bordure(p):
             Globals.colorless.append(p[0])
         else:
             p[0].tincture=p[5]
+        if len(p)>=9 and p[8]:
+            p[0].extendCharges(p[8])
         p[0].lineType=p[4]
 
 def p_chief(p):
