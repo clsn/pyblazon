@@ -1142,12 +1142,17 @@ class Symbol(Charge):
          self.color=Treatment("argent")
 
    def process(self):
-      #self.tincture=Treatment("none")   # make the baserect invisible.
-      # use a clipping path that includes everything.
-      # essentially the clipping path and the baserect are useless
-      # Or should I just rewrite finalizeSVG?
+      # baseRect is worth keeping around, for furs.  Otherwise the fur
+      # gets scaled with the drawing, which can be extreme.
+      # (still can't get it countercharged though)
+      self.baseRect=SVGdraw.rect(-Ordinary.FESSPTX,
+                                 -Ordinary.FESSPTY,
+                                 Ordinary.WIDTH,
+                                 Ordinary.HEIGHT)
+      self.baseRect.charge=self
       self.clipPath=SVGdraw.use(self.path)
       self.clipPathElt.addElement(self.clipPath)
+      self.maingroup.addElement(self.baseRect)
       self.maingroup.addElement(SVGdraw.use(self.path))
 
    def fimbriate(self,treatment):
@@ -1185,7 +1190,9 @@ class Symbol(Charge):
             self.clipPath.attributes["transform"] += self.clipTransforms
       if hasattr(self,"fimbriation"):
            self.do_fimbriation()
-      self.maingroup=self.tincture.fill(self.maingroup)
+      #self.maingroup=self.tincture.fill(self.maingroup)
+      self.maingroup.attributes["fill"]="none"
+      self.baseRect=self.tincture.fill(self.baseRect)
       self.maingroup.attributes["mask"]="url(#%s)"%self.clipPathElt.attributes["id"]
       #newgroup=SVGdraw.group()
       #mask=SVGdraw.SVGelement('mask',attributes=
