@@ -221,27 +221,28 @@ class Field(Ordinary):
       self.chief=chief                  # Have to handle this later.
 
    def addBordure(self,bordure):
-      self.addCharge(bordure)      # But maybe in the future be clever with
-                                        # scaling?
+      self.bordure=bordure
       
    def __repr__(self):
       if not self.maingroup.attributes.has_key("transform"):
          self.maingroup.attributes["transform"]=""
+      if hasattr(self,"bordure"):       # Add the bordure before the chief!
+         self.maingroup.attributes["transform"]+=" scale(.8)"
+         self.borduregroup=SVGdraw.group()
       if hasattr(self,"chief"):
-         # Hm.  Somehow I need add something outside the main group
-         # AFTER things have happened...
-         g=SVGdraw.group()
-         g.attributes["clip-path"]=self.maingroup.attributes["clip-path"]
-         g.addElement(self.maingroup)
          self.maingroup.attributes["transform"]+=" scale(1,.8) translate(0,15)"
-         self.newmaingroup=g
-         g2=SVGdraw.group()
-         g2.attributes["clip-path"]=self.maingroup.attributes["clip-path"]
-         g2.addElement(self.chief.finalizeSVG())
-         #self.svg.addElement(g)
       self.finalizeSVG()
+      if hasattr(self,"bordure"):
+         self.borduregroup.attributes["mask"]=self.maingroup.attributes["mask"]
+         self.borduregroup.addElement(self.bordure.finalizeSVG())
+         self.svg.addElement(self.borduregroup)
       if hasattr(self,"chief"):
-         self.svg.addElement(g2)        # ugh.
+         if hasattr(self,"borduregroup"):
+            self.borduregroup.attributes["transform"]=" scale(1,.8) translate(0,15)"
+         g=SVGdraw.group()
+         g.attributes["mask"]=self.maingroup.attributes["mask"]
+         g.addElement(self.chief.finalizeSVG())
+         self.svg.addElement(g)
       drawing=SVGdraw.drawing()
       drawing.setSVG(self.svg)
       for thing in Ordinary.defs:
@@ -733,12 +734,11 @@ class Bordure(Ordinary):
       pdata.closepath()
       self.clipPath=SVGdraw.path(pdata)
       self.clipPath.attributes["transform"]=" scale(.75)"
+      self.clipPath.attributes["fill"]="black" # Doing masks now!!
       self.clipPathElt.addElement(SVGdraw.rect(-Ordinary.WIDTH,-Ordinary.HEIGHT,
                                                Ordinary.WIDTH*4,
                                                Ordinary.HEIGHT*4))
-      self.clipPathElt.attributes["fill-rule"]="evenodd"
       self.clipPathElt.addElement(self.clipPath)
-
       # Ugh.  pattern{Contents,Siblings} is going to be tough on this one.
 
 

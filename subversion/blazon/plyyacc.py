@@ -18,6 +18,8 @@ def fillin(col):
         obj.tincture=col
     Globals.colorless=[]
 
+start='blazon'
+
 def p_blazon_1(p):
     'blazon : fulltreatment'
     shield=blazon.Field()
@@ -175,7 +177,6 @@ def p_ordinary(p):
                 | PALL
                 | CHIEF
                 | CHARGE
-                | BORDURE
                 | CHARGE OF amount WORD"""
     if len(p)>2:
         p[0]=lookup(p[1])(p[3])
