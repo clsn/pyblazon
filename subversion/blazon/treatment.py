@@ -310,14 +310,24 @@ class Barry(Paly):
       height=float(blazon.Ordinary.HEIGHT)/self.pieces
       # Make the lines a LITTLE wider, so "wavy" doesn't show an extra bit
       # at the bottom.
-      if self.pieces>4 and self.lineType and self.lineType <> "plain":
-         height*=1.03
+      # Not needed after allowance for optical center...
+      # Not sure it's good though.
+      #if self.pieces>4 and self.lineType and self.lineType <> "plain":
+      #   height*=1.03
       # Problem.  Optical center is at 0.  Geometric center is a little lower,
       # owing to the placement of the coordinates.
-      for i in range(1,self.pieces,2):
+      for i in range(1,self.pieces-1,2):
          p.rect(-blazon.Ordinary.WIDTH, -blazon.Ordinary.FESSPTY+i*height,
                 3*blazon.Ordinary.WIDTH, height)
+      # Last piece is extra-wide because everything is shifted up to correct
+      # for optical center.  Only matters when pieces is even.
+      if not self.pieces%2:
+          p.rect(-blazon.Ordinary.WIDTH, -blazon.Ordinary.FESSPTY+(self.pieces-1)*height,
+                 3*blazon.Ordinary.WIDTH, 3*height)
       self.path=SVGdraw.path(p)
+      # Shift to bring center into place.
+      self.path.attributes["transform"]=" translate(0,%.4f)"%\
+                                         -(blazon.Ordinary.HEIGHT/2 - blazon.Ordinary.FESSPTY)
 
 class Pily(Paly):
     def assemble(self):
@@ -387,13 +397,6 @@ class PerPale(Paly):
 class PerFesse(Barry):
     def __init__(self,*args,**kwargs):
         Barry.__init__(self,2,*args,**kwargs)
-    def assemble(self):
-        p=partLine(linetype=self.lineType)
-        p.rect(-blazon.Ordinary.WIDTH, blazon.Ordinary.FESSEPT[1],
-               blazon.Ordinary.WIDTH*2, blazon.Ordinary.HEIGHT)
-        p.rect(-blazon.Ordinary.WIDTH, blazon.Ordinary.FESSEPT[1],
-               blazon.Ordinary.WIDTH*2, blazon.Ordinary.HEIGHT)
-        self.path=SVGdraw.path(p)
 
     @staticmethod
     def patternContents(num):

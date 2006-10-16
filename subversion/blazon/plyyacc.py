@@ -20,19 +20,22 @@ def fillin(col):
 
 start='blazon'
 
-def p_blazon_1(p):
-    'blazon : fulltreatment'
-    shield=blazon.Field()
-    shield.tincture=p[1]
-    Globals.shield=shield
-    p[0]=shield
-    return shield
+#def p_blazon_1(p):
+#    'blazon : fulltreatment'
+#    shield=blazon.Field()
+#    shield.tincture=p[1]
+#    Globals.shield=shield
+#    p[0]=shield
+#    return shield
 
 def p_blazon_2(p):
-    "blazon : fulltreatment charges bordure chief"
+    "blazon : fulltreatment optcharges bordure chief"
+#    sys.stderr.write("top: %s %s %s %s\n"%
+#                     tuple(map(str,p[1:])))
     shield=blazon.Field()
     shield.tincture=p[1]
-    shield.extendCharges(p[2])
+    if p[2]:
+        shield.extendCharges(p[2])
     if p[3]:
         shield.addBordure(p[3])
     if p[4]:
@@ -40,6 +43,11 @@ def p_blazon_2(p):
     p[0]=shield
     Globals.shield=shield
     return shield
+
+def p_optcharges(p):
+    """optcharges : charges
+                  | empty"""
+    p[0]=p[1]
 
 def p_fulltreatment_1(p):
     "fulltreatment : treatment"
@@ -175,8 +183,8 @@ def p_group(p):
 def p_ordinary(p):
     """ordinary : ORDINARY
                 | PALL
-                | CHIEF
                 | CHARGE
+                | CHIEF
                 | CHARGE OF amount WORD"""
     if len(p)>2:
         p[0]=lookup(p[1])(p[3])
@@ -218,9 +226,7 @@ def p_bordure(p):
 def p_chief(p):
     """chief : empty
              | optand A CHIEF optlinetype opttreatment
-             | optand ON A CHIEF optlinetype opttreatment charges
-             | CHIEF A CHIEF optlinetype opttreatment"""
-    # The last one is just to force an unambiguous one for debugging.
+             | optand ON A CHIEF optlinetype opttreatment charges"""
     if len(p)<=2:
         p[0]=None
     elif len(p)==6:
@@ -292,6 +298,7 @@ def p_empty(p):
 
 def p_error(p):
     ""
+    sys.stderr.write("Something unexpected: %s\n"%p)
     pass
 
 yacc.yacc(method="LALR")

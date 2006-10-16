@@ -186,7 +186,7 @@ class Ordinary:
 
 class Field(Ordinary):
    def __init__(self,tincture="argent"):
-      self.svg=SVGdraw.svg(x=0,y=0,width="10cm",height="12.5cm",
+      self.svg=SVGdraw.svg(x=0,y=0,width="10cm",height="11cm",
                            viewBox=(-Ordinary.FESSPTX-3,
                                     -Ordinary.FESSPTY-3,
                                     Ordinary.WIDTH+6,
@@ -231,18 +231,30 @@ class Field(Ordinary):
          self.borduregroup=SVGdraw.group()
       if hasattr(self,"chief"):
          self.maingroup.attributes["transform"]+=" scale(1,.8) translate(0,15)"
+         g=SVGdraw.group()
+         g.addElement(self.maingroup)
+         g.attributes["mask"]=self.maingroup.attributes["mask"]
+         self.newmaingroup=g
       self.finalizeSVG()
-      if hasattr(self,"bordure"):
-         self.borduregroup.attributes["mask"]=self.maingroup.attributes["mask"]
-         self.borduregroup.addElement(self.bordure.finalizeSVG())
-         self.svg.addElement(self.borduregroup)
       if hasattr(self,"chief"):
          if hasattr(self,"borduregroup"):
             self.borduregroup.attributes["transform"]=" scale(1,.8) translate(0,15)"
+            g=SVGdraw.group()
+            g.attributes["mask"]=self.maingroup.attributes["mask"]
+            g.addElement(self.borduregroup)
+            self.bordurecontainer=g
          g=SVGdraw.group()
          g.attributes["mask"]=self.maingroup.attributes["mask"]
          g.addElement(self.chief.finalizeSVG())
          self.svg.addElement(g)
+      if hasattr(self,"bordure"):
+         self.borduregroup.attributes["mask"]=self.maingroup.attributes["mask"]
+         self.borduregroup.addElement(self.bordure.finalizeSVG())
+         if hasattr(self,"bordurecontainer"):
+            self.svg.addElement(self.bordurecontainer)
+            # It really ought to have one or the other...
+         elif hasattr(self,"borduregroup"):
+            self.svg.addElement(self.borduregroup)
       drawing=SVGdraw.drawing()
       drawing.setSVG(self.svg)
       for thing in Ordinary.defs:
