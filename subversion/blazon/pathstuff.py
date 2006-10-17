@@ -108,6 +108,7 @@ class partLine:
         "wavy": (8,5),
         "embattled": (6,2),
         "dovetailed": (6,2),
+        "raguly": (6,3),
         "engrailed": (10,5),
         "invected": (10,5)
         }
@@ -191,12 +192,12 @@ class partLine:
                 self.path.append(" L"+str(x)+","+str(y))
             elif self.lineType == "raguly":
                 for i in range(1,int(leng/wavelength)+1):
-                    self.path.append(" L"+str(uptoX+shiftX-(wavelength/2)*direction)+
-                                     ","+str(uptoY+shiftY*direction))
+                    # up and over.  Use relative paths.
+                    self.path.append(" l%f,%f"%(direction*(shiftX+delX/3),
+                                                direction*(shiftY+delY/3)))
                     uptoX+=delX
                     uptoY+=delY
-                    self.path.append(" L"+str(uptoX+shiftX-(wavelength/2)*direction)+
-                                     ","+str(uptoY+shiftY*direction))
+                    self.path.append(" l%f,%f"%(delX,delY))
                     direction *= -1
                 self.path.append(" L"+str(x)+","+str(y))
             elif self.lineType == "invected" or self.lineType == "engrailed":

@@ -951,9 +951,7 @@ class ChargeGroup:            # Kind of an invisible ordinary
 
     def arrange(self):
         # This can only work for a relatively small number, say up to 3
-        # TODO: check for sibling ordinaries to be "between", or parent
-        # ordinaries to be "on", or "in pale/fesse/bend/cross/saltire"
-        # And scaling?
+        # TODO: check for "in pale/fesse/bend/cross/saltire"
         num=len(self.charges)
         # An even better way to do this: Put a method on the *tincture*
         # objects (or ordinary objects) that returns the appropriate
