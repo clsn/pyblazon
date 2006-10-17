@@ -200,6 +200,16 @@ class partLine:
                     self.path.append(" l%f,%f"%(delX,delY))
                     direction *= -1
                 self.path.append(" L"+str(x)+","+str(y))
+            elif self.lineType == "dovetailed":
+                for i in range(1,int(leng/wavelength)+1):
+                    self.path.append(" L%f,%f"%(uptoX+direction*shiftX-delX/3,
+                                                uptoY+direction*shiftY-delY/3))
+                    self.path.append(" L%f,%f"%(uptoX+delX+direction*shiftX,
+                                                uptoY+delY+direction*shiftY))
+                    uptoX+=delX
+                    uptoY+=delY
+                    direction *= -1
+                self.path.append(" L%f,%f"%(x,y))
             elif self.lineType == "invected" or self.lineType == "engrailed":
                 if self.lineType=="invected":
                     # I'm pretty sure this isn't correct in the general case.
