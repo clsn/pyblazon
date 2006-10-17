@@ -18,8 +18,8 @@ class BlazonryTestCase(unittest.TestCase):
 SVGDrawingTests.addTest(BlazonryTestCase)
 
 class ChargesAppendTestCase(unittest.TestCase):
-    """Test for correct behaviour when appending a charge to a field."""
     def testAppend(self):
+        """Test for correct behaviour when appending a charge to a field."""
         shield = blazon.Field("vert")
         shield.charges.append(blazon.Saltire("or", "plain"))
         self.assertEqual(len(shield.charges), 1)
@@ -80,9 +80,12 @@ def ParsesOK(line):
 
 class CorrectBlazonPreprocessing(unittest.TestCase):
     def testCaps(self):
+        """Check that blazons are properly de-capitalised after being input."""
         test = blazon.Blazon("This is a test")
         self.assertEqual(test.blazon, "this is a test")
     def testPunctuation(self):
+        """Check that punctuation isn't stuck to tokens in a way that
+        could confuse the parser."""
         import re
         test = blazon.Blazon("This, is, also, a test.")
         # Whatever the text normalizer done, it should not allow
@@ -98,6 +101,7 @@ BlazonryTests.addTest(CorrectBlazonPreprocessing)
 
 class CanParseBlazonry(unittest.TestCase):
     def testBlazons(self):
+        """Check that all good test blazons parse successfully."""
         BlazonTestSuite = unittest.TestSuite()
         testblazons = open("tests/blazons-good.txt", "r")
         for line in testblazons:
@@ -112,6 +116,7 @@ BlazonryTests.addTest(CanParseBlazonry)
 
 class CanNotParseBlazonry(unittest.TestCase):
     def testBlazons(self):
+        """Check that all bad test case blazons are not accepted by the parser."""
         import sys
         BlazonTestSuite = unittest.TestSuite()
         testblazons = open("tests/blazons-bad.txt", "r")
@@ -143,6 +148,7 @@ class ValidateSVGofBlazons(unittest.TestCase):
         dtd_filename = "tests/svg10.dtd"
         self.dtd = xmldtd.load_dtd(dtd_filename)
     def testSVG(self):
+        """Draw all good blazons from the test set, and check if they generate valid SVG."""
         testblazons = open("tests/blazons-good.txt", "r")
         for line in testblazons:
             line = line.strip()
@@ -225,6 +231,7 @@ def GenTestImage(coadef, svgfn, imgfn):
 
 class CompImages(unittest.TestCase):
     def testCompImages(self):
+        """Compare generated shields to stored gold standards of the same shields."""
         for curblazon, gsfn in BlazonsAndGoldStandards(TESTBLAZONFN):
             GenTestImage(curblazon, TESTSVGFN, TESTEDIMGFN)
             testedshield = Image.open(TESTEDIMGFN)

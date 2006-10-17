@@ -107,6 +107,7 @@ class partLine:
         "rayonny": (3,5),
         "wavy": (8,5),
         "embattled": (6,2),
+        "dovetailed": (6,2),
         "engrailed": (10,5),
         "invected": (10,5)
         }
@@ -185,6 +186,16 @@ class partLine:
                     uptoX+=delX
                     uptoY+=delY
                     self.path.append(" L"+str(uptoX+shiftX*direction)+
+                                     ","+str(uptoY+shiftY*direction))
+                    direction *= -1
+                self.path.append(" L"+str(x)+","+str(y))
+            elif self.lineType == "raguly":
+                for i in range(1,int(leng/wavelength)+1):
+                    self.path.append(" L"+str(uptoX+shiftX-(wavelength/2)*direction)+
+                                     ","+str(uptoY+shiftY*direction))
+                    uptoX+=delX
+                    uptoY+=delY
+                    self.path.append(" L"+str(uptoX+shiftX-(wavelength/2)*direction)+
                                      ","+str(uptoY+shiftY*direction))
                     direction *= -1
                 self.path.append(" L"+str(x)+","+str(y))

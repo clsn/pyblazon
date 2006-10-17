@@ -76,7 +76,7 @@ t_PALL=r"pall"
 t_CHIEF=r"chief"
 t_ON=r"on"
 
-t_LINETYPE=r"(plain|indented|dancetty|embattled|invected|engrailed|wavy|rayonny)"
+t_LINETYPE=r"(plain|indented|dancetty|embattled|invected|engrailed|wavy|rayonny|dovetailed|raguly)"
 
 def t_FURRY(t):
     r"(vairy.in.pale|vairy|counter.vairy)"
