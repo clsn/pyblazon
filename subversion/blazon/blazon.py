@@ -452,6 +452,7 @@ class Pall(Ordinary):
     def process(self):
         wd=7*math.cos(math.pi/4)
         p=partLine(-Ordinary.WIDTH-wd, -Ordinary.WIDTH+wd)
+        p.lineType=self.lineType
         p.makeline(-wd*2,0,align=1)
         p.makeline(-wd*2,Ordinary.HEIGHT)
         p.relhline(4*wd)
