@@ -57,6 +57,25 @@ class QuarteredTestCase(unittest.TestCase):
         self.assert_(repr(shield) is not None)
 SVGDrawingTests.addTest(QuarteredTestCase)
 
+class PerSaltireTestCase(unittest.TestCase):
+    def testQuartered(self):
+        shield = blazon.Field()
+        shield.tincture = blazon.PerSaltire(color1="azure", color2="argent")
+        for color in shield.tincture.colors:
+            self.assert_(color.color is "blue" or color.color is "white")
+        self.assert_(repr(shield) is not None)
+SVGDrawingTests.addTest(PerSaltireTestCase)
+
+class TiercedInPairleTestCase(unittest.TestCase):
+    def testQuartered(self):
+        shield = blazon.Field()
+        shield.tincture = blazon.PerPall(color1="vert", color2="azure", color3="gules")
+        for color in shield.tincture.colors:
+            self.assert_(color.color is "green" or color.color is "blue" or \
+                         color.color is "red")
+        self.assert_(repr(shield) is not None)
+SVGDrawingTests.addTest(TiercedInPairleTestCase)
+
 # TODO:
 # When charges are in a group, they must not overlap each other.
 # In some specific circumstances, the charges must not cross lines of
@@ -143,10 +162,28 @@ from xml.parsers.xmlproc import xmlproc
 from xml.parsers.xmlproc import xmlval
 from xml.parsers.xmlproc import xmldtd
 
+class DummyErrorHandler(xmlval.ErrorHandler):
+    def warning(self, msg):
+        # Do not print warnings.
+        pass
+
+def WarningLess_load_dtd(sysid):
+    # Cut & paste job from libs, with the following important change:
+    from xml.parsers.xmlproc import dtdparser
+    from xml.parsers.xmlproc import utils
+    dp=dtdparser.DTDParser()
+    # Shup up about the warnings.
+    dp.set_error_handler(DummyErrorHandler(dp))
+    dtd=xmldtd.CompleteDTD(dp)
+    dp.set_dtd_consumer(dtd)
+    dp.parse_resource(sysid)
+    return dtd
+
 class ValidateSVGofBlazons(unittest.TestCase):
     def setUp(self):
         dtd_filename = "tests/svg10.dtd"
-        self.dtd = xmldtd.load_dtd(dtd_filename)
+        # self.dtd = xmldtd.load_dtd(dtd_filename)
+        self.dtd = WarningLess_load_dtd(dtd_filename)
     def testSVG(self):
         """Draw all good blazons from the test set, and check if they generate valid SVG."""
         testblazons = open("tests/blazons-good.txt", "r")
@@ -164,13 +201,9 @@ class ValidateSVGofBlazons(unittest.TestCase):
     def ValidateXML(self, XML):
         # self.parser = xmlval.XMLValidator()
         self.parser = xmlproc.XMLProcessor()
-        self.parser.set_application(xmlval.ValidatingApp(self.dtd, self.parser))
         self.parser.dtd = self.dtd
         self.parser.ent = self.dtd
-        # self.parser.parseStart()
         self.parser.feed(XML)
- #       self.parser.flush()
- #       self.parser.parseEnd()
         self.parser.close()
         # Big fat assumption: if there were no exceptions, everything went well.
         # I *think* that's the way XMLValidator works, anyway ...
@@ -264,6 +297,8 @@ class CompImages(unittest.TestCase):
                          "Old (expected) version: " + IMGDIR + gsfn + "\n" + \
                          "New version: " + TESTEDIMGFN)
 
+def RunAllTests():
+    unittest.main()
 
 if __name__ == '__main__':
-    unittest.main()
+    RunAllTests()
