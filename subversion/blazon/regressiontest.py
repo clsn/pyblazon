@@ -200,7 +200,19 @@ def PixelsAlmostSame(a, b):
     return True
 
 def CompImage(tested, gs):
-    xsize, ysize = tested.size
+    tested = NonTransparentPart(tested)
+    gs = NonTransparentPart(gs)
+    gxsize, gysize = gs.size
+    txsize, tysize = tested.size
+    # Compare only the common subset of the images.
+    if gxsize < txsize:
+        xsize = gxsize
+    else:
+        xsize = txsize
+    if gysize < tysize:
+        ysize = gysize
+    else:
+        ysize = tysize
     area = xsize * ysize
     wrongpixels = 0
     for x in range(xsize):
@@ -208,6 +220,12 @@ def CompImage(tested, gs):
             if not PixelsAlmostSame(tested.getpixel((x,y)), gs.getpixel((x,y))):
                 wrongpixels = wrongpixels + 1
     return float(wrongpixels) / float(area)
+
+def NonTransparentPart(image):
+    """Problem: if the shield moves around in the image file, we are misled to
+    believe that it has changed. To remedy this, only count lines that
+    contain non-transparent pixels."""
+    return image.crop(image.getbbox())
 
 def BlazonsAndGoldStandards(filename):
     f = open(filename, "r")
