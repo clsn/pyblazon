@@ -30,6 +30,8 @@ class Treatment:                         # Metal or color.
              "sanguine" : "#c00000",
              "murrey" : "#800040",
              "bleu celeste" : "#8080ff",
+             "rose" : "#fba0e3",
+             "copper" : "#b87333",
              "none" : "none"
              }
    

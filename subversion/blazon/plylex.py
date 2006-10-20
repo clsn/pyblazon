@@ -22,7 +22,7 @@ t_ignore=" \n\t"
 
 # The gutty colors don't work quite right yet...
 def t_COLOR(t):
-    r"((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|de.larmes|de.poix|de.sang|d'huile|d'eau)"
+    r"((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de.larmes|de.poix|de.sang|d'huile|d'eau)"
     return t
 
 def t_AND(t):
