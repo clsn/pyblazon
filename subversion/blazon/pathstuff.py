@@ -50,7 +50,7 @@ class partLine:
         self.path.append('h'+str(x))
         self.relupdate(x,0)
     def vline(self,y):
-        """verical line to absolute"""
+        """vertical line to absolute"""
         self.path.append('V'+str(y))
         self.update(self.curX,y)
     def relvline(self,y):
@@ -113,12 +113,12 @@ class partLine:
         "invected": (10,5)
         }
     def makeline(self,x,y,align=0,shift=1):
-        """draw a line using whatever linetype is called for"""
-        # TODO: add parameter "align": if align is 0 (default), then put
-        # the leftover part (that doesn't make up a complete oscillation)
-        # at the other end.  If it's 1, put it on the near end.  This will
-        # be easier to do when the whole functioning of this method is made
-        # neater.
+        """draw a line using whatever linetype is called for"""        
+        # TODO: add parameter "align": if align is False (default),
+        # then put the leftover part (that doesn't make up a complete
+        # oscillation) at the other end.  If it's True, put it on the
+        # near end.  This will be easier to do when the whole
+        # functioning of this method is made neater.
 
         if not hasattr(self,"lineType") or not self.lineType or self.lineType == "plain":
             self.line(x,y)

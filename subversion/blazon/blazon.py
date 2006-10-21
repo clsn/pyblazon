@@ -1082,7 +1082,7 @@ Full parsing of the external XML file, using DOM or something
 similar. Now we have a tree that we can traverse. We do a depth-first
 search through the tree to find an element that contains data that we
 think could be the shape that we want to extract. We extract this
-data, and output it (when called from finalizeSVG) as a clipPath.
+data, and output it (when called from finalizeSVG) as a mask.
 """
 
 class ExtCharge(Charge):

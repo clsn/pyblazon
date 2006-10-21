@@ -10,6 +10,14 @@ import Image
 
 SVGDrawingTests = unittest.TestSuite()
 
+def HasOnlyTheColors(shield, colors):
+    """Check that the shield has all of these colors, and none other colors."""
+    import sets
+    shieldcolors = sets.Set([c.color for c in shield.tincture.colors])
+    wantedcolors = sets.Set(colors)
+    return len(shieldcolors - wantedcolors) is 0 and \
+           len(wantedcolors - shieldcolors) is 0
+
 class BlazonryTestCase(unittest.TestCase):
     """Will eventually include code that takes as arguments a blazon,
     and the desired state on the shield object that corresponds to it."""
@@ -26,14 +34,22 @@ class ChargesAppendTestCase(unittest.TestCase):
         self.assertTrue(shield.charges[0].tincture.color is 'yellow')
 SVGDrawingTests.addTest(ChargesAppendTestCase)
 
+class Charges10TestCase(unittest.TestCase):
+    def test10Charges(self):
+        """Test for ability to add a group of ten charges without errors."""
+        shield = blazon.Field("sable")
+        shield.charges.append(blazon.ChargeGroup(10, blazon.Lozenge("argent")))
+        for charge in shield.charges:
+            charge.arrange()
+SVGDrawingTests.addTest(Charges10TestCase)
+
 class PerPaleTestCase(unittest.TestCase):
     def testPerPale(self):
         shield = blazon.Field()
         shield.tincture = blazon.PerPale(color1="vert", color2="sable")
         # Maybe it's silly to test for this, since it's used only internally
         self.assert_(shield.tincture.pieces is 2)
-        for color in shield.tincture.colors:
-            self.assert_(color.color is "green" or color.color is "black")
+        self.assert_(HasOnlyTheColors(shield, ["green", "black"]))
         self.assert_(repr(shield) is not None)
 SVGDrawingTests.addTest(PerPaleTestCase)
 
@@ -43,8 +59,7 @@ class PerFessTestCase(unittest.TestCase):
         shield.tincture = blazon.PerPale(color1="argent", color2="gules")
         # Ditto
         self.assert_(shield.tincture.pieces is 2)
-        for color in shield.tincture.colors:
-            self.assert_(color.color is "white" or color.color is "red")
+        self.assert_(HasOnlyTheColors(shield, ["white", "red"]))
         self.assert_(repr(shield) is not None)
 SVGDrawingTests.addTest(PerFessTestCase)
         
@@ -52,29 +67,68 @@ class QuarteredTestCase(unittest.TestCase):
     def testQuartered(self):
         shield = blazon.Field()
         shield.tincture = blazon.PerCross(color1="vert", color2="sable")
-        for color in shield.tincture.colors:
-            self.assert_(color.color is "green" or color.color is "black")
+        self.assert_(HasOnlyTheColors(shield, ["green", "black"]))
         self.assert_(repr(shield) is not None)
 SVGDrawingTests.addTest(QuarteredTestCase)
 
 class PerSaltireTestCase(unittest.TestCase):
-    def testQuartered(self):
+    def testPerSaltire(self):
         shield = blazon.Field()
         shield.tincture = blazon.PerSaltire(color1="azure", color2="argent")
-        for color in shield.tincture.colors:
-            self.assert_(color.color is "blue" or color.color is "white")
+        self.assert_(HasOnlyTheColors(shield, ["blue", "white"]))
         self.assert_(repr(shield) is not None)
 SVGDrawingTests.addTest(PerSaltireTestCase)
 
 class TiercedInPairleTestCase(unittest.TestCase):
-    def testQuartered(self):
+    def testTiercedInPairle(self):
         shield = blazon.Field()
         shield.tincture = blazon.PerPall(color1="vert", color2="azure", color3="gules")
-        for color in shield.tincture.colors:
-            self.assert_(color.color is "green" or color.color is "blue" or \
-                         color.color is "red")
+        self.assert_(HasOnlyTheColors(shield, ["green", "blue", "red"]))
         self.assert_(repr(shield) is not None)
 SVGDrawingTests.addTest(TiercedInPairleTestCase)
+
+class GyronnyTestCase(unittest.TestCase):
+    def testGyronny(self):
+        shield = blazon.Field()
+        shield.tincture = blazon.Gyronny(color1="purpure", color2="argent")
+        self.assert_(HasOnlyTheColors(shield, ["purple", "white"]))
+        self.assert_(shield.tincture.pieces is 8)
+        self.assert_(repr(shield) is not None)
+SVGDrawingTests.addTest(GyronnyTestCase)
+
+# Various LINEYs...
+
+class PalyTestCase(unittest.TestCase):
+    def testPaly(self):
+        shield = blazon.Field()
+        shield.tincture = blazon.Paly(color1="sable", color2="or")
+        self.assert_(HasOnlyTheColors(shield, ["black", "yellow"]))
+        self.assert_(shield.tincture.pieces is 8)
+        self.assert_(repr(shield) is not None)
+SVGDrawingTests.addTest(PalyTestCase)
+
+class PilyTestCase(unittest.TestCase):
+    def testPily(self):
+        shield = blazon.Field()
+        shield.tincture = blazon.Pily(color1="or", color2="purpure")
+        self.assert_(HasOnlyTheColors(shield, ["yellow", "purple"]))
+        self.assert_(shield.tincture.pieces is 8)
+        self.assert_(repr(shield) is not None)
+SVGDrawingTests.addTest(PilyTestCase)
+
+
+class ChevronnyTestCase(unittest.TestCase):
+    def testPily(self):
+        shield = blazon.Field()
+        # Not according to the Rule of Tincture, but who cares?
+        shield.tincture = blazon.Chevronny(color1="azure", color2="vert")
+        self.assert_(HasOnlyTheColors(shield, ["blue", "green"]))
+        # Chevronny has 8 pieces like everything else, but is not
+        # used in a very sensible way.
+        self.assert_(shield.tincture.pieces is 8)
+        self.assert_(repr(shield) is not None)
+SVGDrawingTests.addTest(ChevronnyTestCase)
+
 
 # TODO:
 # When charges are in a group, they must not overlap each other.
@@ -133,16 +187,19 @@ class CanParseBlazonry(unittest.TestCase):
                 raise      # Re-raise
 BlazonryTests.addTest(CanParseBlazonry)
 
-class CanNotParseBlazonry(unittest.TestCase):
-    def testBlazons(self):
-        """Check that all bad test case blazons are not accepted by the parser."""
-        import sys
-        BlazonTestSuite = unittest.TestSuite()
-        testblazons = open("tests/blazons-bad.txt", "r")
-        for line in testblazons:
-            line = line.strip()
-            self.assert_(not ParsesOK(line))
-BlazonryTests.addTest(CanNotParseBlazonry)
+## Put the following test back if and when we suspect the parser of
+## accepting bogus input. (This does not currently seem to be an
+## important risk, and it creates a bit of spurious output.)
+# class CanNotParseBlazonry(unittest.TestCase):
+#     def testBlazons(self):
+#         """Check that all bad test case blazons are not accepted by the parser."""
+#         import sys
+#         BlazonTestSuite = unittest.TestSuite()
+#         testblazons = open("tests/blazons-bad.txt", "r")
+#         for line in testblazons:
+#             line = line.strip()
+#             self.assert_(not ParsesOK(line))
+# BlazonryTests.addTest(CanNotParseBlazonry)
 
 # Tests for through-and-through acceptance of blazons
 
