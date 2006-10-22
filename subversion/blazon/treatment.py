@@ -270,13 +270,15 @@ class Paly(Treatment):
       """For internal use, to simplify assembly of subclasses"""
       p=partLine(linetype=self.lineType) # Start to support partition lines
       width=float(blazon.Ordinary.WIDTH)/self.pieces
-      # Make the lines a tiny bit too wide, so paly wavy doesn't show
-      # an extra bit.
-      if self.lineType and self.lineType <> "plain":
-         width*=1.03
-      for i in range(1,self.pieces,2):
+      for i in range(1,self.pieces-1,2):
          p.rect(-blazon.Ordinary.FESSPTX+i*width,-blazon.Ordinary.HEIGHT,
                 width,2*blazon.Ordinary.HEIGHT)
+      if not self.pieces%2:
+          # Make the last one extra-big, so things don't show through
+          # if the line-type isn't plain.
+          p.rect(-blazon.Ordinary.FESSPTX+(self.pieces-1)*width,
+                 -blazon.Ordinary.HEIGHT,
+                 2*width,2*blazon.Ordinary.HEIGHT)
       self.path=SVGdraw.path(p)
       
    def __init__(self,bars=8,color1="argent",color2="sable",linetype="plain"):
@@ -310,12 +312,6 @@ class Barry(Paly):
    def assemble(self):
       p=partLine(linetype=self.lineType)
       height=float(blazon.Ordinary.HEIGHT)/self.pieces
-      # Make the lines a LITTLE wider, so "wavy" doesn't show an extra bit
-      # at the bottom.
-      # Not needed after allowance for optical center...
-      # Not sure it's good though.
-      #if self.pieces>4 and self.lineType and self.lineType <> "plain":
-      #   height*=1.03
       # Problem.  Optical center is at 0.  Geometric center is a little lower,
       # owing to the placement of the coordinates.
       for i in range(1,self.pieces-1,2):
@@ -323,6 +319,7 @@ class Barry(Paly):
                 3*blazon.Ordinary.WIDTH, height)
       # Last piece is extra-wide because everything is shifted up to correct
       # for optical center.  Only matters when pieces is even.
+      # Also compensates for non-plain lines.
       if not self.pieces%2:
           p.rect(-blazon.Ordinary.WIDTH, -blazon.Ordinary.FESSPTY+(self.pieces-1)*height,
                  3*blazon.Ordinary.WIDTH, 3*height)
@@ -357,16 +354,17 @@ class BarryPily(Pily):
 class Bendy(Paly):
    def assemble(self):
       p=partLine(linetype=self.lineType)
-      # OK, let's map things on the *square* WIDTHxWIDTH
-      fullwidth=math.sqrt(2)*blazon.Ordinary.WIDTH
+      # OK, let's map things on the *square* HEIGHTxHEIGHT
+      # Because HEIGHT > WIDTH!!!
+      fullwidth=math.sqrt(2)*blazon.Ordinary.HEIGHT
       # Oh, this is going to be much easier to do orthogonally and rotating.
       if self.pieces>3:
-         width=fullwidth*.87/self.pieces # Compensate for round corner.
+          width=fullwidth*.87/self.pieces # Compensate for round corner.
       else:                             # Otherwise Per Bend doesn't work.
-         width=fullwidth/self.pieces
-      for i in range(0,self.pieces+2,2): # Add two to handle odd numbers, just in case.
-         p.rect(fullwidth/2-i*width, -blazon.Ordinary.HEIGHT,
-                width,2*blazon.Ordinary.HEIGHT)
+          width=fullwidth/self.pieces
+      for i in range(0,self.pieces+2,2):
+          p.rect(fullwidth/2-i*width, -blazon.Ordinary.HEIGHT,
+                 width,2*blazon.Ordinary.HEIGHT)
       self.path=SVGdraw.path(p)
       self.path.attributes["transform"]="rotate(-45)"
       
@@ -375,7 +373,7 @@ class BendySinister(Paly):
       # Can't really do this by rotating Bendy, since the round corner is
       # on the other side.
       p=partLine(linetype=self.lineType)
-      fullwidth=math.sqrt(2)*blazon.Ordinary.WIDTH
+      fullwidth=math.sqrt(2)*blazon.Ordinary.HEIGHT
       if self.pieces>3:
          width=fullwidth*.87/self.pieces # Compensate for round corner.
       else:
