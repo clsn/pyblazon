@@ -392,6 +392,11 @@ class PerPale(Paly):
 
     @staticmethod
     def patternContents(num):
+        patterns=[[1],[1,(0,0)]]
+        try:
+            return patterns[num]
+        except IndexError:
+            pass
         return blazon.Pale.patternSiblings(num)
 
 class PerFesse(Barry):
@@ -400,6 +405,11 @@ class PerFesse(Barry):
 
     @staticmethod
     def patternContents(num):
+        patterns=[[1],[1,(0,0)]]
+        try:
+            return patterns[num]
+        except IndexError:
+            pass
         return blazon.Fesse.patternSiblings(num)
 
 class PerBend(Bendy):
@@ -408,6 +418,11 @@ class PerBend(Bendy):
 
     @staticmethod
     def patternContents(num):
+        patterns=[[1],[1,(0,0)]]
+        try:
+            return patterns[num]
+        except IndexError:
+            pass
         return blazon.Bend.patternSiblings(num)
 
 class PerBendSinister(BendySinister):
@@ -416,6 +431,11 @@ class PerBendSinister(BendySinister):
 
     @staticmethod
     def patternContents(num):
+        patterns=[[1],[1,(0,0)]]
+        try:
+            return patterns[num]
+        except IndexError:
+            pass
         return blazon.BendSinister.patternSiblings(num)
 
 class PerPall(Paly):
@@ -478,6 +498,11 @@ class PerPall(Paly):
 
     @staticmethod
     def patternContents(num):
+        patterns=[[1],[1,(0,0)]]
+        try:
+            return patterns[num]
+        except IndexError:
+            pass
         return blazon.Pall.patternSiblings(num)        
 
 class PerCross(Paly):
@@ -488,6 +513,11 @@ class PerCross(Paly):
 
    @staticmethod
    def patternContents(num):
+       patterns=[[1],[1,(0,0)]]
+       try:
+           return patterns[num]
+       except IndexError:
+           pass
        return blazon.Cross.patternSiblings(num)        
 
    def assemble(self):
@@ -510,6 +540,11 @@ class PerSaltire(PerCross):
 
    @staticmethod
    def patternContents(num):
+       patterns=[[1],[1,(0,0)]]
+       try:
+           return patterns[num]
+       except IndexError:
+           pass
        return blazon.Saltire.patternSiblings(num)        
 
 
@@ -540,6 +575,11 @@ class PerChevron(Paly):
 
     # Can't make this static, because have to check for invertedness
     def patternContents(self,num):
+        patterns=[[1],[1,(0,0)]]
+        try:
+            return patterns[num]
+        except IndexError:
+            pass
         tmp=blazon.Chevron()
         tmp.inverted=self.inverted
         return tmp.patternSiblings(num)
