@@ -538,9 +538,11 @@ class PerChevron(Paly):
         self.lineType=linetype
         self.inverted=False
 
-    @staticmethod
-    def patternContents(num):
-        return blazon.Chevron.patternSiblings(num)
+    # Can't make this static, because have to check for invertedness
+    def patternContents(self,num):
+        tmp=blazon.Chevron()
+        tmp.inverted=self.inverted
+        return tmp.patternSiblings(num)
    
     def assemble(self):
         p=partLine(linetype=self.lineType)

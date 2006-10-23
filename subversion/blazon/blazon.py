@@ -156,13 +156,13 @@ class Ordinary:
             rv=elt.patternSiblings(num)
             if rv:
                return rv
-         except:
+         except AttributeError:
             pass
       try:
          rv=self.tincture.patternContents(num)
          if rv:
             return rv
-      except:
+      except AttributeError:
          pass
       return None
 
@@ -788,8 +788,7 @@ class Chevron(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
-    @staticmethod
-    def patternContents(num):
+    def patternContents(self,num):
        patterns=[[.25],[.25,(0,-5)],
                  [.25,(-20,9),(20,9)],
                  [.25,(-25,12),(25,12),(0,-5)],
@@ -799,13 +798,12 @@ class Chevron(Ordinary):
        try:
           res=patterns[num]
           if hasattr(self,"inverted") and self.inverted:
-            self.invertPattern(res)
+             self.invertPattern(res)
        except IndexError:
           return None
        return res
 
-    @staticmethod
-    def patternSiblings(num):
+    def patternSiblings(self,num):
        patterns=[[.35],[.4,(0,32)],
                  [.3,(-33,-10),(33,-10)],
                  [.3,(-33,-10),(33,-10),(0,30)]
@@ -1011,17 +1009,17 @@ class ChargeGroup:            # Kind of an invisible ordinary
         placements=None
         try:
            placements=self.charges[0].patternWithOthers(len(self.charges))
-        except:
+        except AttributeError:
            pass
         if not placements:
            try:
               placements=self.parent.patternContents(len(self.charges))
-           except:
+           except AttributeError:
               pass
         if not placements:
            try:
               placements=defaultplacements[num]
-           except:
+           except AttributeError:
               pass
         if not placements:
            raise "Too many objects"
