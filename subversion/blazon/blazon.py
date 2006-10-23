@@ -714,7 +714,6 @@ class Chief(Ordinary):
 
     @staticmethod
     def patternContents(num):
-       # Chief doesn't need a patternSiblings.
        # Also note that Chief is translated, so everything is around the origin.
        patterns=[[.25],[.25,(0,0)],
                  [.25,(-20,0),(20,0)],
@@ -726,6 +725,11 @@ class Chief(Ordinary):
           return patterns[num]
        except IndexError:
           return None
+       
+    # Chief doesn't need a patternSiblings.
+    @staticmethod
+    def patternSiblings(num):
+       return None
 
 class Bordure(Ordinary):
    # Doing lines of partition is going to be hard with this one.
