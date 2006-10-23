@@ -465,8 +465,7 @@ class Pall(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
-    @staticmethod
-    def patternSiblings(num):
+    def patternSiblings(self,num):
        patterns=[[.35],[.35,(0,-30)],
                  [.35,(-30,0),(30,0)],
                  [.35,(-30,0),(30,0),(0,-30)]
@@ -479,8 +478,7 @@ class Pall(Ordinary):
           self.invertPattern(res)
        return res
 
-    @staticmethod
-    def patternContents(num):
+    def patternContents(self,num):
        patterns=[[.3],[.27,(0,0)],
                  [.2,(-25,-25),(25,-25)],
                  [.2,(-25,-25),(25,-25),(0,25)],
