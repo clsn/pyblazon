@@ -372,7 +372,7 @@ class Fesse(Ordinary):
           return None
 
     @staticmethod
-    def patternSiblings(self,num):
+    def patternSiblings(num):
        patterns=[[.3],[.3,(0,-33)],
                  [.3,(0,-33),(0,33)],
                  [.3,(-33,-33),(33,-33),(0,33)],
