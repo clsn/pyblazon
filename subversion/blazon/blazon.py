@@ -1096,7 +1096,8 @@ class ExtCharge(Charge):
         "humetty":("data/Charges.svg#humetty",3,None),
         "flory":("data/Charges.svg#flory",100,None),
         "crosscrosslet":("data/Cross-Crosslet-Heraldry.svg#cross-crosslet",2,None),
-        "mullet":("data/Charges.svg#mullet",2,None)
+        "mullet":("data/Charges.svg#mullet",2,None),
+        "firtwig":("data/Firtwig.svg#firtwig",2,None)
         }
     
     def __init__(self,name,*args,**kwargs):
