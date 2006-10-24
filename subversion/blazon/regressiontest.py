@@ -6,6 +6,19 @@ import sys
 import os
 import Image
 
+# Bugs that we've seen before.
+
+SpecificBugTrap = unittest.TestSuite()
+
+class FesseStuff(unittest.TestCase):
+    def setUp(self):
+        self.fesse = blazon.Fesse()
+    def testPatternSiblings(self):
+        self.assert_(self.fesse.patternSiblings(1) is not None)
+    def testPatternContents(self):
+        self.assert_(self.fesse.patternContents(1) is not None)
+
+
 # Test for SVG drawing code
 
 SVGDrawingTests = unittest.TestSuite()
