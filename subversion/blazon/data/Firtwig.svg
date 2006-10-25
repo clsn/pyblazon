@@ -60,7 +60,7 @@
          height="198.6739"
          width="50.102486"
          id="rect1872"
-         style="fill:blue;fill-rule:evenodd;stroke:none;stroke-width:0.89751357px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill-rule:evenodd;stroke:none;stroke-width:0.89751357px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <rect
          transform="matrix(0.699658,0.714478,-0.714478,0.699658,0,0)"
          y="-20.425127"
@@ -68,7 +68,7 @@
          height="127.14289"
          width="54.285725"
          id="rect1876"
-         style="fill:blue;fill-rule:evenodd;stroke:none;stroke-width:1.00000024px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill-rule:evenodd;stroke:none;stroke-width:1.00000024px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <rect
          transform="matrix(-0.699658,0.714478,0.714478,0.699658,0,0)"
          y="443.94339"
@@ -76,8 +76,9 @@
          height="127.14291"
          width="54.285736"
          id="rect1878"
-         style="fill:green;fill-rule:evenodd;stroke:none;stroke-width:1.0000006px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill-rule:evenodd;stroke:none;stroke-width:1.0000006px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
   </g>
 </symbol>
+<use xlink:href="#firtwig" x="100" y="100" fill="green"/>
 </svg>
