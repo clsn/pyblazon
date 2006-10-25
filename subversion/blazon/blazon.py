@@ -1009,10 +1009,16 @@ class ChargeGroup:            # Kind of an invisible ordinary
                             (0,30)]
                            ]
         placements=None
+        # Explicit arrangement takes precedence
         try:
-           placements=self.charges[0].patternWithOthers(len(self.charges))
+           placements=self.arrangement.pattern(len(self.charges))
         except AttributeError:
            pass
+        if not placements:
+           try:
+              placements=self.charges[0].patternWithOthers(len(self.charges))
+           except AttributeError:
+              pass
         if not placements:
            try:
               placements=self.parent.patternContents(len(self.charges))

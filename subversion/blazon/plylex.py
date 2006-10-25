@@ -6,13 +6,14 @@ import re
 import blazon
 import sys
 import treatment
+import arrangement
 import copy
 
 tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED","ALTERED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
-        "PALL","WITHIN","BORDURE","BEZANTY","LP","RP")
+        "PALL","WITHIN","BORDURE","BEZANTY","LP","RP","IN")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -38,6 +39,7 @@ t_EACH=r"each"
 t_CHARGED=r"charged"
 t_WITH=r"with"
 t_THE=r"the"
+t_IN="in"
 t_SEMY=r"semy"
 t_LP=r"{|lp"                           # leftparen
 t_RP=r"}|rp"                           # rightparen
@@ -220,7 +222,11 @@ lookupdict={
                 treatment.Bendy(num,treatment.BendySinister(num,col1,col2),
                                 treatment.BendySinister(num,copy.deepcopy(col2),
                                                         copy.deepcopy(col1)))),
-    "countercha[rn]ged": treatment.Countercharged
+    "countercha[rn]ged": treatment.Countercharged,
+    "in pale": arrangement.InPale,
+    "in fesse?": arrangement.InFesse,
+    "in bend": arrangement.InBend,
+    "in bend.sinister": arrangement.InBendSinister
     }
 
 def lookup(key):
