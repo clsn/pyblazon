@@ -8,7 +8,7 @@ import Image
 
 # Bugs that we've seen before.
 
-SpecificBugTrap = unittest.TestSuite()
+SpecificBugTraps = unittest.TestSuite()
 
 class FesseStuff(unittest.TestCase):
     def setUp(self):
@@ -17,6 +17,7 @@ class FesseStuff(unittest.TestCase):
         self.assert_(self.fesse.patternSiblings(1) is not None)
     def testPatternContents(self):
         self.assert_(self.fesse.patternContents(1) is not None)
+SpecificBugTraps.addTest(FesseStuff)
 
 
 # Test for SVG drawing code

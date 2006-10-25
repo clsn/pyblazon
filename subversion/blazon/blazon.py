@@ -9,6 +9,12 @@ import re
 from pathstuff import partLine
 from treatment import *
 
+class ArrangementException(Exception):
+   def __init__(self, message):
+      self.message = message
+   def __str__(self):
+      return self.message
+
 # For the sake of argument, let's assume the base background SVG is 100x125
 # in user-units, starting from 0,0 at top left.  Most ordinaries will also
 # be the same size and same location--only they'll have clipping paths,

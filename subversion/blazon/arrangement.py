@@ -42,10 +42,12 @@ class Arrangement:
                       ]
 
    def pattern(self,num):               # This is it?
-      try:
+      if len(self.__class__.patterns) - 1 >= num:
          return self.__class__.patterns[num]
-      except IndexError:
-         return None
+      else: # Can't arrange that many charges.
+         raise ArrangementException, \
+               "Don't know how to arrange " + \
+               str(num) + " charges " + self.__class__.__name__
 
 class InPale(Arrangement):
    # Doesn't need to scale quite as much as the patternContents of Pale.
