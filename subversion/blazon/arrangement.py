@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from blazon import *
+import blazon
 
 import math
 import sys
@@ -45,7 +46,7 @@ class Arrangement:
       if len(self.__class__.patterns) - 1 >= num:
          return self.__class__.patterns[num]
       else: # Can't arrange that many charges.
-         raise ArrangementException, \
+         raise blazon.ArrangementError, \
                "Don't know how to arrange " + \
                str(num) + " charges " + self.__class__.__name__
 
@@ -91,9 +92,7 @@ class ByNumbers(Arrangement):
       # num should equal the sum of the elements of the rows list.
       # We're going to assume it does.
       if sum(self.rows) <> num:
-         sys.stderr.write("Whoa!  Number of elements is %d, but rows for %d given.\n"%
-                          (num,sum(self.rows)))
-         # Then go on and do it anyway.
+         raise blazon.ArrangementError, "Whoa!  Number of elements is %d, but rows for %d given.\n"% (num,sum(self.rows))
       # Determine the scale by the larger of: the number of rows, and
       # the largest number of elements in a row.
       index=max(len(self.rows),max(self.rows))
