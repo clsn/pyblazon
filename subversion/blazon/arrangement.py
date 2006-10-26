@@ -76,3 +76,35 @@ class InBendSinister(InBend):
          for i in range(1,len(rv)):
             rv[i]=(-rv[i][0],rv[i][1])
       return rv
+
+class ByNumbers(Arrangement):
+   def __init__(self,rows=None):
+      self.rows=rows
+   
+   def setRows(self,rows):
+      self.rows=rows                    # Let it be a list of numbers, top down.
+
+   def pattern(self,num):
+      # Barf if not set right
+      if not self.rows:
+         return None
+      # num should equal the sum of the elements of the rows list.
+      # We're going to assume it does.
+      if sum(self.rows) <> num:
+         sys.stderr.write("Whoa!  Number of elements is %d, but rows for %d given.\n"%
+                          (num,sum(self.rows)))
+         # Then go on and do it anyway.
+      # Determine the scale by the larger of: the number of rows, and
+      # the largest number of elements in a row.
+      index=max(len(self.rows),max(self.rows))
+      scale=[1, 1, .4, .3, .25, .2, .2][index]
+      # Assemble the return value...
+      rv=[scale]
+      totalrows=len(self.rows)
+      for i in range(0,totalrows):
+         row=self.rows[i]
+         y=(-(totalrows-1)/2.0+i)*blazon.Ordinary.HEIGHT*.8*scale
+         for j in range(0,row):
+            x=((row-1)/2.0-j)*blazon.Ordinary.WIDTH*.8*scale
+            rv.append((x,y))
+      return rv

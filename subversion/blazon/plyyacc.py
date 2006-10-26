@@ -7,6 +7,7 @@ import treatment
 import copy
 
 from plylex import tokens,lookup
+from arrangement import ByNumbers
 
 class Globals:
     colorless=[]
@@ -170,19 +171,24 @@ def p_grouporcharge_b(p):
         Globals.colorless.append(p[0].charges[0])
 
 def p_group(p):
-    """group : amount charge optarrange opttreatment
-             | amount charge optarrange opttreatment EACH CHARGED WITH charges"""
+    """group : amount charge optarrange opttreatment optrows
+             | amount charge optarrange opttreatment EACH CHARGED WITH charges optrows"""
     # I don't have to worry about handling the opttreatment.  That's just in
     # case the treatment was omitted in the charge before the arrangement,
     # and the "missing color" code will handle it.  Right?
     p[0]=blazon.ChargeGroup(p[1],p[2])
-    if len(p)>5:
+    if len(p)>6:
+        rows=p[9]
         for elt in p[0].charges:
             elt.extendCharges(copy.deepcopy(p[8]))
+    else:
+        rows=p[5]
     if not p[2].tincture:
         Globals.colorless.extend(p[0].charges)
     # Doesn't matter if p[3] is empty; so we'll pass along an empty one.
     p[0].arrangement=p[3]
+    if rows:
+        p[0].arrangement=ByNumbers(rows)
 
 def p_ordinary(p):
     """ordinary : ORDINARY
@@ -263,6 +269,19 @@ def p_optarrange(p):
         p[0]=None
     else:
         p[0]=lookup("in "+p[2])()
+
+def p_optrows(p):
+    """optrows : rows
+               | empty"""
+    p[0]=p[1]
+
+def p_rows(p):
+    """rows : amount rows
+            | amount AND amount"""
+    if len(p)==3:
+        p[0]=[p[1]] + p[2]                # Just concatenate
+    else:
+        p[0]=[p[1], p[3]]
     
 def p_amount(p):
     """amount : NUM

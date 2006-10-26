@@ -8,6 +8,7 @@ import re
 
 from pathstuff import partLine
 from treatment import *
+from arrangement import ByNumbers
 
 class ArrangementException(Exception):
    def __init__(self, message):
