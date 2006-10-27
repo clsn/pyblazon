@@ -1070,6 +1070,42 @@ class Lozenge(Charge):
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
 
+# Should I even keep defining these simple ones as classes, or just
+# use ExtCharge for them?
+
+class Fusil(Charge):
+    def process(self):
+        p=SVGdraw.pathdata()
+        p.move(0,-42)
+        p.line(22,0)
+        p.line(0,42)
+        p.line(-22,0)
+        p.closepath()
+        self.clipPath=SVGdraw.path(p)
+        self.clipPathElt.addElement(self.clipPath)
+
+class Mascle(Charge):
+    def process(self):
+        self.fimbriation_width=2
+        self.clipPath=SVGdraw.group()
+        self.clipPath.attributes["id"]="ClipPath%04d"%Ordinary.id
+        Ordinary.id += 1
+        p1=SVGdraw.pathdata()
+        p1.move(0,-42)
+        p1.line(28,0)
+        p1.line(0,42)
+        p1.line(-28,0)
+        p1.closepath()
+        self.clipPath.addElement(SVGdraw.path(p1))
+        p2=SVGdraw.pathdata()
+        p2.move(0,-31)
+        p2.line(20,0)
+        p2.line(0,31)
+        p2.line(-20,0)
+        p2.closepath()
+        self.clipPath.addElement(SVGdraw.path(p2,fill="black"))
+        self.clipPathElt.addElement(self.clipPath)
+
 class Billet(Charge):
     def process(self):
         self.clipPath=SVGdraw.rect(-25,-40,50,80)
