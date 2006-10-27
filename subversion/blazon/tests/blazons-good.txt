@@ -1,4 +1,6 @@
 Argent a chief dancetty gules.
+Argent a pall wavy azure.
+Argent three triangles in pale vert.
 Azure.
 Azure a cross or.
 Azure a bend or.
@@ -6,6 +8,8 @@ Azure a saltire and a chief or.
 Azure, a bend or fimbriated sable.
 Azure, four lozenges argent, one, one, one and one.
 Azure semy-de-lis or.
+Azure six plates one two and three.
+Azure three bendlets sinister wavy argent.
 Barry dancetty of six argent and gules.
 Barry of 6 vert and argent.
 Bendy of six or and azure a canton ermine.
@@ -13,7 +17,10 @@ Barry of six vert and argent.
 Bendy vert and argent.
 Bleu celeste, a label or.
 Gules a cross azure fimbriated argent.
+Gules a fret argent.
 Gules three bezants in fesse.
+Gules three crosses bottony or.
+Gules three fusils argent.
 Gyronny sable and argent on a roundel gyronny argent and sable on a roundel gyronny sable and argent on a roundel gyronny argent and sable a torteau
 Gyronny vert and azure.
 Or two pallets gules.
@@ -26,11 +33,13 @@ Per bend sable and argent.
 Per bend sinister wavy purpure and argent. 
 Per chevron azure and argent.
 Per chevron gules and sable.
+Per chevron inverted azure and or.
 Per cross bendy argent and azure and bendy sinister argent and azure. 
 Per cross bendy wavy purpure and argent and azure.
 Per fess sable and argent a lozenge azure.
 Per fess sable and vert, a bar dancetty argent.
 Per pale azure and argent.
+Per pale dovetailed azure and argent.
 Per saltire argent and gules a saltire per saltire gules and argent.
 Per saltire azure and argent.
 Per pale argent and sable a chevron counterchanged.
@@ -47,5 +56,7 @@ Sable a fesse embattled or.
 Sable gutty de sang three piles purpure.
 Sable on a pile argent a chevron gules.
 Sable semy of crosses humetty or.
+Sable seventeen triangles or five, five, three, three, and one.
 Vair a bend indented gules.
 Vert a pile inverted sable a chief azure.
+Vert two bendlets sinister argent.
