@@ -146,6 +146,10 @@ class Ordinary:
            self.do_fimbriation()
       if hasattr(self,"charges"):
          for charge in self.charges:
+            try: 
+                charge.maingroup.attributes["transform"]=self.clipPathElt.attributes["transform"]+charge.maingroup.attributes["transform"]
+            except KeyError:
+                pass
             self.maingroup.addElement(charge.finalizeSVG())
       if hasattr(self,"newmaingroup"):
          self.maingroup=self.newmaingroup
@@ -308,7 +312,7 @@ class Charge(Ordinary):
 
    def addCharge(self,charge):
       Ordinary.addCharge(self,charge)
-      charge.maingroup.attributes["transform"]+=" scale(.4)"
+      charge.maingroup.attributes["transform"]+=" scale(.8)"
 
 
 class Cross(Ordinary):
