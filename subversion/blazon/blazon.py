@@ -1106,6 +1106,27 @@ class Mascle(Charge):
         self.clipPath.addElement(SVGdraw.path(p2,fill="black"))
         self.clipPathElt.addElement(self.clipPath)
 
+class Canton(Charge):
+    # This one can't be an ExtCharge, because it has a special placement.
+    # Or does it?  Just place it where it should be in the clipping
+    # path, and let the arrangement code put it at 0,0
+    def process(self):
+        self.clipPath=SVGdraw.rect(-Ordinary.FESSPTX, -Ordinary.FESSPTY,
+                                   Ordinary.WIDTH/3, Ordinary.HEIGHT/3)
+        self.clipPathElt.addElement(self.clipPath)
+        # Is the fimbriation right, though?  And does anyone fimbriate cantons?
+        # We can always move the upper left corner a little offscreen.
+
+class Triangle(Charge):
+    def process(self):
+        p=SVGdraw.pathdata()
+        p.move(0,-40)
+        p.line(34.6,20)
+        p.line(-34.6,20)
+        p.closepath()
+        self.clipPath=SVGdraw.path(p)
+        self.clipPathElt.addElement(self.clipPath)
+
 class Billet(Charge):
     def process(self):
         self.clipPath=SVGdraw.rect(-25,-40,50,80)

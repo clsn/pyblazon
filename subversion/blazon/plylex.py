@@ -65,7 +65,7 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"(roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|bezants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?)|fir.twigs?|fusils?|mascles?"
+    r"(roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|bezants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?)|fir.twigs?|fusils?|mascles?|triangles?|canton"
     return t
 
 # Hmm.  How to handle "*in* a bordure..." ?
@@ -165,6 +165,8 @@ lookupdict={
     "lozenges?": blazon.Lozenge,
     "mascles?" : blazon.Mascle,
     "fusils?" : blazon.Fusil,
+    "triangles?": blazon.Triangle,
+    "canton": blazon.Canton,            # Is it possible to have >1 canton?
     "fleurs?.de.lis": (lambda *a: blazon.ExtCharge("fleur")),
     "goutes?": (lambda *a: blazon.ExtCharge("goute")),
     "cross(es)?.formy": (lambda *a: blazon.ExtCharge("formy")),
