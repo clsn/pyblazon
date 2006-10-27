@@ -1100,17 +1100,16 @@ class Mascle(Charge):
         p1.line(0,42)
         p1.line(-28,0)
         p1.closepath()
-        self.clipPath.addElement(SVGdraw.path(p1))
-        p2=SVGdraw.pathdata()
-        p2.move(0,-31)
-        p2.line(20,0)
-        p2.line(0,31)
-        p2.line(-20,0)
-        p2.closepath()
-        self.clipPath.addElement(SVGdraw.path(p2,fill="black"))
+        path=SVGdraw.path(p1)
+        path.attributes["id"]="Masc%04d"%Ordinary.id
+        Ordinary.id+=1
+        self.clipPath.addElement(path)
+        use=SVGdraw.use("#%s"%path.attributes["id"],fill="black")
+        use.attributes["transform"]=" scale(.6)"
+        self.clipPath.addElement(use)
         self.clipPathElt.addElement(self.clipPath)
 
-class Canton(Charge):
+class Canton(Ordinary):
     # This one can't be an ExtCharge, because it has a special placement.
     # Or does it?  Just place it where it should be in the clipping
     # path, and let the arrangement code put it at 0,0
@@ -1120,6 +1119,43 @@ class Canton(Charge):
         self.clipPathElt.addElement(self.clipPath)
         # Is the fimbriation right, though?  And does anyone fimbriate cantons?
         # We can always move the upper left corner a little offscreen.
+
+class Gyron(Ordinary):
+    # Should we consider the possibility of more than one?  Or of a canton?
+    def process(self):
+        p=SVGdraw.pathdata()
+        p.move(-Ordinary.FESSPTX, -Ordinary.FESSPTY)
+        p.relline(Ordinary.WIDTH/3, Ordinary.HEIGHT/3)
+        p.relhline(-Ordinary.WIDTH/3)
+        p.closepath()
+        self.clipPath=SVGdraw.path(p)
+        self.clipPathElt.addElement(self.clipPath)
+
+class Fret(Ordinary):
+    # This also should appear only once
+    def process(self):
+        # Not *really* a mascle and crossed bendlets.  A tilted square
+        # looks better.
+        # Try to draw the thin lines?  Bleah, probably possible but a pain
+        # to compute.
+        g=SVGdraw.group()
+        g.attributes["id"]="ClipPath%04d"%Ordinary.id
+        Ordinary.id+=1
+        rect=SVGdraw.rect(-25,-25,50,50)
+        rect.attributes["id"]="Fret%04d"%Ordinary.id
+        Ordinary.id+=1
+        g.addElement(rect)
+        use=SVGdraw.use("#%s"%rect.attributes["id"],fill="black")
+        use.attributes["transform"]=" scale(.7)"
+        g.addElement(use)
+        b1=SVGdraw.rect(-5,-Ordinary.HEIGHT,10,Ordinary.HEIGHT*3)
+        g.addElement(b1)
+        b2=SVGdraw.rect(-Ordinary.WIDTH,-5,Ordinary.WIDTH*3,10)
+        g.addElement(b2)
+        g.attributes["transform"]=" rotate(45)"
+        self.clipPath=g
+        self.clipPathElt.addElement(self.clipPath)
+        
 
 class Triangle(Charge):
     def process(self):
