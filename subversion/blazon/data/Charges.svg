@@ -110,7 +110,7 @@ c18.088,0,32.75-14.663,32.75-32.75
 </g>
 </symbol>
 <symbol id="goute">
-	<path transform="scale(9) translate(-5,-10)" d="M5,5 c0,4 -3,8 0,8 c3,0 0,-4 0,-8 z" />
+	<path transform="scale(12) translate(-5,-9)" d="M5,5 c0,4 -3,8 0,8 c3,0 0,-4 0,-8 z" />
 </symbol>
 <symbol id="humetty">
 	<path d="M-35,-7 L-7,-7 L-7,-35 L7,-35 L7,-7 L35,-7 L35,7 L7,7 L7,35 L-7,35 L-7,7 L-35,7 z" />

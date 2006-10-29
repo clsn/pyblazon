@@ -11,6 +11,8 @@ from treatment import *
 from arrangement import ByNumbers
 
 class ArrangementError(Exception):
+   """An exception that is raised when we are asked to arrange some charges
+   in a way that we don't know how to do."""
    def __init__(self, message):
       self.message = message
    def __str__(self):
@@ -161,7 +163,9 @@ class Ordinary:
       return self.svg
 
    def patternContents(self,num):
-      "return a list of [scale, pos1, pos2...] for num charges rendered on this ordinary or charge."
+      """In the absence of other information, where should num charges be
+      positioned on top of (ie. "charged with") this ordinary or charge?
+      return a list of [scale, pos1, pos2...] for num charges."""
       for elt in self.charges:
          try:
             rv=elt.patternSiblings(num)
@@ -552,7 +556,8 @@ class Pallet(Pale,Charge):
                 [1,(-20,0),(0,0),(20,0)], # They should be wide-spaced.
                 [1,(-30,0),(-10,0),(10,0),(30,0)],
                 [1,(-30,0),(-15,0),(0,0),(15,0),(30,0)],
-                [1,(-35,0),(-21,0),(-7,0),(7,0),(21,0),(35,0)]
+                [1,(-35,0),(-21,0),(-7,0),(7,0),(21,0),(35,0)],
+                [1,(-45,0),(-30,0),(-15,0),(0,0),(15,0),(30,0),(45,0)]
                 ]
       try:
          return patterns[num]

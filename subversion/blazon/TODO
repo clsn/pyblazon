@@ -42,6 +42,8 @@ Fairly important:
 - back-references ("of the first" (DONE, BUT NOT WORKING ATM), "as many")
 - possible to specify each quarter in a quartered shield individually
 - thin black lines between everything (or at least the option of having it)
+- Implemented special case with "a fesse embattled", and also implement
+  counter-embattled
 - Compony (I have my doubts about this one --mes)
 
 
