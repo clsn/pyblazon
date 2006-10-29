@@ -1,5 +1,8 @@
 #!/usr/bin/python
 # -*- coding: latin-1 -*-
+"""
+Tinctures, furs, the main lines of division, and fields semy.
+"""
 
 import SVGdraw
 from pathstuff import partLine

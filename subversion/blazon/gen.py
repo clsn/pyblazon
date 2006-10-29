@@ -1,4 +1,11 @@
 #!/usr/bin/python
+"""Use this file for invocation from the command line.
+
+Example:
+
+python gen.py Azure a bend or.
+"""
+
 import blazon
 import sys
 
