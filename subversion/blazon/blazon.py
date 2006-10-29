@@ -748,21 +748,38 @@ class Chief(Ordinary):
 class Bordure(Ordinary):
    # Doing lines of partition is going to be hard with this one.
    def process(self):
-      # I don't like copying the field border the hard way like this.
-      # Is there a more elegant way?
-      pdata=SVGdraw.pathdata()
-      pdata.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
-      pdata.vline(Ordinary.HEIGHT/3-Ordinary.FESSPTY)
-      pdata.bezier(-Ordinary.FESSPTX,
-                   Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
-                   0,Ordinary.HEIGHT-Ordinary.FESSPTY,
-                   0,Ordinary.HEIGHT-Ordinary.FESSPTY)
-      pdata.bezier(0,Ordinary.HEIGHT-Ordinary.FESSPTY,
-                   Ordinary.FESSPTX,
-                   Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
-                   Ordinary.FESSPTX,Ordinary.HEIGHT/3-Ordinary.FESSPTY)
-      pdata.vline(-Ordinary.FESSPTY)
-      pdata.closepath()
+      if self.lineType and self.lineType <> "plain":
+          pdata=partLine()
+          pdata.lineType=self.lineType
+          pdata.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
+          pdata.makeline(-Ordinary.FESSPTX,Ordinary.HEIGHT/3-Ordinary.FESSPTY,
+                         align=1)
+          pdata.makeline(Ordinary.WIDTH/6-Ordinary.FESSPTX,
+                         3*Ordinary.HEIGHT/4-Ordinary.FESSPTY)
+          pdata.makeline(0,Ordinary.HEIGHT-Ordinary.FESSPTY)
+          pdata.makeline(-Ordinary.WIDTH/6+Ordinary.FESSPTX,
+                         3*Ordinary.HEIGHT/4-Ordinary.FESSPTY,
+                         align=1)
+          pdata.makeline(Ordinary.FESSPTX,Ordinary.HEIGHT/3-Ordinary.FESSPTY)
+          pdata.makeline(Ordinary.FESSPTX,-Ordinary.FESSPTY)
+          pdata.makeline(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
+          pdata.closepath()
+      else:
+          # I don't like copying the field border the hard way like this.
+          # Is there a more elegant way?
+          pdata=SVGdraw.pathdata()
+          pdata.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
+          pdata.vline(Ordinary.HEIGHT/3-Ordinary.FESSPTY)
+          pdata.bezier(-Ordinary.FESSPTX,
+                       Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
+                       0,Ordinary.HEIGHT-Ordinary.FESSPTY,
+                       0,Ordinary.HEIGHT-Ordinary.FESSPTY)
+          pdata.bezier(0,Ordinary.HEIGHT-Ordinary.FESSPTY,
+                       Ordinary.FESSPTX,
+                       Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
+                       Ordinary.FESSPTX,Ordinary.HEIGHT/3-Ordinary.FESSPTY)
+          pdata.vline(-Ordinary.FESSPTY)
+          pdata.closepath()
       self.clipPath=SVGdraw.path(pdata)
       self.clipPath.attributes["transform"]=" scale(.75)"
       self.clipPath.attributes["fill"]="black" # Doing masks now!!
