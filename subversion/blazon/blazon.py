@@ -237,12 +237,13 @@ class Field(Ordinary):
 
    def addBordure(self,bordure):
       self.bordure=bordure
+      bordure.parent=self
       
    def __repr__(self):
       if not self.maingroup.attributes.has_key("transform"):
          self.maingroup.attributes["transform"]=""
       if hasattr(self,"bordure"):       # Add the bordure before the chief!
-         self.maingroup.attributes["transform"]+=" scale(.8)"
+         self.maingroup.attributes["transform"]+=" scale(.85)"
          self.borduregroup=SVGdraw.group()
       if hasattr(self,"chief"):
          self.maingroup.attributes["transform"]+=" scale(1,.8) translate(0,15)"
@@ -702,6 +703,18 @@ class BendletSinister(BendSinister,Bendlet):
    def resize(self,x,y=None):
       Charge.resize(self,x,y)
 
+class Baton(BendletSinister):
+   def __init__(self,*args,**kwargs):
+      BendletSinister.__init__(self,*args,**kwargs)
+
+   def process(self):
+      sys.stderr.write("transform: %s\n"%self.transform)
+      self.clipPath=SVGdraw.rect(-5,-Ordinary.FESSPTY+10,
+                                 10,Ordinary.HEIGHT-30)
+      if hasattr(self,"transform"):
+         self.clipPath.attributes["transform"]=self.transform
+      self.clipPathElt.addElement(self.clipPath)
+
 class Chief(Ordinary):
     # Chiefs will also have to be handled specially, as they ordinarily
     # do not overlay things on the field, but push them downward.  Including
@@ -809,38 +822,8 @@ class Bordure(Ordinary):
       except IndexError:
          return None
 
-class Orle(Bordure):
-    # We will define an Orle as a bordure detached from the edge of the shield
-    # (and narrower).  A Tressure is either a synonym for Orle, or else one that
-    # is narrower, and may be doubled.  We'll work on it...
 
-    # Copying the field border again...
-    def process(self):
-        sys.stderr.write("In the orle\n")
-        pdata=SVGdraw.pathdata()
-        pdata.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
-        pdata.vline(Ordinary.HEIGHT/3-Ordinary.FESSPTY)
-        pdata.bezier(-Ordinary.FESSPTX,
-                     Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
-                     0,Ordinary.HEIGHT-Ordinary.FESSPTY,
-                     0,Ordinary.HEIGHT-Ordinary.FESSPTY)
-        pdata.bezier(0,Ordinary.HEIGHT-Ordinary.FESSPTY,
-                     Ordinary.FESSPTX,
-                     Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
-                     Ordinary.FESSPTX,Ordinary.HEIGHT/3-Ordinary.FESSPTY)
-        pdata.vline(-Ordinary.FESSPTY)
-        pdata.closepath()
-        self.clipPath=SVGdraw.path(pdata)
-        self.clipPath.attributes["transform"]=" scale(.75)"
-        self.clipPath.attributes["fill"]="black"
-        otherpath=copy.deepcopy(self.clipPath)
-        otherpath.attributes["transform"]=" scale(.8)"
-        otherpath.attributes.pop("fill")
-        self.clipPathElt.addElement(otherpath)
-        self.clipPathElt.addElement(self.clipPath)
-        # This isn't working too well yet.
-
-
+    
 class Chevron(Ordinary):
     def process(self):
         p=partLine()
@@ -1110,6 +1093,49 @@ class ChargeGroup:            # Kind of an invisible ordinary
        # Just use the first charge.
        return self.charges[0].patternSiblings(num)
                     
+class Orle(ChargeGroup):
+    # We will define an Orle as a bordure detached from the edge of the shield
+    # (and narrower).  A Tressure is either a synonym for Orle, or else one that
+    # is narrower, and may be doubled.  We'll work on it...
+
+    # Copying the field border again...
+    # OK... right, an orle has to be something *on top of* a bordure,
+    # which happens to be the same color as the field.
+
+    def __init__(self):
+       self.charges=[]
+       self.svg=SVGdraw.svg(x=-Ordinary.FESSPTX,
+                            y=-Ordinary.FESSPTY,
+                            width=Ordinary.WIDTH,
+                            height=Ordinary.HEIGHT,
+                            viewBox=(-Ordinary.FESSPTX,
+                                     -Ordinary.FESSPTY,
+                                     Ordinary.WIDTH,
+                                     Ordinary.HEIGHT))
+       # First, add a bordure in the color of the field.  Somehow.
+       self.bord=Bordure()                   # How to set its color??
+       self.maingroup=SVGdraw.group()
+       self.svg.addElement(self.maingroup)
+       self.charges.append(self.bord)
+       
+    def process(self):
+       sys.stderr.write("In the orle\n")
+       # Escutcheon path.  Tired of copying it the long way.
+       pdat="M -50 -50 V-14 C-50,46 0,60 0,60 C0,60 50,46 50,-14 V-50 z"
+       orl=Ordinary()
+       orl.clipPath=SVGdraw.SVGelement('path',attributes={'d':pdat,
+                                                          'transform':'scale(.85)'})
+       orl.tincture=self.tincture
+       self.bord.tincture=self.parent.tincture
+       self.charges.append(orl)
+       orl.clipPathElt.addElement(orl.clipPath)
+       orl.clipPathElt.addElement(
+          SVGdraw.SVGelement('path',attributes={'d':pdat,
+                                                'transform':'scale(.75)',
+                                                'fill':'black'}))
+
+    def arrange(self):
+       pass
 
 
 class Roundel(Charge):

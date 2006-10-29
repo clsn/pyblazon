@@ -21,6 +21,12 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
 
 t_ignore=" \n\t"
 
+
+# Hmm.  How to handle "*in* a bordure..." ?
+def t_BORDURE(t):
+    r"bordure|orle"
+    return t
+
 # The gutty colors don't work quite right yet...
 def t_COLOR(t):
     r"((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de.larmes|de.poix|de.sang|d'huile|d'eau)"
@@ -68,9 +74,7 @@ def t_CHARGE(t):
     r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|bezants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|crescents?"
     return t
 
-# Hmm.  How to handle "*in* a bordure..." ?
-t_BORDURE=r"bordure"
-t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron|base|label|bars?(.gemelles?)?|fret|flaunches)"
+t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron|base|label|bars?(.gemelles?)?|fret|flaunches|batons?)"
 
 t_PALL=r"pall"
 
@@ -141,6 +145,7 @@ lookupdict={
     "piles?": blazon.Pile,
     "chevron": blazon.Chevron,
     "bend sinister": blazon.BendSinister,
+    "baton": blazon.Baton,
     "chief": blazon.Chief,
     "base": blazon.Base,
     "pall": blazon.Pall,
@@ -186,6 +191,7 @@ lookupdict={
     "crescents?": (lambda *a: blazon.ExtCharge("crescent")),
     "billety": blazon.Billet,
     "bordure": blazon.Bordure,
+    "orle": blazon.Orle,
     "paly": treatment.Paly,
     "pily": treatment.Pily,
     "barrypily": treatment.BarryPily,
