@@ -787,6 +787,38 @@ class Bordure(Ordinary):
       except IndexError:
          return None
 
+class Orle(Bordure):
+    # We will define an Orle as a bordure detached from the edge of the shield
+    # (and narrower).  A Tressure is either a synonym for Orle, or else one that
+    # is narrower, and may be doubled.  We'll work on it...
+
+    # Copying the field border again...
+    def process(self):
+        sys.stderr.write("In the orle\n")
+        pdata=SVGdraw.pathdata()
+        pdata.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
+        pdata.vline(Ordinary.HEIGHT/3-Ordinary.FESSPTY)
+        pdata.bezier(-Ordinary.FESSPTX,
+                     Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
+                     0,Ordinary.HEIGHT-Ordinary.FESSPTY,
+                     0,Ordinary.HEIGHT-Ordinary.FESSPTY)
+        pdata.bezier(0,Ordinary.HEIGHT-Ordinary.FESSPTY,
+                     Ordinary.FESSPTX,
+                     Ordinary.HEIGHT*7/8-Ordinary.FESSPTY,
+                     Ordinary.FESSPTX,Ordinary.HEIGHT/3-Ordinary.FESSPTY)
+        pdata.vline(-Ordinary.FESSPTY)
+        pdata.closepath()
+        self.clipPath=SVGdraw.path(pdata)
+        self.clipPath.attributes["transform"]=" scale(.75)"
+        self.clipPath.attributes["fill"]="black"
+        otherpath=copy.deepcopy(self.clipPath)
+        otherpath.attributes["transform"]=" scale(.8)"
+        otherpath.attributes.pop("fill")
+        self.clipPathElt.addElement(otherpath)
+        self.clipPathElt.addElement(self.clipPath)
+        # This isn't working too well yet.
+
+
 class Chevron(Ordinary):
     def process(self):
         p=partLine()
@@ -1132,12 +1164,13 @@ class Gyron(Ordinary):
         self.clipPathElt.addElement(self.clipPath)
 
 class Fret(Ordinary):
-    # This also should appear only once
+    # This also should appear only once; it's an ordinary really.
     def process(self):
         # Not *really* a mascle and crossed bendlets.  A tilted square
         # looks better.
         # Try to draw the thin lines?  Bleah, probably possible but a pain
         # to compute.
+        # Doesn't fimbriate at all well drawn this way. :(
         g=SVGdraw.group()
         g.attributes["id"]="ClipPath%04d"%Ordinary.id
         Ordinary.id+=1
@@ -1155,7 +1188,36 @@ class Fret(Ordinary):
         g.attributes["transform"]=" rotate(45)"
         self.clipPath=g
         self.clipPathElt.addElement(self.clipPath)
-        
+
+    def patternSiblings(self,num):
+        if num==4:
+            return [.2,(0,-42),(42,0),(-42,0),(0,45)] # *shrug*
+        else:
+            return None
+
+class Flaunches(Ordinary):
+    # Always come in pairs.  Maybe each object draws the pair, and
+    # we'll just have duplicates on top of each other?  Bleah.
+    # Or just find a way to ignore number for flaunches
+
+    def process(self):
+        # I don't think flaunches can take lines of partition.
+        # Are they too big, you think?
+        p=SVGdraw.pathdata()
+        p.move(-Ordinary.FESSPTX-6,-Ordinary.FESSPTY)
+        p.ellarc(Ordinary.WIDTH/4,Ordinary.HEIGHT/2,0,1,1,
+                 -Ordinary.FESSPTX-6,Ordinary.FESSPTY)
+        p.closepath()
+        p.move(Ordinary.FESSPTX+6,-Ordinary.FESSPTY)
+        p.ellarc(Ordinary.WIDTH/4,Ordinary.HEIGHT/2,0,1,0,
+                 Ordinary.FESSPTX+6,Ordinary.FESSPTY)
+        p.closepath()
+        self.clipPath=SVGdraw.path(p)
+        self.clipPathElt.addElement(self.clipPath)
+
+    def patternSiblings(self,num):
+        # They go on a line down the center, only.
+        return Pale.patternContents(num)
 
 class Triangle(Charge):
     def process(self):
@@ -1207,6 +1269,7 @@ class ExtCharge(Charge):
         "flory":("data/Charges.svg#flory",100,None),
         "crosscrosslet":("data/Cross-Crosslet-Heraldry.svg#cross-crosslet",2,None),
         "mullet":("data/Charges.svg#mullet",2,None),
+        "crescent":("data/Charges.svg#crescent",2,None),
         "firtwig":("data/Firtwig.svg#firtwig",2,None)
         }
     

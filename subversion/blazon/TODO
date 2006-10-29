@@ -7,18 +7,18 @@ Prerequisites for Initial Rollout:
   - Orle
   - Tressure
   - Gyron (DONE)
-  - Flaunches
-  - Fret
+  - Flaunches (SORTA DONE)
+  - Fret (DONE)
   - Baton
   - Mascle (DONE)
   - Fusil (DONE)
   - Triangle (DONE)
-  - Crescent
+  - Crescent (DONE)
 
 - Treatments:
   - Fusilly
-  - Masculy
-  - Masoned
+  - Masculy (Is there really such a treatment, aside from "a cross masculy"?)
+  - Masoned (DONE)
   - Compony (I have my doubts about this one --mes)
 
 - Line Types:
@@ -37,11 +37,11 @@ Vital:
   the sinister chief and dexter base, not (by default) per fess. (GETTING THERE)
 
 Fairly important:
-- semy of any single charge
+- semy of any single charge (PRETTY MUCH DONE)
 - importing charges from file or database (it would get tedious to specify
   the outline of, say, a lion, in the source code itself) (GETTING THERE)
   - Going to need some more powerful equipment for more general case.
-- back-references ("of the first" (DONE), "as many")
+- back-references ("of the first" (DONE, BUT NOT WORKING ATM), "as many")
 - possible to specify each quarter in a quartered shield individually
 - thin black lines between everything (or at least the option of having it)
 

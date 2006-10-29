@@ -208,6 +208,34 @@ class Fretty(Ermine):
         newelt.addElement(newbase)
         return newelt
 
+class Masoned(Fretty):
+    def fill(self,elt):
+        pattern=SVGdraw.SVGelement('pattern',attributes=
+                                   {"height":"20", "width":"20",
+                                    "patternUnits":"userSpaceOnUse",
+                                    "patternContentUnits":"userSpaceOnUse",
+                                    "id": "maso%04d"%blazon.Ordinary.id})
+        blazon.Ordinary.id+=1
+        group=SVGdraw.group()
+        group.addElement(self.color2.fill(SVGdraw.rect(x="0",y="9",width="20",height="2")))
+        group.addElement(self.color2.fill(SVGdraw.rect(x="0",y="10",width="1",height="10")))
+        group.addElement(self.color2.fill(SVGdraw.rect(x="19",y="10",width="1",height="10")))
+        group.addElement(self.color2.fill(SVGdraw.rect(x="9",y="0",width="2", height="10")))
+        group.addElement(self.color2.fill(SVGdraw.rect(x="0",y="0",width="20",height="1")))
+        group.addElement(self.color2.fill(SVGdraw.rect(x="0",y="19",width="20",height="1")))
+        pattern.addElement(group)
+        blazon.Ordinary.defs.append(pattern)
+        elt=self.color1.fill(elt)
+        newelt=SVGdraw.group()
+        newelt.addElement(elt)
+        newbase=SVGdraw.rect(x=-blazon.Ordinary.FESSPTX,
+                             y=-blazon.Ordinary.FESSPTY,
+                             width=blazon.Ordinary.WIDTH,
+                             height=blazon.Ordinary.HEIGHT,
+                             fill="url(#%s)"%pattern.attributes["id"])
+        newelt.addElement(newbase)
+        return newelt                               
+
 class Semy(Fur):
     def __init__(self,background,charge):
         self.background=background

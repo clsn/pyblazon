@@ -225,7 +225,7 @@ def p_bordure(p):
     if len(p)<=2:
         p[0]=None
     else:
-        p[0]=blazon.Bordure()
+        p[0]=lookup(p[3])()
         if not(p[5]):
             Globals.colorless.append(p[0])
         else:

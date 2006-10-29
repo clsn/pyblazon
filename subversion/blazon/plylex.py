@@ -65,12 +65,12 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|bezants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron"
+    r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|bezants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|crescents?"
     return t
 
 # Hmm.  How to handle "*in* a bordure..." ?
 t_BORDURE=r"bordure"
-t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron|base|label|bars?(.gemelles?)?|fret)"
+t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron|base|label|bars?(.gemelles?)?|fret|flaunches)"
 
 t_PALL=r"pall"
 
@@ -85,7 +85,7 @@ def t_FURRY(t):
     return t
 
 def t_ALTERED(t):
-    r"(fretty|ermined)"
+    r"(fretty|ermined|masoned)"
     return t
 
 t_FUR=r"(vair.in.pale|vair|counter.vair|ermines?|erminois|pean)"
@@ -147,6 +147,7 @@ lookupdict={
     "labels?": blazon.Label,
     "lables?": blazon.Label,
     "fret": blazon.Fret,
+    "flaunches": blazon.Flaunches,
     "lions?.passant": (lambda *a: blazon.Symbol("lionpassant")), 
     "lions?.rampant": (lambda *a: blazon.Symbol("lionrampant")), 
     "roundels?": blazon.Roundel,
@@ -182,6 +183,7 @@ lookupdict={
     "semy.de.lis": (lambda *a: blazon.ExtCharge("fleur")),
     "gutty": (lambda *a: blazon.ExtCharge("goute")),
     "fir.twigs?": (lambda *a: blazon.ExtCharge("firtwig")),
+    "crescents?": (lambda *a: blazon.ExtCharge("crescent")),
     "billety": blazon.Billet,
     "bordure": blazon.Bordure,
     "paly": treatment.Paly,
@@ -198,6 +200,7 @@ lookupdict={
     "erminois": (lambda *a: treatment.Ermine("or","sable")),
     "pean": (lambda *a: treatment.Ermine("sable","or")),
     "ermined": treatment.Ermine,
+    "masoned": treatment.Masoned,
     "fretty": treatment.Fretty,
     "vairy?.in.pale": treatment.VairInPale,
     "vairy": treatment.Vair,
