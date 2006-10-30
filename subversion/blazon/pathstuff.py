@@ -108,6 +108,7 @@ class partLine:
         "wavy": (8,5),
         "embattled": (6,2),
         "dovetailed": (6,2),
+        "nebuly": (6,4),
         "raguly": (6,3),
         "engrailed": (10,5),
         "invected": (10,5)
@@ -206,6 +207,20 @@ class partLine:
                                                 uptoY+direction*shiftY-delY/3))
                     self.path.append(" L%f,%f"%(uptoX+delX+direction*shiftX,
                                                 uptoY+delY+direction*shiftY))
+                    uptoX+=delX
+                    uptoY+=delY
+                    direction *= -1
+                self.path.append(" L%f,%f"%(x,y))
+            elif self.lineType == "nebuly":
+                for i in range(1,int(leng/wavelength)+1):
+                    self.path.append(" Q%f,%f %f,%f Q%f,%f %f,%f"%
+                                     (uptoX+direction*shiftX-.8*delX,
+                                      uptoY+direction*shiftY-.8*delY,
+                                      uptoX+direction*shiftX+delX/2,
+                                      uptoY+direction*shiftY+delY/2,
+                                      uptoX+direction*shiftX+1.8*delX,
+                                      uptoY+direction*shiftY+1.8*delY,
+                                      uptoX+delX,uptoY+delY))
                     uptoX+=delX
                     uptoY+=delY
                     direction *= -1
