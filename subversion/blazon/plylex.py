@@ -24,7 +24,7 @@ t_ignore=" \n\t"
 
 # Hmm.  How to handle "*in* a bordure..." ?
 def t_BORDURE(t):
-    r"bordure|orle"
+    r"bordure|orle|tressure|double.tressure"
     return t
 
 # The gutty colors don't work quite right yet...
@@ -192,6 +192,8 @@ lookupdict={
     "billety": blazon.Billet,
     "bordure": blazon.Bordure,
     "orle": blazon.Orle,
+    "tressure": blazon.Tressure,
+    "double.tressure": blazon.DoubleTressure,
     "paly": treatment.Paly,
     "pily": treatment.Pily,
     "barrypily": treatment.BarryPily,

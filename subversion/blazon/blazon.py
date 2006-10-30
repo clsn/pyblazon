@@ -1118,25 +1118,47 @@ class Orle(ChargeGroup):
        self.svg.addElement(self.maingroup)
        self.charges.append(self.bord)
        
-    def process(self):
-       sys.stderr.write("In the orle\n")
+    def makebord(self,outer,inner):
        # Escutcheon path.  Tired of copying it the long way.
        pdat="M -50 -50 V-14 C-50,46 0,60 0,60 C0,60 50,46 50,-14 V-50 z"
        orl=Ordinary()
+       if inner<.75:
+          inner=.75
        orl.clipPath=SVGdraw.SVGelement('path',attributes={'d':pdat,
-                                                          'transform':'scale(.85)'})
+                                                          'transform':'scale(%.2f)'%outer})
        orl.tincture=self.tincture
        self.bord.tincture=self.parent.tincture
        self.charges.append(orl)
        orl.clipPathElt.addElement(orl.clipPath)
        orl.clipPathElt.addElement(
           SVGdraw.SVGelement('path',attributes={'d':pdat,
-                                                'transform':'scale(.75)',
+                                                'transform':'scale(%.2f)'%inner,
                                                 'fill':'black'}))
+    def process(self):
+       self.makebord(.85,.75)
 
     def arrange(self):
        pass
 
+class DoubleTressure(Orle):
+   # Do we need to bother with a single tressure?  Can we just take it as a
+   # synonym for Orle?
+   def process(self):
+      Orle.makebord(self,.9,.75)
+      # Everything up to here like in Orle, except maybe a little thicker.
+      # Just add a fat unmasking stroke.
+      pdat="M -50 -50 V-14 C-50,46 0,60 0,60 C0,60 50,46 50,-14 V-50 z"
+      self.charges[-1].clipPathElt.addElement(
+         SVGdraw.SVGelement('path',attributes={'d':pdat,
+                                               'transform':'scale(0.83)',
+                                               'fill':'none',
+                                               'stroke':'black',
+                                               'stroke-width':'3'}))
+
+class Tressure(Orle):
+   def process(self):
+      Orle.makebord(self,.85,.8)
+      
 
 class Roundel(Charge):
    def process(self):
