@@ -109,6 +109,7 @@ class partLine:
         "embattled": (6,2),
         "dovetailed": (6,2),
         "nebuly": (6,4),
+        "urdy": (6,6),
         "raguly": (6,3),
         "engrailed": (10,5),
         "invected": (10,5)
@@ -225,6 +226,19 @@ class partLine:
                     uptoY+=delY
                     direction *= -1
                 self.path.append(" L%f,%f"%(x,y))
+            elif self.lineType == "urdy":
+                for i in range(1,int(leng/wavelength)+1):
+                    self.path.append("L%f,%f l%f,%f l%f,%f l%f,%f"%
+                                     (uptoX,uptoY,
+                                      direction*shiftX/2,
+                                      direction*shiftY/2,
+                                      direction*shiftX/2+delX/2,
+                                      direction*shiftY/2+delY/2,
+                                      -direction*shiftX/2+delX/2,
+                                      -direction*shiftY/2+delY/2))
+                    uptoX+=delX
+                    uptoY+=delY
+                    direction *= -1
             elif self.lineType == "invected" or self.lineType == "engrailed":
                 if self.lineType=="invected":
                     # I'm pretty sure this isn't correct in the general case.
