@@ -825,19 +825,23 @@ class Bordure(Ordinary):
 
     
 class Chevron(Ordinary):
-    def process(self):
+
+    def drawme(self,width):
         p=partLine()
         p.lineType=self.lineType
         p.move(-Ordinary.FESSPTX,20)
         p.makeline(0,-20,align=1,shift=-1)
         p.makeline(Ordinary.FESSPTX,20)
-        p.relvline(25)
-        p.makeline(0,5,align=1)
-        p.makeline(-Ordinary.FESSPTX,45,shift=-1)
+        p.relvline(width)
+        p.makeline(0,width-20,align=1)
+        p.makeline(-Ordinary.FESSPTX,20+width,shift=-1)
         p.closepath
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
+    def process(self):
+       self.drawme(25)
+       
     def patternContents(self,num):
        patterns=[[.25],[.25,(0,-5)],
                  [.25,(-20,9),(20,9)],
@@ -866,6 +870,37 @@ class Chevron(Ordinary):
           return None
        return res
        
+class Chevronel(Chevron):
+   def process(self):
+      self.drawme(10)
+
+   def patternWithOthers(self,num):
+      patterns=[[1],[1,(0,0)],
+                [1,(0,-10),(0,10)],
+                [1,(0,-20),(0,0),(0,20)]]
+      try:
+         # Don't need to consider inversion here.
+         return patterns[num]
+      except IndexError:
+         return None
+
+   def moveto(self,*args):
+      if not self.svg.attributes.has_key("transform"):
+         self.svg.attributes["transform"]=""
+      self.svg.attributes["transform"]+=" translate(%.4f,%.4f)" % args[0]
+         
+   def shiftto(self,*args):
+      if not self.clipPathElt.attributes.has_key("transform"):
+         self.clipPathElt.attributes["transform"]=""
+      self.clipPathElt.attributes["transform"]+=" translate(%.4f,%.4f)"%args[0]
+
+   def duplicate(self,base):
+      "make this chevronel a copy of the chevron base, only thinner"
+      for name in dir(base):
+         # Only copy data, not functions.
+         at=getattr(base,name)
+         if not callable(at):
+            setattr(self,name,at)
 
 class Pile(Ordinary,Charge):
     def process(self):
@@ -984,6 +1019,11 @@ class ChargeGroup:            # Kind of an invisible ordinary
            self.numcharges(num,charge)
 
     def numcharges(self,num,charge):
+        # Special case: Chevrons become Chevronels.
+        if num>1 and isinstance(charge,Chevron) and not isinstance(charge,Chevronel):
+           new=Chevronel()
+           new.duplicate(charge)
+           charge=new
         for i in range(0,num):
             self.charges.append(copy.deepcopy(charge))
 

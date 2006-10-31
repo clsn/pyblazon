@@ -74,7 +74,7 @@ def t_CHARGE(t):
     r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|crescents?"
     return t
 
-t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron|base|label|bars?(.gemelles?)?|fret|flaunches|batons?)"
+t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(.gemelles?)?|fret|flaunches|batons?)"
 
 t_PALL=r"pall"
 
@@ -143,7 +143,8 @@ lookupdict={
     "bars?" : blazon.Bar,
     "bars?.gemelles?" : blazon.BarGemelle,
     "piles?": blazon.Pile,
-    "chevron": blazon.Chevron,
+    "chevrons?": blazon.Chevron,
+    "chevronels?": blazon.Chevronel,
     "bend sinister": blazon.BendSinister,
     "baton": blazon.Baton,
     "chief": blazon.Chief,
