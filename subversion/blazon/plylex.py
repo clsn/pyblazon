@@ -51,7 +51,7 @@ t_LP=r"{|lp"                           # leftparen
 t_RP=r"}|rp"                           # rightparen
     
 def t_SEMYDELIS(t):
-    r"(semy.de.lis|billety|gutty)"
+    r"(semy.de.lis|billety|gutty|crusilly)"
     return t
 
 # t_QUARTERED=r"quartered"
@@ -71,7 +71,7 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|bezants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|crescents?"
+    r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|crescents?"
     return t
 
 t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron|base|label|bars?(.gemelles?)?|fret|flaunches|batons?)"
@@ -157,7 +157,7 @@ lookupdict={
     "lions?.rampant": (lambda *a: blazon.Symbol("lionrampant")), 
     "roundels?": blazon.Roundel,
     "roundles?": blazon.Roundel,
-    "bezant[ys]?" : (lambda *a: blazon.Roundel(tincture="or")),
+    "be[sz]ant[ys]?" : (lambda *a: blazon.Roundel(tincture="or")),
     "plate[ys]?" : (lambda *a: blazon.Roundel(tincture="argent")),
     "ogress(es)?" : (lambda *a: blazon.Roundel(tincture="sable")),
     "pellet[sy]?" : (lambda *a: blazon.Roundel(tincture="sable")),
@@ -173,7 +173,7 @@ lookupdict={
     "mascles?" : blazon.Mascle,
     "fusils?" : blazon.Fusil,
     "triangles?": blazon.Triangle,
-    "canton": blazon.Canton,            # Is it possible to have >1 canton?
+    "canton": blazon.Canton,            # There can be no more than one canton.
     "gyron": blazon.Gyron,
     "fleurs?.de.lis": (lambda *a: blazon.ExtCharge("fleur")),
     "goutes?": (lambda *a: blazon.ExtCharge("goute")),
@@ -190,6 +190,7 @@ lookupdict={
     "fir.twigs?": (lambda *a: blazon.ExtCharge("firtwig")),
     "crescents?": (lambda *a: blazon.ExtCharge("crescent")),
     "billety": blazon.Billet,
+    "crusilly": (lambda *a: blazon.ExtCharge("humetty")),
     "bordure": blazon.Bordure,
     "orle": blazon.Orle,
     "tressure": blazon.Tressure,

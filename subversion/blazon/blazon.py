@@ -855,8 +855,8 @@ class Chevron(Ordinary):
 
     def patternSiblings(self,num):
        patterns=[[.35],[.4,(0,32)],
-                 [.3,(-33,-10),(33,-10)],
-                 [.3,(-33,-10),(33,-10),(0,30)]
+                 [.3,(-33,-20),(33,-20)],
+                 [.3,(-33,-20),(33,-20),(0,30)]
                  ]
        try:
           res=patterns[num]
@@ -1328,7 +1328,9 @@ data, and output it (when called from finalizeSVG) as a mask.
 """
 
 class ExtCharge(Charge):
-    # Path, fimbriation-width, and default tincture (for "proper")
+    # * Path, fimbriation-width, and default tincture (for "proper")
+    # * Each ext charge should specify patternSiblings/patternContents.
+    #   Perhaps through external matadata?
     paths={
         "fleur":("data/Fleur.svg#fleur",4,None),
         "formy":("data/Charges.svg#formy",30,None),
