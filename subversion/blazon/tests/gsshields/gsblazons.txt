@@ -29,8 +29,8 @@
 29.png Vert two bendlets sinister argent.
 30.png Gules three crosses bottony or.
 31.png Per pale dovetailed azure and argent.
-1.png Argent a saltire gules between four torteaux.
-1.png Argent a chevron gules between three torteaux.
-1.png Gules three bendlets or.
-1.png Or on a chief gules three plates.
-1.png Sable three crescents or.
+32.png Argent a saltire gules between four torteaux.
+33.png Argent a chevron gules between three torteaux.
+34.png Gules three bendlets or.
+35.png Or on a chief gules three plates.
+36.png Sable three crescents or.
