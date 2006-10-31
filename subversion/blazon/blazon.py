@@ -826,6 +826,10 @@ class Bordure(Ordinary):
     
 class Chevron(Ordinary):
 
+    def __init__(self,*args,**kwargs):
+       Ordinary.__init__(self,*args,**kwargs)
+       self.chevronwidth=25
+       
     def drawme(self,width):
         p=partLine()
         p.lineType=self.lineType
@@ -840,7 +844,7 @@ class Chevron(Ordinary):
         self.clipPathElt.addElement(self.clipPath)
 
     def process(self):
-       self.drawme(25)
+       self.drawme(self.chevronwidth)
        
     def patternContents(self,num):
        patterns=[[.25],[.25,(0,-5)],
@@ -856,6 +860,19 @@ class Chevron(Ordinary):
        except IndexError:
           return None
        return res
+    
+    def patternWithOthers(self,num):
+       patterns=[[1],[1,(0,0)],
+                [.4,(0,-10),(0,10)],
+                [.4,(0,-20),(0,0),(0,20)]]
+       try:
+          # Don't need to consider inversion here.
+          res=patterns[num]
+          if isinstance(self,Chevronel): # Chevronels don't need to rescale.
+             res[0]=1
+          return res
+       except IndexError:
+          return None
 
     def patternSiblings(self,num):
        patterns=[[.35],[.4,(0,32)],
@@ -869,38 +886,34 @@ class Chevron(Ordinary):
        except IndexError:
           return None
        return res
-       
-class Chevronel(Chevron):
-   def process(self):
-      self.drawme(10)
 
-   def patternWithOthers(self,num):
-      patterns=[[1],[1,(0,0)],
-                [1,(0,-10),(0,10)],
-                [1,(0,-20),(0,0),(0,20)]]
-      try:
-         # Don't need to consider inversion here.
-         return patterns[num]
-      except IndexError:
-         return None
-
-   def moveto(self,*args):
-      if not self.svg.attributes.has_key("transform"):
-         self.svg.attributes["transform"]=""
-      self.svg.attributes["transform"]+=" translate(%.4f,%.4f)" % args[0]
+    def moveto(self,*args):
+       if not self.svg.attributes.has_key("transform"):
+          self.svg.attributes["transform"]=""
+          self.svg.attributes["transform"]+=" translate(%.4f,%.4f)" % args[0]
          
-   def shiftto(self,*args):
-      if not self.clipPathElt.attributes.has_key("transform"):
-         self.clipPathElt.attributes["transform"]=""
-      self.clipPathElt.attributes["transform"]+=" translate(%.4f,%.4f)"%args[0]
+    def shiftto(self,*args):
+       if not self.clipPathElt.attributes.has_key("transform"):
+          self.clipPathElt.attributes["transform"]=""
+       self.clipPathElt.attributes["transform"]+=" translate(%.4f,%.4f)"%args[0]
 
-   def duplicate(self,base):
-      "make this chevronel a copy of the chevron base, only thinner"
-      for name in dir(base):
-         # Only copy data, not functions.
-         at=getattr(base,name)
-         if not callable(at):
-            setattr(self,name,at)
+    def scale(self,x,y=None):
+       # Ignore the x coordinate, actually.
+       if not y:
+          y=x
+       if not hasattr(self,"chevronwidth"):
+          self.chevronwidth=25
+       self.chevronwidth *= y
+           
+    def resize(self,x,y=None):
+       # Does this need to be different from scale?
+       self.scale(x,y)
+           
+
+class Chevronel(Chevron):
+   def __init__(self,*args,**kwargs):
+      Chevron.__init__(self,*args,**kwargs)
+      self.chevronwidth=10
 
 class Pile(Ordinary,Charge):
     def process(self):
@@ -1019,11 +1032,6 @@ class ChargeGroup:            # Kind of an invisible ordinary
            self.numcharges(num,charge)
 
     def numcharges(self,num,charge):
-        # Special case: Chevrons become Chevronels.
-        if num>1 and isinstance(charge,Chevron) and not isinstance(charge,Chevronel):
-           new=Chevronel()
-           new.duplicate(charge)
-           charge=new
         for i in range(0,num):
             self.charges.append(copy.deepcopy(charge))
 
