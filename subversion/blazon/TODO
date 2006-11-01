@@ -2,22 +2,6 @@ Remove items from here as soon as they are implemented.
 
 Prerequisites for Initial Rollout:
 (from arj letter 27 X 06)
-- Charges:
-  - Canton (DONE)
-  - Orle (MOSTLY)
-  - Tressure
-  - Gyron (DONE)
-  - Flaunches (SORTA DONE)
-  - Fret (DONE)
-  - Baton (DONE)
-  - Mascle (DONE)
-  - Fusil (DONE)
-  - Triangle (DONE)
-  - Crescent (DONE)
-
-- Treatments:
-  - Fusilly (may not actually exist, or be a synonym of lozengy)
-  - Masoned (DONE)
 
 - Other Features:
   - Lines of partition on bordures (SORTA)
@@ -71,9 +55,11 @@ Saltire
 Bezant
 Ermine
 
-Other suggestion (non-ordered, ATM): Gyron, Wyvern, Pheon, Estoile
+Other suggestion (non-ordered, ATM): Gyron, Wyvern, Pheon, Estoile,
+Cinquefoil, Trefoil, Quatrefoil, Dexter, Tabard, Cockatrice
 Rejected names: Fusil, Pile
 
 Gratuitous acronyms would be nice, but is not a
 requirement. Uniqueness of the name *is* a requirement. Search
 Freshmeat/Sourceforge to check for collisions.
+See if it's possible to combine two words to cut down on Google interference.

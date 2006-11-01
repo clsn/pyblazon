@@ -1390,6 +1390,8 @@ class ExtCharge(Charge):
         "crosscrosslet":("data/Cross-Crosslet-Heraldry.svg#cross-crosslet",2,None),
         "mullet":("data/Charges.svg#mullet",2,None),
         "crescent":("data/Charges.svg#crescent",2,None),
+        "escutcheon":("data/Charges.svg#escutcheon",3,None),
+        "shakefork":("data/Charges.svg#shakefork",3,None),
         "firtwig":("data/Firtwig.svg#firtwig",2,None)
         }
     
@@ -1405,7 +1407,12 @@ class ExtCharge(Charge):
             
 
     def process(self):
-        self.clipPathElt.addElement(SVGdraw.use(self.path))
+        u=SVGdraw.use(self.path)
+        if self.inverted:
+           if not u.attributes.has_key("transform"):
+              u.attributes["transform"]=""
+           u.attributes["transform"]+=" rotate(180)"
+        self.clipPathElt.addElement(u)
 
     def do_fimbriation(self):
        self.maingroup.addElement(SVGdraw.SVGelement('use',

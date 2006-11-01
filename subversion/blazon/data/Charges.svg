@@ -178,4 +178,10 @@ H1778.9Z"/>
 <symbol id="crescent">
 <path d="M -30 -30 A 30 30 0 0 0 30 -30 A 35 40 0 1 1 -30 -30 z"/>
 </symbol>
+<symbol id="escutcheon">
+<path transform="scale(.7)" d="M -50 -50 V-14 C-50,46 0,60 0,60 C0,60 50,46 50,-14 V-50 z" />
+</symbol>
+<symbol id="shakefork">
+<path d="M -40,-40 h10 L0,-13 L30,-40 h10 v10 L7,0 v40 l-7,7 l-7,-7 v-40 L-40,-30 z" />
+</symbol>
 </svg>
