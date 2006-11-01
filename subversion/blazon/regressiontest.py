@@ -57,11 +57,25 @@ class Charges10TestCase(unittest.TestCase):
             charge.arrange()
 SVGDrawingTests.addTest(Charges10TestCase)
 
+class ChargesTwoGroupsTestCase(unittest.TestCase):
+    def test10Charges(self):
+        """Test for ability to add *two* group of ten charges without errors."""
+        shield = blazon.Field("sable")
+        # Currently, this looks wrong, because the annulets end up
+        # *on top of* the lozenges.
+        shield.charges.append(blazon.ChargeGroup(10, blazon.Lozenge("argent")))
+        shield.charges.append(blazon.ChargeGroup(10, blazon.Annulet("or")))
+        for charge in shield.charges:
+            charge.arrange()
+SVGDrawingTests.addTest(ChargesTwoGroupsTestCase)
+
+
 class PerPaleTestCase(unittest.TestCase):
     def testPerPale(self):
         shield = blazon.Field()
         shield.tincture = blazon.PerPale(color1="vert", color2="sable")
-        # Maybe it's silly to test for this, since it's used only internally
+        # Maybe it's silly to test for number of pieces, since it's used
+        # only internally
         self.assert_(shield.tincture.pieces is 2)
         self.assert_(HasOnlyTheColors(shield, ["green", "black"]))
         self.assert_(repr(shield) is not None)

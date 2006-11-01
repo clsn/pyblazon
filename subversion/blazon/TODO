@@ -7,7 +7,7 @@ Prerequisites for Initial Rollout:
   - Lines of partition on bordures (SORTA)
 
 Vital:
-- support all charges that are simple, geometrical figures
+- support all charges that are simple, geometrical figures (MOSTLY DONE)
 - a charge or a group "between" a group
 - charges upon ordinaries (GETTING THERE)
 - charges to end up in the conventional places according to divisions of the
@@ -15,7 +15,6 @@ Vital:
   the sinister chief and dexter base, not (by default) per fess. (GETTING THERE)
 
 Fairly important:
-- semy of any single charge (PRETTY MUCH DONE)
 - importing charges from file or database (it would get tedious to specify
   the outline of, say, a lion, in the source code itself) (GETTING THERE)
   - Going to need some more powerful equipment for more general case.
@@ -42,9 +41,13 @@ arj's favourites:
 10. Dovetail
 15. Coronet
 18. Gauntlet
-20. Saltire
+19. Trefoil
+20. Ardent
+25. Saltire
 30. Albion
+35. Cockatrice
 40. Rampant
+42. Cinquefoil
 50. Bezant
 60. Ermine
 
@@ -56,7 +59,7 @@ Bezant
 Ermine
 
 Other suggestion (non-ordered, ATM): Gyron, Wyvern, Pheon, Estoile,
-Cinquefoil, Trefoil, Quatrefoil, Dexter, Tabard, Cockatrice
+Quatrefoil, Dexter, Tabard
 Rejected names: Fusil, Pile
 
 Gratuitous acronyms would be nice, but is not a
