@@ -79,6 +79,8 @@ class Ordinary:
       # Not the best solution...
       self.baseRect.charge=self
 
+      self.inverted = False
+
    def fimbriate(self,color):
       # Only plain colors ATM
       # sys.stderr.write("fimbriating with %s\n"%color)
