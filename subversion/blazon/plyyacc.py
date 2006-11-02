@@ -165,10 +165,11 @@ def p_grouporcharge_a(p):
     p[0]=p[1]
 
 def p_grouporcharge_b(p):
-    """grouporcharge : charge"""
+    """grouporcharge : charge optarrange"""
     p[0]=blazon.ChargeGroup(1,p[1])
     if not p[1].tincture:
         Globals.colorless.append(p[0].charges[0])
+    p[0].arrangement=p[2]
 
 def p_group(p):
     """group : amount charge optarrange opttreatment optrows
@@ -261,12 +262,23 @@ def p_chief(p):
         p[0]=None
 
 def p_optarrange(p):
-    """optarrange : IN ORDINARY
+    """optarrange : IN optdir ORDINARY
+                  | IN optdir CHIEF
+                  | IN optdir BORDURE
                   | empty"""
     if not p[1]:
         p[0]=None
     else:
-        p[0]=lookup("in "+p[2])()
+        if not p[2]:
+            side=""
+        else:
+            side=p[2]
+        p[0]=lookup("in "+side+p[3])()
+
+def p_optdir(p):
+    """optdir : DIRECTION
+              | empty"""
+    p[0]=p[1]
 
 def p_optrows(p):
     """optrows : rows

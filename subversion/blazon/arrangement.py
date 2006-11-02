@@ -78,6 +78,61 @@ class InBendSinister(InBend):
             rv[i]=(-rv[i][0],rv[i][1])
       return rv
 
+class InChief(Arrangement):
+   def __init__(self,side=None):
+      self.side=side
+
+   def shiftover(self,arr):
+      mindist=10000
+      # Wonder if I need to do something less clever.
+      # They're going to be in order and all horizontal anyway.
+      for i in range(1,len(arr)):
+         c=arr[i]
+         arr[i]=((c[0]+blazon.Ordinary.FESSPTX)/2.0-blazon.Ordinary.FESSPTX,
+                 c[1])
+         if self.side=="sinister":
+            arr[i]=(arr[i][0]+blazon.Ordinary.FESSPTX,arr[i][1])
+         if i==1:
+            mindist=abs(arr[i][0] - blazon.Ordinary.FESSPTX)
+         elif abs(arr[i][0]-arr[i-1][0])<mindist:
+            mindist=abs(arr[i][0]-arr[i-1][0])
+      if mindist<80*arr[0]:
+         arr[0]=mindist/80.0
+      return arr
+         
+   def pattern(self,num):
+      arr=blazon.Chief.patternContents(num)
+      # That's ordered around the origin, since chiefs get translated
+      for i in range(1,len(arr)):
+         c=arr[i]
+         arr[i]=(c[0],c[1]-36)
+      if self.side:
+         arr=self.shiftover(arr)
+      return arr
+
+class InBase(InChief):
+   def pattern(self,num):
+      arr=blazon.Base.patternContents(num)
+      if self.side:
+         # Darn.  I can't just use InChief's shiftover, because the
+         # shield is narrower down here.
+         # Maybe I can use it and twiddle it some...
+         arr=self.shiftover(arr)
+         for i in range(1,len(arr)):
+            if self.side=="sinister":
+               arr[i]=(arr[i][0]-12,arr[i][1])
+            else:
+               arr[i]=(arr[i][0]+12,arr[i][1])
+            # And reduce the scale
+         arr[0]*=.6
+      # Probably won't work well for most numbers, but it's unlikely that
+      # num > 1 anyway.
+      return arr
+
+class InOrle(Arrangement):
+   def pattern(self,num):
+      return blazon.Bordure.patternContents(num)
+
 class ByNumbers(Arrangement):
    def __init__(self,rows=None):
       self.rows=rows

@@ -996,6 +996,19 @@ class Base(Ordinary):
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
 
+   @staticmethod
+   def patternContents(num):
+      patterns=[[.35],[.35,(0,42)],
+                [.25,(-15,38),(15,38)],
+                [.2,(-15,36),(15,36),(0,45)],
+                [.18,(-15,33),(15,33),(-7,46),(7,46)],
+                [.18,(-15,33),(15,33),(-7,46),(7,46),(0,33)]
+                ]
+      try:
+         return patterns[num]
+      except IndexError:
+         return None
+
 class Label(Ordinary):
    def __init__(self,points=3,*args,**kwargs):
       self.points=points

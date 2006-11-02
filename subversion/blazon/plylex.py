@@ -13,7 +13,7 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED","ALTERED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
-        "PALL","WITHIN","BORDURE","BEZANTY","LP","RP","IN")
+        "PALL","WITHIN","BORDURE","BEZANTY","LP","RP","IN","DIRECTION")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -98,6 +98,7 @@ t_PARTYPER=r"(party[ ]per|per)"
 t_FIMBRIATED=r"fimbriated|voided"
 t_INVERTED=r"inverted"
 t_COUNTERCHARGED=r"countercha[rn]ged"
+t_DIRECTION=r"dexter|sinister"
 
 def t_A(t):
     r"an?"
@@ -247,7 +248,14 @@ lookupdict={
     "in pale": arrangement.InPale,
     "in fesse?": arrangement.InFesse,
     "in bend": arrangement.InBend,
-    "in bend.sinister": arrangement.InBendSinister
+    "in bend.sinister": arrangement.InBendSinister,
+    "in chief": arrangement.InChief,
+    "in base": arrangement.InBase,
+    "in dexterchief": (lambda *a: arrangement.InChief(side="dexter")),
+    "in sinisterchief": (lambda *a: arrangement.InChief(side="sinister")),
+    "in dexterbase": (lambda *a: arrangement.InBase(side="dexter")),
+    "in sinisterbase": (lambda *a: arrangement.InBase(side="sinister")),
+    "in orle": arrangement.InOrle
     }
 
 def lookup(key):
