@@ -1410,7 +1410,7 @@ class ExtCharge(Charge):
 
     def process(self):
         u=SVGdraw.use(self.path)
-        if self.inverted:
+        if hasattr(self,"inverted") and self.inverted:
            if not u.attributes.has_key("transform"):
               u.attributes["transform"]=""
            u.attributes["transform"]+=" rotate(180)"
