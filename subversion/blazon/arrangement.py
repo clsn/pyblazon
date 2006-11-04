@@ -143,7 +143,7 @@ class ByNumbers(Arrangement):
    def pattern(self,num):
       # Barf if not set right
       if not self.rows:
-         return None
+         raise blazon.ArrangementErrors, "Tried to arrange something by numbers, but number of rows is not specified."
       # num should equal the sum of the elements of the rows list.
       # We're going to assume it does.
       if sum(self.rows) <> num:

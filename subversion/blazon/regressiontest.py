@@ -2,6 +2,7 @@
 
 import unittest
 import blazon
+import arrangement
 import sys
 import os
 import Image
@@ -21,6 +22,57 @@ SpecificBugTraps.addTest(FesseStuff)
 
 
 # Test for SVG drawing code
+# TODO: arrangement in specific loci (in base, in dexter chief, &c.)
+# Arrangement in n rows.
+# Proper rejection (ie. exception raising) of bogus/conflicting arrangement
+# requests.
+
+ArrangementTests = unittest.TestSuite()
+
+class Arrange2by4TestCase(unittest.TestCase):
+    def test2by4(self):
+        shield = blazon.Field("sable")
+        chargegroup = blazon.ChargeGroup(8, blazon.Annulet("or"))
+        chargegroup.arrangement = arrangement.ByNumbers()
+        chargegroup.arrangement.setRows([2, 2, 2, 2])
+        shield.charges.append(chargegroup)
+        for charge in shield.charges:
+            charge.arrange()
+ArrangementTests.addTest(Arrange2by4TestCase)
+
+class BogusByNumbersTestCase(unittest.TestCase):
+    """You are not supposed to have a mismatch between the number of charges
+    in a group, and the total number of all charges in all rows."""
+    def testBogusByNumbers(self):
+        shield = blazon.Field("vert")
+        chargegroup = blazon.ChargeGroup(6, blazon.Roundel("argent"))
+        chargegroup.arrangement = arrangement.ByNumbers()
+        chargegroup.arrangement.setRows([1, 2, 3, 4])
+        shield.charges.append(chargegroup)
+        for charge in shield.charges:
+            self.assertRaises(blazon.ArrangementError, charge.arrange)
+ArrangementTests.addTest(BogusByNumbersTestCase)
+
+class InChiefTestCase(unittest.TestCase):
+    def testInChief(self):
+        shield = blazon.Field("gules")
+        lozenge = blazon.Lozenge("or")
+        lozenge.arrangement = arrangement.InChief()
+        for charge in shield.charges:
+            charge.arrange()
+ArrangementTests.addTest(InChiefTestCase)
+
+class InOrleTestCase(unittest.TestCase):
+    def testInOrle(self):
+        shield = blazon.Field("gules")
+        bezants = blazon.ChargeGroup(9, blazon.Roundel("or"))
+        bezants.arrangement = arrangement.InOrle()
+        shield.charges.append(bezants)
+        for charge in shield.charges:
+            charge.arrange()
+ArrangementTests.addTest(InOrleTestCase)
+
+## SVG drawing tests
 
 SVGDrawingTests = unittest.TestSuite()
 
@@ -173,7 +225,6 @@ BlazonryTests = unittest.TestSuite()
 
 def ParsesOK(line):
     """Since blazonry parsing is a moving target, this function should try to test if the blazon it gets will parse in whichever way is currently fashionable."""
-    # This is not a very good way of doing it, because YAPPS complains when it fails, creating a lot of clutter on the screen.
     curblazon = blazon.Blazon(line)            
     shield = curblazon.GetShield()
     # YAPPS gives us None when it fails.
