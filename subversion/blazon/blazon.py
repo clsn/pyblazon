@@ -864,17 +864,20 @@ class Chevron(Ordinary):
        return res
     
     def patternWithOthers(self,num):
-       patterns=[[1],[1,(0,0)],
-                [.4,(0,-10),(0,10)],
-                [.4,(0,-20),(0,0),(0,20)]]
-       try:
-          # Don't need to consider inversion here.
-          res=patterns[num]
-          if isinstance(self,Chevronel): # Chevronels don't need to rescale.
-             res[0]=1
-          return res
-       except IndexError:
-          return None
+        patterns=[[1],[1,(0,0)],
+                  [.4,(0,-10),(0,10)],
+                  [.4,(0,-20),(0,0),(0,20)],
+                  [.4,(0,-30),(0,-10),(0,10),(0,30)],
+                  [.35,(0,-30),(0,-15),(0,0),(0,15),(0,30)]
+                  ]
+        try:
+            # Don't need to consider inversion here.
+            res=patterns[num]
+            if isinstance(self,Chevronel): # Chevronels don't need to rescale.
+                res[0]=1
+            return res
+        except IndexError:
+            return None
 
     def patternSiblings(self,num):
        patterns=[[.35],[.4,(0,32)],
