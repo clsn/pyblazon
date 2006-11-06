@@ -1279,36 +1279,21 @@ class Mascle(Charge):
 
 class Canton(Ordinary):
     # This one can't be an ExtCharge, because it has a special placement.
-    # Or does it?  Just place it where it should be in the clipping
-    # path, and let the arrangement code put it at 0,0
     def process(self):
+        # Make it a *full-sized* rectangle, let the usual Ordinary
+        # patternContents do its thing, then just diddle its scaling
+        # and positioning.
+        # Downside to that is that its background patterns get scaled
+        # too.  I think I'll leave it, though, and not revert to drawing it
+        # directly.
         self.clipPath=SVGdraw.rect(-Ordinary.FESSPTX, -Ordinary.FESSPTY,
-                                   Ordinary.WIDTH/3, Ordinary.HEIGHT/3)
+                                   Ordinary.WIDTH, Ordinary.HEIGHT)
         self.clipPathElt.addElement(self.clipPath)
         # Is the fimbriation right, though?  And does anyone fimbriate cantons?
         # We can always move the upper left corner a little offscreen.
-
-    # It's going to need a proper patternContents.
-    @staticmethod
-    def patternContents(num):
-        patterns=[[.4],[.4,(-34,-32)],
-                  [.2,(-41.5,-32),(-25.5,-32)],
-                  [.2,(-41.5,-40),(-25.5,-40),(-33.5,-26)],
-                  [.2,(-41.5,-40),(-25.5,-40),(-41.5,-24),(-25.5,-24)],
-                  [.15,(-43.5,-42),(-23.5,-42),(-43.5,-22),(-23.5,-22),(-33.5,-32)],
-                  [.12,(-43.5,-41),(-33.5,-41),(-23.5,-41),(-38.5,-32),(-28.5,-32),(-33.5,-23)],
-                  [.12,(-43.5,-42),(-33.5,-42),(-23.5,-42),(-43.5,-32),(-33.5,-32),(-23.5,-32),(-33.5,-22)],
-                  [.12,(-43.5,-42),(-33.5,-42),(-23.5,-42),(-43.5,-32),(-23.5,-32),(-43.5,-22),(-33.5,-22),(-23.5,-22)],
-                  [.12,(-43.5,-42),(-33.5,-42),(-23.5,-42),(-43.5,-32),(-33.5,-32),(-23.5,-32),(-43.5,-22),(-33.5,-22),(-23.5,-22)],
-                  [.1,(-45.5,-44),(-37.5,-44),(-29.5,-44),(-21.5,-44),
-                   (-41.5,-37),(-33.5,-37),(-25.5,-37),
-                   (-37.5,-30),(-29.5,-30),
-                   (-33.5,-23)],
-                  ]
-        try:
-            return patterns[num]
-        except IndexError:
-            return None
+        if not self.maingroup.attributes.has_key("transform"):
+            self.maingroup.attributes["transform"]=""
+        self.maingroup.attributes["transform"]=" translate(-%f,-%f) scale(.3)"%(Ordinary.FESSPTX*.7,Ordinary.FESSPTY*.7)
 
 class Gyron(Ordinary):
     # Should we consider the possibility of more than one?  Or of a canton?
