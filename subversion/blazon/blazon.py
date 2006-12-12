@@ -1280,20 +1280,18 @@ class Mascle(Charge):
 class Canton(Ordinary):
     # This one can't be an ExtCharge, because it has a special placement.
     def process(self):
-        # Make it a *full-sized* rectangle, let the usual Ordinary
-        # patternContents do its thing, then just diddle its scaling
-        # and positioning.
-        # Downside to that is that its background patterns get scaled
-        # too.  I think I'll leave it, though, and not revert to drawing it
-        # directly.
-        self.clipPath=SVGdraw.rect(-Ordinary.FESSPTX, -Ordinary.FESSPTY,
-                                   Ordinary.WIDTH, Ordinary.HEIGHT)
+        # Make the rectangle around the fess point, let the usual Ordinary
+        # patternContents do its thing, then just diddle its
+        # positioning.
+        # Do not touch the scaling, lest furs and stuff get unduly resized.
+        self.clipPath=SVGdraw.rect(-Ordinary.WIDTH/3/2, -Ordinary.WIDTH/3/2,
+                                   Ordinary.WIDTH/3, Ordinary.HEIGHT/3)
         self.clipPathElt.addElement(self.clipPath)
         # Is the fimbriation right, though?  And does anyone fimbriate cantons?
         # We can always move the upper left corner a little offscreen.
         if not self.maingroup.attributes.has_key("transform"):
             self.maingroup.attributes["transform"]=""
-        self.maingroup.attributes["transform"]=" translate(-%f,-%f) scale(.3)"%(Ordinary.FESSPTX*.7,Ordinary.FESSPTY*.7)
+        self.maingroup.attributes["transform"]=" translate(-%f,-%f)"%(Ordinary.FESSPTX*.7,Ordinary.FESSPTY*.7)
 
 class Gyron(Ordinary):
     # Should we consider the possibility of more than one?  Or of a canton?
