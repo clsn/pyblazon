@@ -25,6 +25,9 @@ class ArrangementError(Exception):
 # a rectangle filling it).
 
 class Ordinary:
+   """The top class for anything that is inside a shield. Instances of direct
+   subclasses of this will usually correspond to Ordinaries as it is meant in
+   heraldics."""
    id=0
    FESSPTX=50
    FESSPTY=50
@@ -129,6 +132,11 @@ class Ordinary:
       # Keep the "defs" property around for general use, but fill it
       # automatically if possible.
       if not hasattr(self,"mydefs"):
+         # Storage for some kind of pattern/treatment SVG data, I'm not sure
+         # what it is...
+         # Seems to be some global storage, for countercharging perhaps.
+         # Also, seems to only be moved from "defs" when they have
+         # finished drawing.
          self.mydefs=[]
       #if hasattr(self.tincture,"id"):
       #   self.defs.append(self.tincture.elt)
@@ -185,6 +193,8 @@ class Ordinary:
 
    @staticmethod
    def invertPattern(pat):
+      """Turn the pattern upside-down.
+      Useful for "inverted" versions of charges/divisions."""
       for i in range(1,len(pat)):
          x=list(pat[i])
          x[1]*=-1
@@ -242,6 +252,7 @@ class Field(Ordinary):
       bordure.parent=self
       
    def __repr__(self):
+      """Output the SVG of the whole thing."""
       if not self.maingroup.attributes.has_key("transform"):
          self.maingroup.attributes["transform"]=""
       if hasattr(self,"bordure"):       # Add the bordure before the chief!
@@ -282,9 +293,10 @@ class Field(Ordinary):
 class Charge(Ordinary):
    def moveto(self,*args):
       # Remember, args[0] is a tuple!
+      offset = args[0]
       if not self.svg.attributes.has_key("transform"):
          self.svg.attributes["transform"]=""
-      self.svg.attributes["transform"]+=" translate(%.4f,%.4f)" % args[0]
+      self.svg.attributes["transform"]+=" translate(%.4f,%.4f)" % offset
          
    # Lousy name, but we need a *different* kind of moving, to slide
    # the outline but not the innards/tincture.
@@ -323,6 +335,8 @@ class Charge(Ordinary):
 
 
 class Cross(Ordinary):
+    """A cross in the heraldic sense (it goes all the way to the edges of the
+    shield) NOT a cross couped."""
     def process(self):
         p=partLine()
         p.lineType=self.lineType
@@ -372,6 +386,8 @@ class Fesse(Ordinary):
         p=partLine(-Ordinary.WIDTH, -20)
         # Fesse is unusual: when "embattled", only the *top* line is
         # crenelated, unless it is blazoned "embattled counter-embattled"
+        # FIXME:
+        # Currently, "embattled" renders it "embattled counter-embattled".
         p.lineType=self.lineType
         p.rect(-Ordinary.WIDTH,-20,Ordinary.WIDTH*3,40)
         self.clipPath=SVGdraw.path(p)
@@ -461,7 +477,8 @@ class Saltire(Cross):
        except IndexError:
           return None
 
-    # This works okay for patternSiblings, actually.
+    # This works okay for even nums, but not odd ones.
+    # FIXME: Should be rewritten.
     @staticmethod
     def patternSiblings(num):
        return Cross.patternContents(num)
