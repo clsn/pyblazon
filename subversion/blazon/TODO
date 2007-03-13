@@ -18,6 +18,7 @@ Fairly important:
 - importing charges from file or database (it would get tedious to specify
   the outline of, say, a lion, in the source code itself) (GETTING THERE)
   - Going to need some more powerful equipment for more general case.
+  - Probably some half-intelligent DOM-based solution. -arj
 - back-references ("of the first" (DONE, BUT NOT WORKING ATM), "as many")
 - possible to specify each quarter in a quartered shield individually
 - thin black lines between everything (or at least the option of having it)
@@ -27,6 +28,8 @@ Fairly important:
 
 
 Wishlist:
+- "Gules within a bordure or a chief argent." looks horrible (squashing the
+  bordure makes it look very odd).
 - semy of _anything_ (even crazy, complex things like "a
   cross-crosslet or between four bezants"
 - multilingual support (e.g. blazons in French, German, Norwegian ...)

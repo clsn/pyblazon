@@ -331,7 +331,9 @@ class Charge(Ordinary):
 
    def addCharge(self,charge):
       Ordinary.addCharge(self,charge)
+      # The following appears to make no difference, visually:
       charge.maingroup.attributes["transform"]+=" scale(.8)"
+      # Should it be removed?
 
 
 class Cross(Ordinary):
@@ -1389,7 +1391,7 @@ class Triangle(Charge):
 
 class Billet(Charge):
     def process(self):
-        self.clipPath=SVGdraw.rect(-25,-40,50,80)
+        self.clipPath=SVGdraw.rect(-15,-25,30,50)
         self.clipPathElt.addElement(self.clipPath)
 
 class Annulet(Charge):
