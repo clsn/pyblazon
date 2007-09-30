@@ -293,10 +293,9 @@ class Field(Ordinary):
 class Charge(Ordinary):
    def moveto(self,*args):
       # Remember, args[0] is a tuple!
-      offset = args[0]
-      if not self.svg.attributes.has_key("transform"):
-         self.svg.attributes["transform"]=""
-      self.svg.attributes["transform"]+=" translate(%.4f,%.4f)" % offset
+      if not self.maingroup.attributes.has_key("transform"):
+         self.maingroup.attributes["transform"]=""
+      self.maingroup.attributes["transform"]+=" translate(%.4f,%.4f)" % args[0]
          
    # Lousy name, but we need a *different* kind of moving, to slide
    # the outline but not the innards/tincture.
@@ -308,9 +307,9 @@ class Charge(Ordinary):
    def scale(self,x,y=None):
       if not y:                        # I can't scale by 0 anyway.
          y=x
-      if not self.svg.attributes.has_key("transform"):
-         self.svg.attributes["transform"]=""
-      self.svg.attributes["transform"] += " scale(%.2f,%.2f)"%(x,y)
+      if not self.maingroup.attributes.has_key("transform"):
+         self.maingroup.attributes["transform"]=""
+      self.maingroup.attributes["transform"] += " scale(%.2f,%.2f)"%(x,y)
 
    # Same as shiftto: changes the size of the outline only. 
    def resize(self,x,y=None):
@@ -912,9 +911,9 @@ class Chevron(Ordinary):
        return res
 
     def moveto(self,*args):
-       if not self.svg.attributes.has_key("transform"):
-          self.svg.attributes["transform"]=""
-          self.svg.attributes["transform"]+=" translate(%.4f,%.4f)" % args[0]
+       if not self.maingroup.attributes.has_key("transform"):
+          self.maingroup.attributes["transform"]=""
+          self.maingroup.attributes["transform"]+=" translate(%.4f,%.4f)" % args[0]
          
     def shiftto(self,*args):
        if not self.clipPathElt.attributes.has_key("transform"):
