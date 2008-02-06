@@ -2,7 +2,7 @@
 
 import blazon
 import sys
-import yacc
+import ply.yacc as yacc
 import treatment
 import copy
 

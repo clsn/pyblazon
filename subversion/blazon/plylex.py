@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: latin-1 -*-
 
-import lex
+import ply.lex as lex
 import re
 import blazon
 import sys

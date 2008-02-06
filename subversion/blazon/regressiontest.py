@@ -18,7 +18,7 @@ class FesseStuff(unittest.TestCase):
         self.assert_(self.fesse.patternSiblings(1) is not None)
     def testPatternContents(self):
         self.assert_(self.fesse.patternContents(1) is not None)
-SpecificBugTraps.addTest(FesseStuff)
+#SpecificBugTraps.addTest(FesseStuff)
 
 
 # Test for SVG drawing code
@@ -38,7 +38,7 @@ class Arrange2by4TestCase(unittest.TestCase):
         shield.charges.append(chargegroup)
         for charge in shield.charges:
             charge.arrange()
-ArrangementTests.addTest(Arrange2by4TestCase)
+#ArrangementTests.addTest(Arrange2by4TestCase)
 
 class BogusByNumbersTestCase(unittest.TestCase):
     """You are not supposed to have a mismatch between the number of charges
@@ -51,7 +51,7 @@ class BogusByNumbersTestCase(unittest.TestCase):
         shield.charges.append(chargegroup)
         for charge in shield.charges:
             self.assertRaises(blazon.ArrangementError, charge.arrange)
-ArrangementTests.addTest(BogusByNumbersTestCase)
+#ArrangementTests.addTest(BogusByNumbersTestCase)
 
 class InChiefTestCase(unittest.TestCase):
     def testInChief(self):
@@ -60,7 +60,7 @@ class InChiefTestCase(unittest.TestCase):
         lozenge.arrangement = arrangement.InChief()
         for charge in shield.charges:
             charge.arrange()
-ArrangementTests.addTest(InChiefTestCase)
+#ArrangementTests.addTest(InChiefTestCase)
 
 class InOrleTestCase(unittest.TestCase):
     def testInOrle(self):
@@ -70,7 +70,7 @@ class InOrleTestCase(unittest.TestCase):
         shield.charges.append(bezants)
         for charge in shield.charges:
             charge.arrange()
-ArrangementTests.addTest(InOrleTestCase)
+#ArrangementTests.addTest(InOrleTestCase)
 
 ## SVG drawing tests
 
@@ -89,7 +89,7 @@ class BlazonryTestCase(unittest.TestCase):
     and the desired state on the shield object that corresponds to it."""
     def testBlazon(self):
         pass
-SVGDrawingTests.addTest(BlazonryTestCase)
+#SVGDrawingTests.addTest(BlazonryTestCase)
 
 class ChargesAppendTestCase(unittest.TestCase):
     def testAppend(self):
@@ -98,7 +98,7 @@ class ChargesAppendTestCase(unittest.TestCase):
         shield.charges.append(blazon.Saltire("or", "plain"))
         self.assertEqual(len(shield.charges), 1)
         self.assertTrue(shield.charges[0].tincture.color is 'yellow')
-SVGDrawingTests.addTest(ChargesAppendTestCase)
+#SVGDrawingTests.addTest(ChargesAppendTestCase)
 
 class Charges10TestCase(unittest.TestCase):
     def test10Charges(self):
@@ -107,7 +107,7 @@ class Charges10TestCase(unittest.TestCase):
         shield.charges.append(blazon.ChargeGroup(10, blazon.Lozenge("argent")))
         for charge in shield.charges:
             charge.arrange()
-SVGDrawingTests.addTest(Charges10TestCase)
+#SVGDrawingTests.addTest(Charges10TestCase)
 
 class ChargesTwoGroupsTestCase(unittest.TestCase):
     def test10Charges(self):
@@ -119,7 +119,7 @@ class ChargesTwoGroupsTestCase(unittest.TestCase):
         shield.charges.append(blazon.ChargeGroup(10, blazon.Annulet("or")))
         for charge in shield.charges:
             charge.arrange()
-SVGDrawingTests.addTest(ChargesTwoGroupsTestCase)
+#SVGDrawingTests.addTest(ChargesTwoGroupsTestCase)
 
 
 class PerPaleTestCase(unittest.TestCase):
@@ -131,7 +131,7 @@ class PerPaleTestCase(unittest.TestCase):
         self.assert_(shield.tincture.pieces is 2)
         self.assert_(HasOnlyTheColors(shield, ["green", "black"]))
         self.assert_(repr(shield) is not None)
-SVGDrawingTests.addTest(PerPaleTestCase)
+#SVGDrawingTests.addTest(PerPaleTestCase)
 
 class PerFessTestCase(unittest.TestCase):
     def testPerFess(self):
@@ -141,7 +141,7 @@ class PerFessTestCase(unittest.TestCase):
         self.assert_(shield.tincture.pieces is 2)
         self.assert_(HasOnlyTheColors(shield, ["white", "red"]))
         self.assert_(repr(shield) is not None)
-SVGDrawingTests.addTest(PerFessTestCase)
+#SVGDrawingTests.addTest(PerFessTestCase)
         
 class QuarteredTestCase(unittest.TestCase):
     def testQuartered(self):
@@ -149,7 +149,7 @@ class QuarteredTestCase(unittest.TestCase):
         shield.tincture = blazon.PerCross(color1="vert", color2="sable")
         self.assert_(HasOnlyTheColors(shield, ["green", "black"]))
         self.assert_(repr(shield) is not None)
-SVGDrawingTests.addTest(QuarteredTestCase)
+#SVGDrawingTests.addTest(QuarteredTestCase)
 
 class PerSaltireTestCase(unittest.TestCase):
     def testPerSaltire(self):
@@ -157,7 +157,7 @@ class PerSaltireTestCase(unittest.TestCase):
         shield.tincture = blazon.PerSaltire(color1="azure", color2="argent")
         self.assert_(HasOnlyTheColors(shield, ["blue", "white"]))
         self.assert_(repr(shield) is not None)
-SVGDrawingTests.addTest(PerSaltireTestCase)
+#SVGDrawingTests.addTest(PerSaltireTestCase)
 
 class TiercedInPairleTestCase(unittest.TestCase):
     def testTiercedInPairle(self):
@@ -165,7 +165,7 @@ class TiercedInPairleTestCase(unittest.TestCase):
         shield.tincture = blazon.PerPall(color1="vert", color2="azure", color3="gules")
         self.assert_(HasOnlyTheColors(shield, ["green", "blue", "red"]))
         self.assert_(repr(shield) is not None)
-SVGDrawingTests.addTest(TiercedInPairleTestCase)
+#SVGDrawingTests.addTest(TiercedInPairleTestCase)
 
 class GyronnyTestCase(unittest.TestCase):
     def testGyronny(self):
@@ -174,7 +174,7 @@ class GyronnyTestCase(unittest.TestCase):
         self.assert_(HasOnlyTheColors(shield, ["purple", "white"]))
         self.assert_(shield.tincture.pieces is 8)
         self.assert_(repr(shield) is not None)
-SVGDrawingTests.addTest(GyronnyTestCase)
+#SVGDrawingTests.addTest(GyronnyTestCase)
 
 # Various LINEYs...
 
@@ -185,7 +185,7 @@ class PalyTestCase(unittest.TestCase):
         self.assert_(HasOnlyTheColors(shield, ["black", "yellow"]))
         self.assert_(shield.tincture.pieces is 8)
         self.assert_(repr(shield) is not None)
-SVGDrawingTests.addTest(PalyTestCase)
+#SVGDrawingTests.addTest(PalyTestCase)
 
 class PilyTestCase(unittest.TestCase):
     def testPily(self):
@@ -194,7 +194,7 @@ class PilyTestCase(unittest.TestCase):
         self.assert_(HasOnlyTheColors(shield, ["yellow", "purple"]))
         self.assert_(shield.tincture.pieces is 8)
         self.assert_(repr(shield) is not None)
-SVGDrawingTests.addTest(PilyTestCase)
+#SVGDrawingTests.addTest(PilyTestCase)
 
 
 class ChevronnyTestCase(unittest.TestCase):
@@ -207,7 +207,7 @@ class ChevronnyTestCase(unittest.TestCase):
         # used in a very sensible way.
         self.assert_(shield.tincture.pieces is 8)
         self.assert_(repr(shield) is not None)
-SVGDrawingTests.addTest(ChevronnyTestCase)
+#SVGDrawingTests.addTest(ChevronnyTestCase)
 
 
 # TODO:
@@ -244,7 +244,7 @@ class CorrectBlazonPreprocessing(unittest.TestCase):
         # punctuation to attach to a word.
         self.assert_(re.match("[a-z][\,\.]", test.GetBlazon()) is None)
 
-BlazonryTests.addTest(CorrectBlazonPreprocessing)
+#BlazonryTests.addTest(CorrectBlazonPreprocessing)
 
 # The Right Way(tm) would be to create a single test case for each line,
 # but I don't know how to do that.
@@ -264,7 +264,7 @@ class CanParseBlazonry(unittest.TestCase):
                 print "Could not parse good blazon:"
                 print line # Output offending blazon
                 raise      # Re-raise
-BlazonryTests.addTest(CanParseBlazonry)
+#BlazonryTests.addTest(CanParseBlazonry)
 
 ## Put the following test back if and when we suspect the parser of
 ## accepting bogus input. (This does not currently seem to be an
@@ -291,7 +291,7 @@ class PurpureALozengeArgent(unittest.TestCase):
         shield = curblazon.GetShield()
         # What is missing here is a way of retrieving the *actions* generated
         # by the blazon, before those actions are actually executed.
-PipelineTests.addTest(PurpureALozengeArgent)
+#PipelineTests.addTest(PurpureALozengeArgent)
 
 # - tests for standards-compliant SVG output
 from xml.parsers.xmlproc import xmlproc
