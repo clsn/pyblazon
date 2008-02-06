@@ -629,6 +629,9 @@ class PerChevron(Paly):
 
     def invert(self):
         self.inverted=True
+        # ALSO!  Have to reverse the orders of the colors, so the correct
+        # one remains on top.
+        self.colors=(self.colors[1], self.colors[0])
 
        
 class Chevronny(Paly):
