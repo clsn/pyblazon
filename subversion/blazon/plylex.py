@@ -71,7 +71,7 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|crescents?|escutcheons?|shakeforks?"
+    r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|crescents?|escutcheons?|shakeforks?|escallops?"
     return t
 
 t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(.gemelles?)?|fret|flaunches|batons?)"
@@ -193,6 +193,7 @@ lookupdict={
     "gutty": (lambda *a: blazon.ExtCharge("goute")),
     "fir.twigs?": (lambda *a: blazon.ExtCharge("firtwig")),
     "crescents?": (lambda *a: blazon.ExtCharge("crescent")),
+    "escallops?": (lambda *a: blazon.ExtCharge("escallop")),
     "billety": blazon.Billet,
     "crusilly": (lambda *a: blazon.ExtCharge("humetty")),
     "bordure": blazon.Bordure,

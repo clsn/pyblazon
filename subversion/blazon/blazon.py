@@ -1433,6 +1433,7 @@ class ExtCharge(Charge):
         "crescent":("data/Charges.svg#crescent",2,None),
         "escutcheon":("data/Charges.svg#escutcheon",3,None),
         "shakefork":("data/Charges.svg#shakefork",3,None),
+        "escallop":("data/Escallop.svg#escallop",2,None),
         "firtwig":("data/Firtwig.svg#firtwig",2,None)
         }
     
