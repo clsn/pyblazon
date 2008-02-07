@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="175"
+   height="158"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.44"
+   version="1.0"
+   sodipodi:docbase="C:\Documents and Settings\Bruno Vallette\Mes documents\Perso\Wikipédia Blasons\Meubles BVA"
+   sodipodi:docname="Héraldique_meuble_Coquille.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="3.3"
+     inkscape:cx="87.5"
+     inkscape:cy="80"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     width="175px"
+     height="158px"
+     inkscape:window-width="1024"
+     inkscape:window-height="719"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+<symbol id="escallop">
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-43,-40) scale(.5)">
+    <g
+       id="g7233"
+       transform="translate(-191.3618,-117.0945)">
+      <path
+         id="path1900"
+         d="M 210.61551,124.75033 L 278.92313,216.00528 L 347.25949,124.75033 L 278.92313,124.75033 L 210.61551,124.75033 z "
+         style="fill:white;fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:2.99999833;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="ccccccccccccccccccccc"
+         id="path2792"
+         d="M 272.5625,125.21875 C 257.19658,136.91298 242.73369,163.0608 240,170.9375 C 194.61121,176.569 180.98987,208.31114 208.5625,219.5 C 209.21616,215.9628 240.84674,185.42379 244.54099,184.2757 C 240.13735,185.90493 208.49552,216.30868 208.65625,219.5625 C 202.32508,242.82671 215.95091,252.17785 233.9375,250.625 C 236.83859,236.21456 251.45585,205.45338 258.347,197.83049 C 251.61004,206.012 236.69906,236.40682 233.875,251.1875 C 243.81155,272.71129 257.13805,278.74751 278.5625,265.21875 L 278.9375,203.22862 L 279.3125,265.21875 C 300.73695,278.74751 314.03219,272.71129 323.96875,251.1875 C 320.37709,237.94201 305.55099,207.43993 299.528,197.83049 C 304.28159,205.62089 318.75134,234.60829 323.9375,250.625 C 341.92409,252.17785 355.54994,242.82671 349.21875,219.5625 C 348.19525,212.5645 315.92094,183.16314 313.30276,183.65747 C 317.50127,183.19769 349.64716,213.85677 349.3125,219.5 C 376.88513,208.31114 363.2638,176.569 317.875,170.9375 C 315.14131,163.0608 301.23416,136.07938 285.86824,124.38515 C 285.86824,124.38515 281.22599,120.28731 278.9375,121.34375 L 272.5625,125.21875 z "
+         style="fill:white;fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cc"
+         id="path3686"
+         d="M 246.70482,177.6338 C 269.83879,189.15241 290.99211,186.80647 311.17019,177.6338"
+         style="fill:none;fill-rule:evenodd;stroke:black;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cc"
+         id="path4573"
+         d="M 223.36391,198.75177 C 258.93101,236.4434 295.98007,238.09807 334.5111,198.75177"
+         style="fill:none;fill-rule:evenodd;stroke:black;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+  </g>
+</symbol>
+</svg>
