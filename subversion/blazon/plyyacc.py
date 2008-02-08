@@ -225,8 +225,8 @@ def p_charge_2(p):
     p[0]=p[3]
 
 def p_charge_3(p):
-    "charge : optA LB URL AT NUM NUM RB"
-    p[0]=blazon.Image(p[3], p[5], p[6])
+    "charge : optA URL"
+    p[0]=blazon.Image(p[2][1:-1].strip(), 80, 80) # use same numbers always?
 
 def p_bordure(p):
     """bordure : empty

@@ -14,7 +14,7 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
         "PALL","WITHIN","BORDURE","BEZANTY","LP","RP","IN","DIRECTION",
-        "LB","RB","URL","AT")
+        "URL")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -50,9 +50,6 @@ t_IN="in"
 t_SEMY=r"semy"
 t_LP=r"{|lp"                           # leftparen
 t_RP=r"}|rp"                           # rightparen
-t_LB=r"<"
-t_RB=r">"
-t_AT=r"@"
 
 def t_SEMYDELIS(t):
     r"(semy.de.lis|billety|gutty|crusilly)"
@@ -130,8 +127,8 @@ def t_WORD(t):
     return t
 
 def t_URL(t):
-    r"http://[^ ]+"
-    return t    
+    r"<[^>]*>"
+    return t   
 
 def t_error(t):
     sys.stderr.write("illegal character: %s\n"%t.value[0])

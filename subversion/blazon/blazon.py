@@ -1653,13 +1653,13 @@ class Blazon:
       # Can't just toss all the non-alphanumeric chars, if we're going
       # to accept URLs...
       # return re.sub("[^a-z0-9 ']+"," ",blazon.lower())
-      bits=re.split("[<>]",blazon.lower())
+      bits=re.split("[<>]",blazon)
       # Splitting on the <>s means that every odd-indexed element in the
       # list is one that belongs in <>s and thus literal
       i=0
       for i in range(0,len(bits)):
          if i%2 == 0:
-            bits[i]=re.sub("[^a-z0-9 ]+"," ",bits[i])
+            bits[i]=re.sub("[^a-z0-9 ]+"," ",bits[i].lower())
          else:
             bits[i]='<'+bits[i]+'>'
       return ' '.join(bits)
