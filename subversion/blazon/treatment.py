@@ -527,14 +527,16 @@ class PerPall(Paly):
     def invert(self):
         self.inverted=True
 
-    @staticmethod
-    def patternContents(num):
+    # Like PerChevron, we need a dummy object
+    def patternContents(self,num):
         patterns=[[1],[1,(0,0)]]
         try:
             return patterns[num]
         except IndexError:
             pass
-        return blazon.Pall.patternSiblings(num)        
+        tmp=blazon.Pall()
+        tmp.inverted=self.inverted
+        return tmp.patternSiblings(num)        
 
 class PerCross(Paly):
    def __init__(self,color1="argent",color2="sable",linetype="plain"):

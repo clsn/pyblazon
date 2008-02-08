@@ -171,7 +171,7 @@ def p_grouporcharge_b(p):
         Globals.colorless.append(p[0].charges[0])
     p[0].arrangement=p[2]
 
-def p_group(p):
+def p_group_1(p):
     """group : amount charge optarrange opttreatment optrows
              | amount charge optarrange opttreatment optrows EACH CHARGED WITH charges"""
     # I don't have to worry about handling the opttreatment.  That's just in
@@ -188,6 +188,11 @@ def p_group(p):
     p[0].arrangement=p[3]
     if rows:
         p[0].arrangement=ByNumbers(rows)
+
+def p_group_2(p):
+    """group : LP charges RP"""
+    p[0]=blazon.ChargeGroup()
+    p[0].fromarray(p[2])
 
 def p_ordinary(p):
     """ordinary : ORDINARY

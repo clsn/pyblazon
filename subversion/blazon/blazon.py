@@ -1067,6 +1067,17 @@ class ChargeGroup:            # Kind of an invisible ordinary
         if num and charge:
            self.numcharges(num,charge)
 
+    def fromarray(self,array):
+       # OK, this may be wrong, but at the moment anyway, single charges
+       # appear here as ChargeGroups.  And we need to have the charges
+       # as the elements of this group.  Lessee...
+       self.charges=[]
+       for incoming in array:
+          if isinstance(incoming, ChargeGroup):
+             self.charges.extend(incoming.charges)
+          else:
+             self.charges.append(incoming)
+
     def numcharges(self,num,charge):
         for i in range(0,num):
             self.charges.append(copy.deepcopy(charge))
