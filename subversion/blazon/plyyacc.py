@@ -224,6 +224,10 @@ def p_charge_2(p):
     p[3].addCharge(p[5])
     p[0]=p[3]
 
+def p_charge_3(p):
+    "charge : optA LB URL AT NUM NUM RB"
+    p[0]=blazon.Image(p[3], p[5], p[6])
+
 def p_bordure(p):
     """bordure : empty
                | WITHIN A BORDURE optlinetype opttreatment

@@ -1485,7 +1485,6 @@ class Symbol(Charge):
       "lionrampant" : ("data/LionRampant.svg#lion",Treatment("or"))
       }
    
-   
    def __init__(self,name,*args,**kwargs):
       self.setup(*args)
       try:
@@ -1588,6 +1587,39 @@ class Symbol(Charge):
       self.maingroup.attributes["transform"]=" scale(%.3f,%.3f)"%(x,y)
 
 
+# A class for raster (non-vector) images.  Eww.
+class Image(Charge):
+   "External link to a non-vector image"
+
+   def __init__(self, url, width, height, *args, **kwargs):
+      self.setup(*args)
+      self.url=url
+      (self.width,self.height)=(width, height)
+
+   def process(self):
+      u=SVGdraw.image(self.url, x= -self.width/2.0, y= -self.height/2.0,
+                      width=self.width,
+                      height=self.height)
+      if self.maingroup.attributes.has_key("transform"):
+         u.attributes["transform"]=self.maingroup.attributes["transform"]
+      self.ref=u
+
+   def shiftto(self, *args):
+      self.moveto(*args)
+
+   def resize(self, *args):
+      self.scale(*args)
+   
+   def do_fimbriation(self):
+      # Shyeah right.
+      pass
+
+   def finalizeSVG(self):
+      # Need a special version for Image, overriding the default.
+      self.process()
+      return self.ref
+
+
 # Other ideas...:
 
 # Presumably each charge (esp. each Ordinary) will be its own <g> element,
@@ -1611,26 +1643,39 @@ class Symbol(Charge):
 import plyyacc
 
 class Blazon:
-    """A blazon is a heraldic definition. We would like to be as liberal
-    as possible in what we accept."""
-    def __init__(self, blazon):
-        # Our parser is somewhat finicky, so we want to convert the raw,
-        # user-provided text into something it can handle.
-        self.blazon = self.Normalize(blazon)
-    def Normalize(self, blazon):
-        return re.sub("[^a-z0-9 ']+"," ",blazon.lower())
-    def GetBlazon(self):
-        return self.blazon
-    def GetShield(self):
-        # Old YAPPS parser:
-        # return parse.parse('blazon', self.GetBlazon())
-        # New YACC parser:
-        return plyyacc.yacc.parse(self.GetBlazon())
+   """A blazon is a heraldic definition. We would like to be as liberal
+   as possible in what we accept."""
+   def __init__(self, blazon):
+      # Our parser is somewhat finicky, so we want to convert the raw,
+      # user-provided text into something it can handle.
+      self.blazon=self.Normalize(blazon)
+   def Normalize(self, blazon):
+      # Can't just toss all the non-alphanumeric chars, if we're going
+      # to accept URLs...
+      # return re.sub("[^a-z0-9 ']+"," ",blazon.lower())
+      bits=re.split("[<>]",blazon.lower())
+      # Splitting on the <>s means that every odd-indexed element in the
+      # list is one that belongs in <>s and thus literal
+      i=0
+      for i in range(0,len(bits)):
+         if i%2 == 0:
+            bits[i]=re.sub("[^a-z0-9 ]+"," ",bits[i])
+         else:
+            bits[i]='<'+bits[i]+'>'
+      return ' '.join(bits)
+   def GetBlazon(self):
+      return self.blazon
+   def GetShield(self):
+      # Old YAPPS parser:
+      # return parse.parse('blazon', self.GetBlazon())
+      # New YACC parser:
+      return plyyacc.yacc.parse(self.GetBlazon())
 
 if __name__=="__main__":
-    cmdlineinput = " ".join(sys.argv[1:])
-    blazon = Blazon(cmdlineinput)
-    # Old YAPPS parser:
-    # return parse.parse('blazon', self.GetBlazon())
-    # New YACC parser:
-    print plyyacc.yacc.parse(self.GetBlazon())
+   cmdlineinput = " ".join(sys.argv[1:])
+   blazon = Blazon(cmdlineinput)
+   # Old YAPPS parser:
+   # return parse.parse('blazon', self.GetBlazon())
+   # New YACC parser:
+   print plyyacc.yacc.parse(self.GetBlazon())
+   
