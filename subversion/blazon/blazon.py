@@ -911,9 +911,9 @@ class Chevron(Ordinary):
        return res
 
     def moveto(self,*args):
-       if not self.maingroup.attributes.has_key("transform"):
-          self.maingroup.attributes["transform"]=""
-          self.maingroup.attributes["transform"]+=" translate(%.4f,%.4f)" % args[0]
+      if not self.maingroup.attributes.has_key("transform"):
+         self.maingroup.attributes["transform"]=""
+      self.maingroup.attributes["transform"]+=" translate(%.4f,%.4f)" % args[0]
          
     def shiftto(self,*args):
        if not self.clipPathElt.attributes.has_key("transform"):
@@ -1584,7 +1584,16 @@ class Symbol(Charge):
    def resize(self,x,y=None):
       if not y:
          y=x
-      self.maingroup.attributes["transform"]=" scale(%.3f,%.3f)"%(x,y)
+      if not self.maingroup.attributes.has_key("transform"):
+         self.maingroup.attributes['transform']=""
+      self.maingroup.attributes['transform']+=" scale(%.3f,%.3f)"%(x,y)
+
+   # This helps, but screws up differently:
+#   def moveto(self,*args):
+#      self.shiftto(*args)
+
+# Check the 2lions.svg file!!  Both the mask AND the later <use> have to be
+# translated.
 
 
 # A class for raster (non-vector) images.  Eww.
