@@ -382,6 +382,22 @@ class BarryPily(Pily):
             p.closepath()
         self.path=SVGdraw.path(p)
 
+class BendyPily(Pily):
+    # As above, but slantwise
+    # Not a good Bendy Pily, but it's something.
+    def assemble(self):
+        p=partLine(linetype=self.lineType)
+        breadth=math.sqrt(blazon.Ordinary.HEIGHT**2 +
+                          blazon.Ordinary.WIDTH**2)
+        unit=breadth/self.pieces
+        for i in range(0,self.pieces):
+            p.move(-breadth/2+i*unit, -breadth/2)
+            p.makelinerel(unit/2, breadth)
+            p.makelinerel(unit/2, -breadth)
+            p.closepath()
+        self.path=SVGdraw.path(p)
+        self.path.attributes["transform"]=" rotate(45)"
+
 class Bendy(Paly):
    def assemble(self):
       p=partLine(linetype=self.lineType)

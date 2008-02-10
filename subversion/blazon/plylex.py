@@ -34,7 +34,7 @@ def t_COLOR(t):
     return t
 
 def t_AND(t):
-    r"(and|between)"                    # FOR NOW, between is a synonym of and.
+    r"(and|&|between)"              # FOR NOW, between is a synonym of and.
     return t
 
 def t_BEZANTY(t):
@@ -208,6 +208,7 @@ lookupdict={
     "paly": treatment.Paly,
     "pily": treatment.Pily,
     "barrypily": treatment.BarryPily,
+    "bendypily": treatment.BendyPily,
     "barry": treatment.Barry,
     "chevronny": treatment.Chevronny,
     "bendy": treatment.Bendy,
