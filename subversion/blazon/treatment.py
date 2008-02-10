@@ -582,21 +582,35 @@ class PerSaltire(PerCross):
 
 
 # start with default: Gyronny of eight.
+# *boggle*... all this time and we still don't support gyronny of anything else?
 class Gyronny(Paly):
     def assemble(self):
         # Yes, everything with HEIGHT, so I'm working in a square.
         # May have the colors backwards.
         p=partLine(linetype=self.lineType)
-        p.move(0,-blazon.Ordinary.HEIGHT)
-        p.makeline(0,blazon.Ordinary.HEIGHT)
-        p.hline(-blazon.Ordinary.HEIGHT)
-        p.makeline(blazon.Ordinary.HEIGHT,-blazon.Ordinary.HEIGHT)
-        p.closepath()
-        p.move(-blazon.Ordinary.HEIGHT,0)
-        p.makeline(blazon.Ordinary.HEIGHT,0)
-        p.vline(blazon.Ordinary.HEIGHT)
-        p.makeline(-blazon.Ordinary.HEIGHT,-blazon.Ordinary.HEIGHT)
-        p.closepath
+        if self.pieces == 8:
+            # No reason to do this as a special case, but it was working
+            # first, so why mess with it.
+            p.move(0,-blazon.Ordinary.HEIGHT)
+            p.makeline(0,blazon.Ordinary.HEIGHT)
+            p.hline(-blazon.Ordinary.HEIGHT)
+            p.makeline(blazon.Ordinary.HEIGHT,-blazon.Ordinary.HEIGHT)
+            p.closepath()
+            p.move(-blazon.Ordinary.HEIGHT,0)
+            p.makeline(blazon.Ordinary.HEIGHT,0)
+            p.vline(blazon.Ordinary.HEIGHT)
+            p.makeline(-blazon.Ordinary.HEIGHT,-blazon.Ordinary.HEIGHT)
+            p.closepath()
+        else:
+            angle=2*math.pi/self.pieces
+            pi_2=math.pi/2
+            for i in range(0,self.pieces,2):
+                p.move(blazon.Ordinary.HEIGHT*math.cos(pi_2+i*angle),
+                       blazon.Ordinary.HEIGHT*math.sin(pi_2+i*angle))
+                p.makeline(0,0)
+                p.makeline(blazon.Ordinary.HEIGHT*math.cos(pi_2+(i+1)*angle),
+                           blazon.Ordinary.HEIGHT*math.sin(pi_2+(i+1)*angle))
+                p.closepath()
         self.path=SVGdraw.path(p)
         self.path.attributes["fill-rule"]="evenodd"
 
