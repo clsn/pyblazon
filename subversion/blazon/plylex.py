@@ -72,7 +72,7 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|crescents?|escutcheons?|shakeforks?|escallops?"
+    r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|crescents?|escutcheons?|shakeforks?|escallops?|fountains?"
     return t
 
 t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(.gemelles?)?|fret|flaunches|batons?)"
@@ -174,6 +174,7 @@ lookupdict={
     "hurt[ys]?" : (lambda *a: blazon.Roundel(tincture="azure")),
     "golpes?" : (lambda *a: blazon.Roundel(tincture="purpure")),
     "pome(i?s)?" : (lambda *a: blazon.Roundel(tincture="vert")),
+    "fountains?" : (lambda *a: blazon.Roundel(tincture=treatment.Barry(color1="argent", color2="azure", linetype="wavy"))),
     "billets?": blazon.Billet,
     "annulets?": blazon.Annulet,
     "lozenges?": blazon.Lozenge,

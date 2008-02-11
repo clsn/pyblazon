@@ -54,7 +54,10 @@ class Ordinary:
 
    def setup(self,tincture="none",linetype="plain"):
       self.done=False
-      self.tincture=Treatment(tincture)
+      if type(tincture)==str:
+         self.tincture=Treatment(tincture)
+      else:
+         self.tincture=tincture
       self.lineType=linetype
       self.charges=[]
       self.fimbriation_width=4          # default

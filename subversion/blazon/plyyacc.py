@@ -211,7 +211,7 @@ def p_charge_1(p):
     p[3](res)
     res.lineType=p[4]
     if not p[5]:
-        if not res.tincture or not res.tincture.color or res.tincture.color == "none":
+        if not res.tincture or not hasattr(res.tincture,"color") or not res.tincture.color or res.tincture.color == "none":
             Globals.colorless.append(res)
             res.tincture=None
     else:

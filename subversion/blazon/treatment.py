@@ -315,6 +315,9 @@ class Paly(Treatment):
    def __init__(self,bars=8,color1="argent",color2="sable",linetype="plain"):
       self.parseColors(color1,color2)
       self.lineType=linetype
+      # Need to have a dummy color here so things don't wind up in the
+      # colorless list. ref: "fountain"
+      self.color="X"
       if bars:
           self.pieces=bars
       else:
