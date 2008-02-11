@@ -14,7 +14,7 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
         "PALL","WITHIN","BORDURE","BEZANTY","LP","RP","IN","DIRECTION",
-        "URL")
+        "URL","MULLET")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -64,7 +64,7 @@ def t_CARDINAL(t):
     return t
 
 def t_LINEY(t):
-    r"(paly|barry|bendy(.sinister)?|gyronny|checky|lozengy|pily|chevronny)"
+    r"(paly|barry|bendy(.sinister)?|gyronny|checky|lozengy|pily|chevronny(.inverted)?)"
     return t
 
 def t_QUARTERLY(t):
@@ -72,8 +72,10 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|mullets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|crescents?|escutcheons?|shakeforks?|escallops?|fountains?"
+    r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|crescents?|escutcheons?|shakeforks?|escallops?|fountains?"
     return t
+
+t_MULLET="mullets?"
 
 t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(.gemelles?)?|fret|flaunches|batons?)"
 
@@ -212,6 +214,7 @@ lookupdict={
     "bendypily": treatment.BendyPily,
     "barry": treatment.Barry,
     "chevronny": treatment.Chevronny,
+    "chevronny.inverted": (lambda *a,**k: treatment.Chevronny(inverted=True,*a,**k)),
     "bendy": treatment.Bendy,
     "bendy.sinister": treatment.BendySinister,
     "gyronny": treatment.Gyronny,

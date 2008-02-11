@@ -198,12 +198,25 @@ def p_ordinary(p):
     """ordinary : ORDINARY
                 | PALL
                 | CHARGE
-                | CHIEF
-                | CHARGE OF amount WORD"""
-    if len(p)>2:
-        p[0]=lookup(p[1])(p[3])
-    else:
-        p[0]=lookup(p[1])()
+                | CHIEF """
+    p[0]=lookup(p[1])()
+
+# mullets have to be a special case, because the "of X points" interferes
+# with "of the second"
+
+def p_ordinary_2(p):
+    "ordinary : mullet"
+    p[0]=p[1]
+
+def p_mullet(p):
+    """mullet : MULLET
+              | MULLET OF amount WORD"""
+    n=5
+    try:
+        n=p[3]
+    except IndexError:
+        pass
+    p[0]=lookup(p[1])(n)
 
 def p_charge_1(p):
     "charge : optA ordinary optinverted optlinetype opttreatment optfimbriation"

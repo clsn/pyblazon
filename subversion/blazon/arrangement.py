@@ -143,15 +143,14 @@ class ByNumbers(Arrangement):
    def pattern(self,num):
       # Barf if not set right
       if not self.rows:
-         raise blazon.ArrangementErrors, "Tried to arrange something by numbers, but number of rows is not specified."
+         raise blazon.ArrangementError, "Tried to arrange something by numbers, but number of rows is not specified."
       # num should equal the sum of the elements of the rows list.
-      # We're going to assume it does.
       if sum(self.rows) <> num:
          raise blazon.ArrangementError, "Whoa!  Number of elements is %d, but rows for %d given.\n"% (num,sum(self.rows))
       # Determine the scale by the larger of: the number of rows, and
       # the largest number of elements in a row.
       index=max(len(self.rows),max(self.rows))
-      scale=[1, 1, .4, .3, .25, .2, .2][index]
+      scale=[1, 1, .4, .3, .25, .2, .2, .2, .15, .15, .15, .1, .1, .1][index]
       # Assemble the return value...
       rv=[scale]
       totalrows=len(self.rows)

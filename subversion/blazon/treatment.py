@@ -684,6 +684,14 @@ class Chevronny(Paly):
             p.makelinerel(-blazon.Ordinary.FESSPTX,25)
             p.closepath()
         self.path=SVGdraw.path(p)
+        if (self.inverted):
+            self.path.attributes['transform']=" rotate(180)"
+
+    def __init__(self, bars=8, color1="argent", color2="sable", linetype="plain", inverted=False):
+        self.parseColors(color1, color2)
+        self.lineType=linetype
+        self.pieces=bars
+        self.inverted=inverted
 
 # Barry-bendy and paly-bendy are easy now: just do:
 # paly of 8 barry of 8 or and sable and barry of 8 sable and or
