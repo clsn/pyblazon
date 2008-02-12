@@ -838,7 +838,8 @@ class Bordure(Ordinary):
                 [.15,(-43,-43),(43,-43),(-44,-5),(44,-5),(0,52),(-31,30),(31,30)],
                 [.15,(-43,-43),(43,-43),(-44,-5),(44,-5),(0,52),(-31,30),(31,30),(0,-44)],
                 [.15,(-43,-43),(43,-43),(-44,-5),(44,-5),(0,52),(-31,30),(31,30),(-15,-44),(15,-44)],
-                [.15,(-43,-43),(43,-43),(-44,-15),(44,-15),(-41,10),(41,10),(-15,-44),(15,-44),(-25,37),(25,37)]
+                [.15,(-43,-43),(43,-43),(-44,-15),(44,-15),(-41,10),(41,10),(-15,-44),(15,-44),(-25,37),(25,37)],
+   [.15,(-43,-43),(43,-43),(-44,-15),(44,-15),(-41,10),(41,10),(-15,-44),(15,-44),(-25,37),(25,37),(0,52)]
                 ]
       try:
          return patterns[num]
@@ -1671,16 +1672,24 @@ class Blazon:
       i=0
       for i in range(0,len(bits)):
          if i%2 == 0:
-            bits[i]=re.sub("[^a-z0-9 ]+"," ",bits[i].lower())
+            bits[i]=re.sub("[^a-z0-9() -]+"," ",bits[i].lower())
          else:
             bits[i]='<'+bits[i]+'>'
       return ' '.join(bits)
    def GetBlazon(self):
       return self.blazon
+   def getlookuptable(self):
+      self.__class__.lookup={}
+      try:
+         fh=open('data/Chargelist','r')
+         for line in fh:
+            (key, value)=line.split(':',1)
+            self.__class__.lookup[key.strip()]=value.strip()
+      except IOError:
+         pass
    def GetShield(self):
-      # Old YAPPS parser:
-      # return parse.parse('blazon', self.GetBlazon())
-      # New YACC parser:
+      if not hasattr(self.__class__,'lookup') or not self.__class__.lookup:
+         self.getlookuptable()
       return plyyacc.yacc.parse(self.GetBlazon())
 
 if __name__=="__main__":

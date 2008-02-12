@@ -239,7 +239,15 @@ def p_charge_2(p):
 
 def p_charge_3(p):
     "charge : optA URL"
-    p[0]=blazon.Image(p[2][1:-1].strip(), 80, 80) # use same numbers always?
+    p[0]=blazon.Image(p[2], 80, 80) # use same numbers always?
+
+def p_charge_4(p):
+    "charge : optA NAME"
+    try:
+        p[0]=blazon.Image(blazon.Blazon.lookup[p[2]], 80, 80)
+    except KeyError:
+        # Punt.
+        p[0]=blazon.Image(p[2], 80, 80)
 
 def p_bordure(p):
     """bordure : empty
