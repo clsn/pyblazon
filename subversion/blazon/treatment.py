@@ -35,6 +35,7 @@ class Treatment:                         # Metal or color.
              "bleu celeste" : "#8080ff",
              "rose" : "#fba0e3",
              "copper" : "#b87333",
+             "proper" : "proper",       # Not none, to keep things out of the colorless array
              "none" : "none"
              }
    
@@ -44,6 +45,8 @@ class Treatment:                         # Metal or color.
         except KeyError:
             sys.stderr.write("Invalid tincture: %s\n"%color)
             self.color="white"
+        if self.color == "proper":
+            self.color="none"
 
     def fill(self, elt):
         elt.attributes["fill"]=self.color

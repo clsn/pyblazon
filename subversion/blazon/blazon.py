@@ -49,6 +49,8 @@ class Ordinary:
    DEXSIDE=(DEXCHIEFX+15,0)
    SINSIDE=(SINCHIEFX-15,0)
 
+   ImageFilters=False                   # Have we done the filters for images?
+
    def __init__(self,*args,**kwargs):
       self.setup(*args,**kwargs)
 
@@ -1610,13 +1612,10 @@ class Image(Charge):
       (self.width,self.height)=(width, height)
 
    def process(self):
-      u=SVGdraw.image(self.url, x= -self.width/2.0, y= -self.height/2.0,
-                      width=self.width,
-                      height=self.height)
-      if self.maingroup.attributes.has_key("transform"):
-         u.attributes["transform"]=self.maingroup.attributes["transform"]
-      self.ref=u
-
+      self.ref=SVGdraw.image(self.url, x= -self.width/2.0, y= -self.height/2.0,
+                             width=self.width,
+                             height=self.height)
+      
    def shiftto(self, *args):
       self.moveto(*args)
 
@@ -1630,7 +1629,56 @@ class Image(Charge):
    def finalizeSVG(self):
       # Need a special version for Image, overriding the default.
       self.process()
-      return self.ref
+      if hasattr(self,'tincture') and self.tincture and not \
+             (hasattr(self.tincture,'color') and self.tincture.color=="none"):
+         # There's a color!  Have to do some brilliant filter stuff.
+         # Let's get this straight: we make baserect which is filled with
+         # the color/fur/whatever.  We mask it with the image's alpha,
+         # which we get from a filter.  Then we put the image on top
+         # of that, masking it with a filter that multiplies it by what's
+         # underneath, and Bob's yer uncle!
+         # Those two filters do not depend on anything, they only need
+         # to be defined once.
+         if not Ordinary.ImageFilters:
+            filter1=SVGdraw.SVGelement("filter",
+                                       attributes={'id' : 'AlphaFilter'})
+            filter1.addElement(
+               SVGdraw.SVGelement('feFlood',
+                                  attributes={'flood-color': 'white',
+                                              'result' : 'flood'}))
+            filter1.addElement(
+               SVGdraw.SVGelement('feComposite',
+                                  attributes={'in':'flood',
+                                              'in2':'SourceGraphic',
+                                              'operator':'in'}))
+            Ordinary.defs.append(filter1)
+            filter2=SVGdraw.SVGelement("filter",
+                                       attributes={'id': 'BlendFilter'})
+            filter2.addElement(
+               SVGdraw.SVGelement('feBlend',
+                                  attributes={'in':'BackgroundImage',
+                                              'in2':'SourceGraphic',
+                                              'mode':'multiply'}))
+            Ordinary.defs.append(filter2)
+            Ordinary.ImageFilters=True  # Don't do this again.
+         self.mask=SVGdraw.SVGelement('mask',
+                                      attributes={'id' : 'Mask%04d'%Ordinary.id,
+                                                  'maskUnits':'UserSpaceOnUse'})
+         Ordinary.id+=1
+         img=copy.deepcopy(self.ref)
+         img.attributes['filter']='url(#AlphaFilter)'
+         self.mask.addElement(img)                        
+         Ordinary.defs.append(self.mask)
+         self.baseRect=SVGdraw.rect(x=-Ordinary.FESSPTX,
+                                    y=-Ordinary.FESSPTY,
+                                    width=Ordinary.WIDTH,
+                                    height=Ordinary.HEIGHT)
+         self.baseRect=self.tincture.fill(self.baseRect)
+         self.baseRect.attributes['mask']='url(#%s)'%self.mask.attributes['id']
+         self.ref.attributes['filter']='url(#BlendFilter)'
+         self.maingroup.addElement(self.baseRect)
+      self.maingroup.addElement(self.ref)
+      return self.maingroup
 
 
 # Other ideas...:

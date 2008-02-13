@@ -237,12 +237,12 @@ def p_charge_2(p):
     p[3].addCharge(p[5])
     p[0]=p[3]
 
-def p_charge_3(p):
-    "charge : optA URL"
+def p_ordinary_3(p):
+    "ordinary : optA URL"
     p[0]=blazon.Image(p[2], 80, 80) # use same numbers always?
 
-def p_charge_4(p):
-    "charge : optA NAME"
+def p_ordinary_4(p):
+    "ordinary : optA NAME"
     try:
         p[0]=blazon.Image(blazon.Blazon.lookup[p[2]], 80, 80)
     except KeyError:
