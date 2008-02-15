@@ -158,7 +158,17 @@ def p_charges(p):
     if len(p)==2:
         p[0]=[p[1]]
     else:
-        p[0]=p[1]+[p[3]]
+        # If the last elt of p[1] is a (group of) regular charges and not
+        # ordinaries, then *consolidate* p[3] into it as a single chargegroup.
+        # This is to permit {azure a bend argent between a fusil
+        # and a roundel or}
+        lastgroup=p[1][-1]
+        if not isinstance(lastgroup.charges[0], blazon.TrueOrdinary) and \
+               not isinstance(p[3].charges[0], blazon.TrueOrdinary):
+            lastgroup.charges.extend(p[3].charges)
+            p[0]=p[1]
+        else:
+            p[0]=p[1]+[p[3]]
 
 def p_grouporcharge_a(p):
     """grouporcharge : group"""
@@ -374,6 +384,12 @@ def p_error(p):
     ""
     sys.stderr.write("Something unexpected: %s\n"%p)
     pass
+
+def show_grammar(all=dir()):
+    all=filter((lambda x: x[0:2] == 'p_'), all)
+    all.sort()
+    for f in all:
+        print getattr(sys.modules[__name__],f).__doc__
 
 yacc.yacc(method="LALR")
 

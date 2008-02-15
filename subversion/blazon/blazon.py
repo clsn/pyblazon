@@ -215,8 +215,20 @@ class Ordinary:
    def scale(self,x,y=None):
       pass
 
+class TrueOrdinary:
+   """
+   Marker class, to distinguish between charges and ordinaries, since regular
+   class inheritance isn't reliable.  Some ordinaries (e.g. bendlets) are also
+   Charges, presumably to enable them to be shifted around easier.
 
-class Field(Ordinary):
+   The criterion: If you have a charge, and then another charge on the shield,
+   the two charges should move over and make room for one another more or less
+   as equals, in the way that charges pattern.  But a TrueOrdinary does not
+   move for a charge, and charges pattern around them.
+   """
+   pass
+
+class Field(Ordinary,TrueOrdinary):
    def __init__(self,tincture="argent"):
       self.svg=SVGdraw.svg(x=0,y=0,width="10cm",height="11cm",
                            viewBox=(-Ordinary.FESSPTX-3,
@@ -340,7 +352,7 @@ class Charge(Ordinary):
       # Should it be removed?
 
 
-class Cross(Ordinary):
+class Cross(Ordinary,TrueOrdinary):
     """A cross in the heraldic sense (it goes all the way to the edges of the
     shield) NOT a cross couped."""
     def process(self):
@@ -387,7 +399,7 @@ class Cross(Ordinary):
           return None
 
 
-class Fesse(Ordinary):
+class Fesse(Ordinary,TrueOrdinary):
     def process(self):
         p=partLine(-Ordinary.WIDTH, -20)
         # Fesse is unusual: when "embattled", only the *top* line is
@@ -489,7 +501,7 @@ class Saltire(Cross):
     def patternSiblings(num):
        return Cross.patternContents(num)
 
-class Pall(Ordinary):
+class Pall(Ordinary,TrueOrdinary):
     def process(self):
         wd=7*math.cos(math.pi/4)
         p=partLine(-Ordinary.WIDTH-wd, -Ordinary.WIDTH+wd)
@@ -533,7 +545,7 @@ class Pall(Ordinary):
        except IndexError:
           return None
 
-class Pale(Ordinary):
+class Pale(Ordinary,TrueOrdinary):
     def process(self):
         p=partLine()
         p.lineType=self.lineType
@@ -600,7 +612,7 @@ class Pallet(Pale,Charge):
       Charge.scale(self,x,y)
 
 
-class Bend(Ordinary):
+class Bend(Ordinary,TrueOrdinary):
     def __init__(self,*args,**kwargs):
         self.setup(*args,**kwargs)
         self.transform="rotate(-45)"
@@ -740,7 +752,7 @@ class Baton(BendletSinister):
          self.clipPath.attributes["transform"]=self.transform
       self.clipPathElt.addElement(self.clipPath)
 
-class Chief(Ordinary):
+class Chief(Ordinary,TrueOrdinary):
     # Chiefs will also have to be handled specially, as they ordinarily
     # do not overlay things on the field, but push them downward.  Including
     # bordures, right?
@@ -783,7 +795,7 @@ class Chief(Ordinary):
     def patternSiblings(num):
        return None
 
-class Bordure(Ordinary):
+class Bordure(Ordinary,TrueOrdinary):
    # Doing lines of partition is going to be hard with this one.
    def process(self):
       if self.lineType and self.lineType <> "plain":
@@ -850,7 +862,7 @@ class Bordure(Ordinary):
 
 
     
-class Chevron(Ordinary):
+class Chevron(Ordinary,TrueOrdinary):
 
     def __init__(self,*args,**kwargs):
        Ordinary.__init__(self,*args,**kwargs)
@@ -944,7 +956,7 @@ class Chevronel(Chevron):
       Chevron.__init__(self,*args,**kwargs)
       self.chevronwidth=10
 
-class Pile(Ordinary,Charge):
+class Pile(Ordinary,Charge,TrueOrdinary):
     def process(self):
         p=partLine()
         p.lineType=self.lineType
@@ -1011,7 +1023,7 @@ class Pile(Ordinary,Charge):
           self.clipPathElt.attributes["transform"]=""
        self.clipPathElt.attributes["transform"]+=" scale(%.4f,1)"%x
        
-class Base(Ordinary):
+class Base(Ordinary,TrueOrdinary):
    def process(self):
       p=partLine()
       p.lineType=self.lineType
@@ -1036,7 +1048,7 @@ class Base(Ordinary):
       except IndexError:
          return None
 
-class Label(Ordinary):
+class Label(Ordinary,TrueOrdinary):
    def __init__(self,points=3,*args,**kwargs):
       self.points=points
       self.setup(*args,**kwargs)
@@ -1194,7 +1206,7 @@ class ChargeGroup:            # Kind of an invisible ordinary
        # Just use the first charge.
        return self.charges[0].patternSiblings(num)
                     
-class Orle(ChargeGroup):
+class Orle(ChargeGroup,TrueOrdinary):
     # We will define an Orle as a bordure detached from the edge of the shield
     # (and narrower).  A Tressure is either a synonym for Orle, or else one that
     # is narrower, and may be doubled.  We'll work on it...
@@ -1312,7 +1324,7 @@ class Mascle(Charge):
         self.clipPath.addElement(use)
         self.clipPathElt.addElement(self.clipPath)
 
-class Canton(Ordinary):
+class Canton(Ordinary,TrueOrdinary):
     # This one can't be an ExtCharge, because it has a special placement.
     def process(self):
         # Make the rectangle around the fess point, let the usual Ordinary
@@ -1328,7 +1340,7 @@ class Canton(Ordinary):
             self.maingroup.attributes["transform"]=""
         self.maingroup.attributes["transform"]=" translate(-%f,-%f)"%(Ordinary.FESSPTX*.7,Ordinary.FESSPTY*.7)
 
-class Gyron(Ordinary):
+class Gyron(Ordinary,TrueOrdinary):
     # Should we consider the possibility of more than one?  Or of a canton?
     def process(self):
         p=SVGdraw.pathdata()
@@ -1339,7 +1351,7 @@ class Gyron(Ordinary):
         self.clipPath=SVGdraw.path(p)
         self.clipPathElt.addElement(self.clipPath)
 
-class Fret(Ordinary):
+class Fret(Ordinary,TrueOrdinary):
     # This also should appear only once; it's an ordinary really.
     def process(self):
         # Not *really* a mascle and crossed bendlets.  A tilted square
@@ -1371,7 +1383,7 @@ class Fret(Ordinary):
         else:
             return None
 
-class Flaunches(Ordinary):
+class Flaunches(Ordinary,TrueOrdinary):
     # Always come in pairs.  Maybe each object draws the pair, and
     # we'll just have duplicates on top of each other?  Bleah.
     # Or just find a way to ignore number for flaunches
