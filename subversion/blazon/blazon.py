@@ -129,6 +129,9 @@ class Ordinary:
          self.clipTransforms=""
       self.clipTransforms += " rotate(180)"
 
+   def orient(self,direction,*args,**kwargs):
+      pass
+
    def finalizeSVG(self):
       # we really should only ever do this once.
       # if self.done:
@@ -175,6 +178,11 @@ class Ordinary:
       for i in self.mydefs:
          defs.addElement(i)
       # self.done=True
+      # add any last-minute transforms
+      if hasattr(self,"endtransforms"):
+         if not self.clipPathElt.attributes.has_key("transform"):
+            self.clipPathElt.attributes["transform"]=""
+         self.clipPathElt.attributes["transform"]+=self.endtransforms
       return self.svg
 
    def patternContents(self,num):
@@ -335,6 +343,46 @@ class Charge(Ordinary):
       if not self.clipPathElt.attributes.has_key("transform"):
          self.clipPathElt.attributes["transform"]=""
       self.clipPathElt.attributes["transform"] += " scale(%.2f,%.2f)"%(x,y)
+
+   def orient(self, direction="none", absolute=False, andThen=None):
+      # Hrm.  These rotations and things have to come at the END of all the
+      # transforms, otherwise things wind up moving in the wrong direction
+      # when they are scaled down and shifted about to make room for
+      # others.
+      #
+      # If absolute is True, then this is an *absolute* orientation.
+      # No other orientations (rotations, in particular) may occur.
+      if not hasattr(self,'absoluteRotation'):
+         self.absoluteRotation=False
+      if not hasattr(self,"endtransforms"):
+         self.endtransforms=""
+      if direction=="bendwise" and not self.absoluteRotation:
+         self.endtransforms+=" rotate(-45)"
+      elif direction=="bendwise sinister" and not self.absoluteRotation:
+         self.endtransforms+=" rotate(45)"
+      elif direction=="contourny" or \
+           direction=="reversed":
+         self.endtransforms+=" scale(-1.0,1.0)"
+      elif direction=="inverted":
+         self.invert()
+      elif direction=="fesswise" and not self.absoluteRotation:
+         # I think by rights individual charges should have to handle these
+         # themselves, since for some things palewise is normal, and for
+         # others fesswise is.  By default, I'm going to define palewise
+         # is normal, and fesswise is a -90 degree turn.  I guess.
+         self.endtransforms+=" rotate(-90)"
+      if absolute and direction != "contourny" and direction!="reversed" and \
+             direction != "inverted":
+         self.absoluteRotation=True
+      # Hack to handle "palewise contourny" etc.
+      if andThen:
+         self.orient(andThen, absolute=absolute)
+         
+
+   def rotate(self, degrees):
+      if not self.clipPathElt.attributes.has_key("transform"):
+         self.clipPathElt.attributes["transform"]=""
+      self.clipPathElt.attributes["transform"] += " rotate(%d)"%degrees
               
    def dexterchief(self):
       self.moveto(Ordinary.DEXCHIEF)
@@ -631,6 +679,15 @@ class Bend(Ordinary,TrueOrdinary):
         self.clipPathElt.addElement(p)
         # Hrm.  But now the outer clipping path (?) is clipping the end of
         # the bend??
+        #
+        # Any charges have to be rotated...
+        # but only those that are not otherwise specified...
+        if hasattr(self,'charges'):
+           for c in self.charges:
+              if isinstance(self,BendSinister):
+                 c.orient("bendwise sinister")
+              else:
+                 c.orient("bendwise")
 
     @staticmethod
     def patternSiblings(num):
@@ -1205,6 +1262,10 @@ class ChargeGroup:            # Kind of an invisible ordinary
     def patternSiblings(self,num):
        # Just use the first charge.
        return self.charges[0].patternSiblings(num)
+
+    def orient(self,direction,*args,**kwargs):
+       for c in self.charges:
+          c.orient(direction,*args,**kwargs)
                     
 class Orle(ChargeGroup,TrueOrdinary):
     # We will define an Orle as a bordure detached from the edge of the shield
@@ -1520,10 +1581,6 @@ class Symbol(Charge):
                                  Ordinary.WIDTH,
                                  Ordinary.HEIGHT)
       self.baseRect.charge=self
-      self.clipPath=SVGdraw.use(self.path)
-      self.clipPathElt.addElement(self.clipPath)
-      self.maingroup.addElement(self.baseRect)
-      self.maingroup.addElement(SVGdraw.use(self.path))
 
    def fimbriate(self,treatment):
       self.fimbriation=Treatment(treatment)
@@ -1549,6 +1606,11 @@ class Symbol(Charge):
 
    def finalizeSVG(self):
       self.process()
+      self.use=SVGdraw.use(self.path)
+      self.clipPath=self.use
+      self.clipPathElt.addElement(self.clipPath)
+      self.maingroup.addElement(self.baseRect)
+      self.maingroup.addElement(self.use)
       if hasattr(self,"clipPath"): 
          # For fimbriation (at least one way to do it), need an id on the actual
          # path, not just the group:
@@ -1564,6 +1626,11 @@ class Symbol(Charge):
       self.maingroup.attributes["fill"]="none"
       self.baseRect=self.tincture.fill(self.baseRect)
       self.maingroup.attributes["mask"]="url(#%s)"%self.clipPathElt.attributes["id"]
+      # Last-minute transforms
+      if hasattr(self,"endtransforms"):
+         if not self.use.attributes.has_key("transform"):
+            self.use.attributes["transform"]=""
+         self.use.attributes["transform"]+=self.endtransforms
       #newgroup=SVGdraw.group()
       #mask=SVGdraw.SVGelement('mask',attributes=
       #                         {"id" : "Mask%04d"%Ordinary.id})
@@ -1589,12 +1656,17 @@ class Symbol(Charge):
       self.svg.addElement(self.maingroup)
       # Add another iteration of the use element, to fill in what was lost
       # in masking.
-      last=SVGdraw.use(self.path)
+      last=copy.deepcopy(self.use)
       last.attributes["fill"]="none"
       try:
          last.attributes["transform"]=self.maingroup.attributes["transform"]
       except KeyError:
          pass
+      # Gotta put in the last-minute transforms again; they got overwritten.
+      if hasattr(self,"endtransforms"):
+         if not last.attributes.has_key("transform"):
+            last.attributes["transform"]=""
+         last.attributes["transform"]+=self.endtransforms
       self.svg.addElement(last)
       return self.svg
 
@@ -1641,6 +1713,12 @@ class Image(Charge):
    def finalizeSVG(self):
       # Need a special version for Image, overriding the default.
       self.process()
+      # Last-minute transforms:
+      if hasattr(self,"endtransforms"):
+         # The transform goes on the ref, right?
+         if not self.ref.attributes.has_key("transform"):
+            self.ref.attributes["transform"]=""
+         self.ref.attributes["transform"]+=self.endtransforms
       if hasattr(self,'tincture') and self.tincture and not \
              (hasattr(self.tincture,'color') and self.tincture.color=="none"):
          # There's a color!  Have to do some brilliant filter stuff.

@@ -12,15 +12,15 @@ Vital:
 - charges upon ordinaries (PRETTY MUCH DONE)
 - charges to end up in the conventional places according to divisions of the
   field. E.g. two annulets on a field parted per bend is supposed to go in
-  the sinister chief and dexter base, not (by default) per fess. (GETTING THERE)
+  the sinister chief and dexter base, not (by default) per fess. (MOSTLY DONE)
 
 Fairly important:
 - importing charges from file or database (it would get tedious to specify
   the outline of, say, a lion, in the source code itself) (GETTING THERE)
   - Going to need some more powerful equipment for more general case.
   - Probably some half-intelligent DOM-based solution. -arj
-- permit importing (referencing) of raster-graphic charges.
-- back-references ("of the first" (DONE, BUT NOT WORKING ATM), "as many")
+- permit importing (referencing) of raster-graphic charges. (DONE)
+- back-references ("of the first" (DONE), "as many")
 - possible to specify each quarter in a quartered shield individually
 - thin black lines between everything (or at least the option of having it)
 - Implemented special case with "a fesse embattled", and also implement
@@ -39,13 +39,10 @@ Wishlist:
 - support for using a flag instead of a shield
 
 Bugs:
-- "Sable a bend between a roundel and a fusil or" puts the charges on top
-  of each other.  Should treat the two charges as a charge-group.
-- "Azure three lions passant argent" yields only one lion, no matter how
-  many are called for.
 - "Argent six roundels azure each charged with an escutcheon or" makes the
   escutcheons too big.  Probably just a matter of adjusting the scaling
   factor on escutcheons, which may be too large in general.
+- Fimbriation and orientation ("bendwise") interact badly.
 
 Naming:
 The project should have a name. Suggestions thus far:

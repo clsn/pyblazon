@@ -51,7 +51,7 @@ t_LP=r"{|lp"                           # leftparen
 t_RP=r"}|rp"                           # rightparen
 
 def t_SEMYDELIS(t):
-    r"(semy.de.lis|billety|gutty|crusilly)"
+    r"(semy.de.lis|billety|go?utty|crusilly)"
     return t
 
 # t_QUARTERED=r"quartered"
@@ -76,6 +76,10 @@ def t_CHARGE(t):
 
 t_MULLET="mullets?"
 
+def t_INVERTED(t):
+    r"inverted|bendwise(.sinister)?|reversed|contourny|fesswise|palewise"
+    return t
+
 t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(.gemelles?)?|fret|flaunches|batons?)"
 
 t_PALL=r"pall"
@@ -98,7 +102,6 @@ t_FUR=r"(vair.in.pale|vair|counter.vair|ermines?|erminois|pean)"
 
 t_PARTYPER=r"(party[ ]per|per)"
 t_FIMBRIATED=r"fimbriated|voided"
-t_INVERTED=r"inverted"
 t_COUNTERCHARGED=r"countercha[rn]ged"
 t_DIRECTION=r"dexter|sinister"
 
@@ -205,7 +208,7 @@ lookupdict={
     "escutcheons?": (lambda *a: blazon.ExtCharge("escutcheon")),
     "shakeforks?": (lambda *a: blazon.ExtCharge("shakefork")),
     "semy.de.lis": (lambda *a: blazon.ExtCharge("fleur")),
-    "gutty": (lambda *a: blazon.ExtCharge("goute")),
+    "go?utty": (lambda *a: blazon.ExtCharge("goute")),
     "fir.twigs?": (lambda *a: blazon.ExtCharge("firtwig")),
     "crescents?": (lambda *a: blazon.ExtCharge("crescent")),
     "escallops?": (lambda *a: blazon.ExtCharge("escallop")),

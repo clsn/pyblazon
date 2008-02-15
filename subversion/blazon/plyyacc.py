@@ -346,13 +346,24 @@ def p_optamt(p):
     else:
         p[0]=8
 
+
+# Have to allow for *two* INVERTEDs, for "palewise contourny" etc.
 def p_optinverted(p):
     """optinverted : INVERTED
+                   | INVERTED INVERTED
                    | empty"""
-    if p[1]=="inverted":
-        p[0]=lambda x:x.invert()
+    if len(p)<3:
+        if not p[1]:
+            p[0]=lambda x:x
+        elif p[1]=="inverted":
+            p[0]=lambda x:x.invert()
+        else:
+            s=p[1]                          # Have to make a copy
+            p[0]=(lambda x:x.orient(s,absolute=True))
     else:
-        p[0]=lambda x:x
+        s1=p[1]
+        s2=p[2]
+        p[0]=(lambda x:x.orient(s1,absolute=True,andThen=s2))
         
 def p_optfimbriation(p):
     """optfimbriation : FIMBRIATED COLOR

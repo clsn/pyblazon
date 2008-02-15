@@ -55,6 +55,9 @@ class Treatment:                         # Metal or color.
     def invert(self):
         pass
 
+    def orient(self,direction,*args,**kwargs):
+        pass
+
 class Fur(Treatment): pass
 
 class VairInPale(Fur):
