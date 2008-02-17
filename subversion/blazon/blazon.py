@@ -1699,16 +1699,71 @@ class Image(Charge):
       self.ref=SVGdraw.image(self.url, x= -self.width/2.0, y= -self.height/2.0,
                              width=self.width,
                              height=self.height)
+
+   def invert(self):
+      if not hasattr(self,"endtransforms"):
+         self.endtransforms=""
+      self.endtransforms += " rotate(180)"
       
    def shiftto(self, *args):
       self.moveto(*args)
 
    def resize(self, *args):
       self.scale(*args)
-   
-   def do_fimbriation(self):
-      # Shyeah right.
-      pass
+
+   def addStdFilters(self):
+      if not Ordinary.ImageFilters:
+         filter1=SVGdraw.SVGelement("filter",
+                                    attributes={'id' : 'AlphaFilter'})
+         filter1.addElement(
+            SVGdraw.SVGelement('feFlood',
+                               attributes={'flood-color': 'white',
+                                           'result' : 'flood'}))
+         filter1.addElement(
+            SVGdraw.SVGelement('feComposite',
+                               attributes={'in':'flood',
+                                           'in2':'SourceGraphic',
+                                           'operator':'in'}))
+         Ordinary.defs.append(filter1)
+         filter2=SVGdraw.SVGelement("filter",
+                                    attributes={'id': 'BlendFilter'})
+         filter2.addElement(
+            SVGdraw.SVGelement('feBlend',
+                               attributes={'in':'BackgroundImage',
+                                           'in2':'SourceGraphic',
+                                           'mode':'multiply'}))
+         Ordinary.defs.append(filter2)
+         # For use in fimbriation
+         filter3=SVGdraw.SVGelement('filter',
+                                    attributes={'id' : 'DilateFilter'})
+         filter3.addElement(
+            SVGdraw.SVGelement('feMorphology',
+                               attributes={'operator' : 'dilate',
+                                           'in' : 'SourceAlpha',
+                                           'result' : 'matte',
+                                           'radius' : '1', # fimb_width?
+                                           }))
+         filter3.addElement(
+            SVGdraw.SVGelement('feFlood',
+                               attributes={'flood-color' : 'white',
+                                           'flood-opacity' : '1',
+                                           'result' : 'glare'}))
+         filter3.addElement(
+            SVGdraw.SVGelement('feComposite',
+                               attributes={'operator': 'in',
+                                           'in' : 'glare',
+                                           'in2' : 'matte',
+                                           'result' : 'back'}))
+         fmrge=SVGdraw.SVGelement('feMerge')
+         fmrge.addElement(
+            SVGdraw.SVGelement('feMergeNode',
+                               attributes={'in' : 'back'}))
+         fmrge.addElement(
+            SVGdraw.SVGelement('feMergeNode',
+                               attributes={'in' : 'SourceGraphic'}))
+         filter3.addElement(fmrge)
+         Ordinary.defs.append(filter3)
+         Ordinary.ImageFilters=True
 
    def finalizeSVG(self):
       # Need a special version for Image, overriding the default.
@@ -1729,28 +1784,7 @@ class Image(Charge):
          # underneath, and Bob's yer uncle!
          # Those two filters do not depend on anything, they only need
          # to be defined once.
-         if not Ordinary.ImageFilters:
-            filter1=SVGdraw.SVGelement("filter",
-                                       attributes={'id' : 'AlphaFilter'})
-            filter1.addElement(
-               SVGdraw.SVGelement('feFlood',
-                                  attributes={'flood-color': 'white',
-                                              'result' : 'flood'}))
-            filter1.addElement(
-               SVGdraw.SVGelement('feComposite',
-                                  attributes={'in':'flood',
-                                              'in2':'SourceGraphic',
-                                              'operator':'in'}))
-            Ordinary.defs.append(filter1)
-            filter2=SVGdraw.SVGelement("filter",
-                                       attributes={'id': 'BlendFilter'})
-            filter2.addElement(
-               SVGdraw.SVGelement('feBlend',
-                                  attributes={'in':'BackgroundImage',
-                                              'in2':'SourceGraphic',
-                                              'mode':'multiply'}))
-            Ordinary.defs.append(filter2)
-            Ordinary.ImageFilters=True  # Don't do this again.
+         self.addStdFilters()
          self.mask=SVGdraw.SVGelement('mask',
                                       attributes={'id' : 'Mask%04d'%Ordinary.id,
                                                   'maskUnits':'UserSpaceOnUse'})
@@ -1768,6 +1802,14 @@ class Image(Charge):
          self.ref.attributes['filter']='url(#BlendFilter)'
          self.maingroup.addElement(self.baseRect)
       self.maingroup.addElement(self.ref)
+      if hasattr(self,'fimbriation'):
+         self.addStdFilters()
+         g1=SVGdraw.group(attributes={'filter':'url(#DilateFilter)'})
+         g1.addElement(self.ref)
+         g2=SVGdraw.group()
+         g2.addElement(g1)
+         #g2.addElement(self.maingroup)
+         self.maingroup=g2
       return self.maingroup
 
 
