@@ -491,6 +491,22 @@ class Fesse(Ordinary,TrueOrdinary):
           return patterns[num]
        except IndexError:
           return None
+
+class Gore(Ordinary,TrueOrdinary):
+   # One really bad-looking gore.  I suppose we'll have to improve this.
+   def process(self):
+      # Any way to do this with lines of partition?
+      p=SVGdraw.pathdata()
+      p.move(-Ordinary.FESSPTX-2,-Ordinary.FESSPTY)
+      p.bezier(-Ordinary.FESSPTX/2, -10,
+               -Ordinary.FESSPTX/2, -10,
+               0,0)
+      p.bezier(-Ordinary.FESSPTX/2, 10,
+               -Ordinary.FESSPTX/2, 10,
+               -Ordinary.FESSPTX-10, Ordinary.HEIGHT)
+      p.closepath()
+      self.clipPath=SVGdraw.path(p)
+      self.clipPathElt.addElement(self.clipPath)
                  
 class Bar(Fesse,Charge):
    def process(self):
@@ -1550,6 +1566,11 @@ class ExtCharge(Charge):
             (self.path,self.fimbriation_width,self.tincture)=info
             if kwargs.get("extension"): # Not sure this is so great.
                self.path+=str(kwargs["extension"][0])
+            # On one hand, this is a hack.  On the other hand, there is
+            # something to be said for it.  It is potentially awfully
+            # generic.
+            if kwargs.get("postprocessing"):
+               kwargs['postprocessing'](self)
         except KeyError:
             self.path=name              # Punt.
             
@@ -1842,10 +1863,21 @@ class Blazon:
       try:
          fh=open('data/Chargelist','r')
          for line in fh:
-            (key, value)=line.split(':',1)
-            self.__class__.lookup[key.strip()]=value.strip()
+            if line[0]!='#':            # Skip comments.
+               (key, value)=line.split(':',1)
+               self.__class__.lookup[key.strip()]=value.strip()
       except IOError:
          pass
+   @classmethod
+   def lookupcharge(cls,name):
+      try:
+         return cls.lookup[name]
+      except KeyError:
+         pass
+      for (key,value) in cls.lookup.items():
+         if re.match(key,name):
+            return value
+      raise KeyError
    def GetShield(self):
       if not hasattr(self.__class__,'lookup') or not self.__class__.lookup:
          self.getlookuptable()

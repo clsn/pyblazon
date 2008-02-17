@@ -71,7 +71,7 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|crescents?|escutcheons?|shakeforks?|escallops?|fountains?|areas?"
+    r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|(in|de)?crescents?|escutcheons?|shakeforks?|escallops?|fountains?|areas?"
     return t
 
 t_MULLET="mullets?"
@@ -80,7 +80,7 @@ def t_INVERTED(t):
     r"inverted|bendwise(.sinister)?|reversed|contourny|fesswise|palewise"
     return t
 
-t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(.gemelles?)?|fret|flaunches|batons?)"
+t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(.gemelles?)?|fret|flaunches|batons?|gore)"
 
 t_PALL=r"pall"
 
@@ -171,6 +171,7 @@ lookupdict={
     "labels?": blazon.Label,
     "lables?": blazon.Label,
     "fret": blazon.Fret,
+    "gore": blazon.Gore,
     "flaunches": blazon.Flaunches,
     "lions?.passant": (lambda *a: blazon.Symbol("lionpassant")), 
     "lions?.rampant": (lambda *a: blazon.Symbol("lionrampant")), 
@@ -212,6 +213,10 @@ lookupdict={
     "go?utty": (lambda *a: blazon.ExtCharge("goute")),
     "fir.twigs?": (lambda *a: blazon.ExtCharge("firtwig")),
     "crescents?": (lambda *a: blazon.ExtCharge("crescent")),
+    "increscents?": (lambda *a: blazon.ExtCharge("crescent",
+                                                 postprocessing=(lambda x: x.rotate(-90)))),
+    "decrescents?": (lambda *a: blazon.ExtCharge("crescent",
+                                                 postprocessing=(lambda x: x.rotate(90)))),
     "escallops?": (lambda *a: blazon.ExtCharge("escallop")),
     "billety": blazon.Billet,
     "crusilly": (lambda *a: blazon.ExtCharge("humetty")),

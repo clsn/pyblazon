@@ -254,7 +254,7 @@ def p_ordinary_3(p):
 def p_ordinary_4(p):
     "ordinary : optA NAME"
     try:
-        p[0]=blazon.Image(blazon.Blazon.lookup[p[2]], 80, 80)
+        p[0]=blazon.Image(blazon.Blazon.lookupcharge(p[2]), 80, 80)
     except KeyError:
         # Punt.
         p[0]=blazon.Image(p[2], 80, 80)
