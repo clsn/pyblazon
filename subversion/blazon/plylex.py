@@ -71,7 +71,7 @@ def t_QUARTERLY(t):
     return t
 
 def t_CHARGE(t):
-    r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|crescents?|escutcheons?|shakeforks?|escallops?|fountains?"
+    r"roundels?|annulets?|lozenges?|fleurs?.de.lis|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|crescents?|escutcheons?|shakeforks?|escallops?|fountains?|areas?"
     return t
 
 t_MULLET="mullets?"
@@ -95,7 +95,7 @@ def t_FURRY(t):
     return t
 
 def t_ALTERED(t):
-    r"(fretty|ermined|masoned)"
+    r"(fretty|ermined|masoned|estencelly)"
     return t
 
 t_FUR=r"(vair.in.pale|vair|counter.vair|ermines?|erminois|pean)"
@@ -191,6 +191,7 @@ lookupdict={
     "annulets?": blazon.Annulet,
     "lozenges?": blazon.Lozenge,
     "mascles?" : blazon.Mascle,
+    "areas?"  : blazon.BigRect,        # Just to fool around with.
     "fusils?" : blazon.Fusil,
     "triangles?": blazon.Triangle,
     "canton": blazon.Canton,            # There can be no more than one canton.
@@ -229,12 +230,12 @@ lookupdict={
     "bendy.sinister": treatment.BendySinister,
     "gyronny": treatment.Gyronny,
     "ermine": blazon.Ermine,
-    # This is a bit of a hack...
     "ermines": (lambda *a: treatment.Ermine("sable","argent")),
     "erminois": (lambda *a: treatment.Ermine("or","sable")),
     "pean": (lambda *a: treatment.Ermine("sable","or")),
     "ermined": treatment.Ermine,
     "masoned": treatment.Masoned,
+    "estencelly": treatment.Estencelly,
     "fretty": treatment.Fretty,
     "vairy?.in.pale": treatment.VairInPale,
     "vairy": treatment.Vair,
@@ -272,6 +273,7 @@ lookupdict={
     "in bend.sinister": arrangement.InBendSinister,
     "in chief": arrangement.InChief,
     "in base": arrangement.InBase,
+    "in cross": arrangement.InCross,
     "in dexterchief": (lambda *a: arrangement.InChief(side="dexter")),
     "in sinisterchief": (lambda *a: arrangement.InChief(side="sinister")),
     "in dexterbase": (lambda *a: arrangement.InBase(side="dexter")),

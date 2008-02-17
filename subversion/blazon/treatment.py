@@ -10,6 +10,7 @@ import blazon
 import copy
 import sys
 import math
+import arrangement
 
 class Pattern: pass                     # gyronny, checky, etc.
 
@@ -279,7 +280,14 @@ class Semy(Fur):
                              fill="url(#%s)"%pattern.attributes["id"])
         newelt.addElement(newbase)
         return newelt
-        
+
+class Estencelly(Semy):
+    def __init__(self, background, color):
+        self.background=background
+        cg=blazon.ChargeGroup(3,blazon.Roundel(tincture=color))
+        cg.arrangement=arrangement.ByNumbers([1,2])
+        self.charge=blazon.BigRect()
+        self.charge.addCharge(cg)
                            
 # I wonder if this'll work...
 

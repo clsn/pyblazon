@@ -54,13 +54,17 @@ class InPale(Arrangement):
    # Doesn't need to scale quite as much as the patternContents of Pale.
    patterns=[[1],[1,(0,0)],
              [.4,(0,-25),(0,25)],
-             [.4,(0,-33),(0,0),(0,33)]
+             [.4,(0,-33),(0,0),(0,33)],
+             [.3,(0,-36),(0,-12),(0,12),(0,36)],
+             [.2,(0,-40),(0,-20),(0,0),(0,20),(0,40)]
              ]
 
 class InFesse(Arrangement):
    patterns=[[1],[1,(0,0)],
              [.4,(-22,0),(22,0)],
-             [.4,(-32,0),(0,0),(32,0)]
+             [.4,(-32,0),(0,0),(32,0)],
+             [.3,(-36,0),(-12,0),(12,0),(36,0)],
+             [.2,(-40,0),(-20,0),(0,0),(20,0),(40,0)]
              ]
 
 class InBend(Arrangement):
@@ -69,6 +73,33 @@ class InBend(Arrangement):
              [.4,(-30,-30),(21,21),(-4,-4)],
              [.3,(-30,-30),(-12,-12),(8,8),(26,26)]
              ]
+
+class InCross(Arrangement):
+   # It only makes sense for 4 or more items in cross, really.
+   # Ought to be able to infer this from InFesse and InPale.
+
+   def pattern(self,num):
+      if num < 4:
+         return InFesse.patterns[num]
+      # If the number is not congruent to zero or one modulo four,
+      # we can't do anything anyway.
+      if num%4 > 1:
+         raise blazon.ArrangementError, "Can't arrange %d things in cross"%num
+      # When num is 4, we can get away with this.  Otherwise we have to
+      # leave the center blank:
+      if num==4:
+         return InFesse.patterns[2]+InPale.patterns[2][1:]
+      half=num/2+1                      # center blank.
+      rv=InFesse.patterns[half]+InPale.patterns[half][1:]
+      # Remove all (<=2) the (0,0) elements, and put one back if needed.
+      try:
+         rv.remove((0,0))
+         rv.remove((0,0))
+      except ValueError:
+         pass
+      if num%4:
+         rv+=[(0,0)]
+      return rv
 
 class InBendSinister(InBend):
    def pattern(self,num):

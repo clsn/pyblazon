@@ -370,6 +370,13 @@ class Charge(Ordinary):
          # themselves, since for some things palewise is normal, and for
          # others fesswise is.  By default, I'm going to define palewise
          # is normal, and fesswise is a -90 degree turn.  I guess.
+         #
+         # Going to need to do better than that.  Some charges are fesswise
+         # in nature and some are palewise in nature.  Specifying
+         # "bendwise" means turning a palewise charge -45deg but turning a
+         # fesswise charge +45deg.  Most/all? of the normal geometric
+         # charges are palewise in nature, but things like beasts couchant
+         # or passant are fesswise.
          self.endtransforms+=" rotate(-90)"
       if absolute and direction != "contourny" and direction!="reversed" and \
              direction != "inverted":
@@ -1337,6 +1344,15 @@ class Tressure(Orle):
 class Roundel(Charge):
    def process(self):
       self.clipPath=SVGdraw.circle(cx=0,cy=0,r=36) # make it 36
+      self.clipPathElt.addElement(self.clipPath)
+
+# Maybe this'll be handy for making "grouped" charges, behind the scenes.
+class BigRect(Charge):
+   def process(self):
+      self.clipPath=SVGdraw.rect(x=-Ordinary.FESSPTX,
+                                 y=-Ordinary.FESSPTY,
+                                 width=Ordinary.WIDTH,
+                                 height=Ordinary.HEIGHT)
       self.clipPathElt.addElement(self.clipPath)
 
 class Lozenge(Charge):
