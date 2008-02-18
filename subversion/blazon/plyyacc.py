@@ -182,22 +182,25 @@ def p_grouporcharge_b(p):
     p[0].arrangement=p[2]
 
 def p_group_1(p):
-    """group : amount charge optarrange opttreatment optrows
-             | amount charge optarrange opttreatment optrows EACH CHARGED WITH charges"""
+    """group : amount charge optarrange opttreatment optfimbriation optrows
+             | amount charge optarrange opttreatment optfimbriation optrows EACH CHARGED WITH charges"""
     # I don't have to worry about handling the opttreatment.  That's just in
     # case the treatment was omitted in the charge before the arrangement,
     # and the "missing color" code will handle it.  Right?
     p[0]=blazon.ChargeGroup(p[1],p[2])
-    if len(p)>6:
+    if len(p)>7:
         for elt in p[0].charges:
-            elt.extendCharges(copy.deepcopy(p[9]))
-    rows=p[5]
+            elt.extendCharges(copy.deepcopy(p[10]))
+    rows=p[6]
     if not p[2].tincture:
         Globals.colorless.extend(p[0].charges)
     # Doesn't matter if p[3] is empty; so we'll pass along an empty one.
     p[0].arrangement=p[3]
     if rows:
         p[0].arrangement=ByNumbers(rows)
+    # We wind up having two different places for treatment and fimbriation,
+    # but that's okay.  If you specify both, one wins, but GIGO after all.
+    p[5](p[0])
 
 def p_group_2(p):
     """group : LP charges RP"""

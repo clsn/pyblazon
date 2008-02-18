@@ -70,8 +70,8 @@ class InFesse(Arrangement):
 class InBend(Arrangement):
    patterns=[[1],[1,(0,0)],
              [.5,(-20,-20),(18,18)],
-             [.4,(-30,-30),(21,21),(-4,-4)],
-             [.3,(-30,-30),(-12,-12),(8,8),(26,26)]
+             [.4,(-29,-29),(21,21),(-4,-4)],
+             [.3,(-34,-34),(-14,-14),(6,6),(26,26)]
              ]
 
 class InCross(Arrangement):
@@ -103,7 +103,8 @@ class InCross(Arrangement):
 
 class InBendSinister(InBend):
    def pattern(self,num):
-      rv=Arrangement.pattern(self,num)
+      # Have to copy this or else if there's more than one it gets unreversed!
+      rv=copy.deepcopy(Arrangement.pattern(self,num))
       if rv:
          for i in range(1,len(rv)):
             rv[i]=(-rv[i][0],rv[i][1])
