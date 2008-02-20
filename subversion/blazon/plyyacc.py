@@ -11,6 +11,7 @@ from arrangement import ByNumbers
 
 class Globals:
     colorless=[]
+    extracolorless=[]
     colors=[]
     shield=None
 
@@ -18,6 +19,16 @@ def fillin(col):
     for obj in Globals.colorless:
         obj.tincture=col
     Globals.colorless=[]
+
+def extrafillin(col):
+    """This and Globals.extracolorless are hacks in order not to get into
+    infinite regress with things like 'gules billetty a lion rampant
+    argent'.  Otherwise the billet goes into colorless which is then filled
+    in by the billetty treatment... ugh.  It's a hack, but it works.  Oh,
+    and extrafillin is only called by treatments that are just "COLOR"s."""
+    for obj in Globals.extracolorless:
+        obj.tincture=col
+    Globals.extracolorless=[]
 
 start='blazon'
 
@@ -72,6 +83,7 @@ def p_treatment_1(p):
     p[0]=treatment.Treatment(p[1])
     Globals.colors.append(p[0])
     fillin(p[0])
+    extrafillin(p[0])
 
 def p_treatment_1_b(p):
     "treatment : LP fulltreatment RP"
@@ -129,7 +141,7 @@ def p_treatment_8(p):
 
 def p_treatment_9(p):
     """treatment : COLOR SEMY OF charge
-                 | COLOR SEMYDELIS treatment
+                 | COLOR SEMYDELIS opttreatment
                  | COLOR BEZANTY"""
     # The second is actually syntactically like ALTERED
     if len(p)==5:
@@ -141,7 +153,9 @@ def p_treatment_9(p):
     else:                               # len(p)==3
         p[0]=treatment.Semy(treatment.Treatment(p[1]),lookup(p[2])())
     fillin(p[0])
-
+    if len(p)==4 and not f.tincture:
+        Globals.extracolorless.append(f)
+    
 def p_opttreatment(p):
     """opttreatment : fulltreatment
                     | empty"""
@@ -391,7 +405,7 @@ def p_optA(p):
     pass
 
 def p_empty(p):
-    "empty :"
+    "empty : "
     pass
 
 def p_error(p):

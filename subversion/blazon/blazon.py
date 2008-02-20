@@ -1242,6 +1242,35 @@ class ChargeGroup:            # Kind of an invisible ordinary
       for elt in self.charges:
          elt.fimbriate(*args,**kwargs)
 
+   # Defaults:
+   defaultplacements=[[1],[1,(0,0)],    # 0 charges, 1 charge ...
+                      [.5, (-22,0),(22,0)],            # 2
+                      [.5, (-25,-25),(25,-25),(0,20)], # 3
+                      # and so on
+                      [.4, (-22,-22),(22,-22),(-22,22),(22,22)], 
+                      # 5 -> in saltire:
+                      [.35, (-21,-21),(21,-21),(0,0),(-21,21),(21,21)],
+                      # 6 -> in pile:
+                      [.3, (-26,-26),(0,-26),(26,-26),(-13,0),(13,0),(0,26)],
+                      # 7 -> three three and one
+                      [.3, (-26,-26),(0,-26),(26,-26),
+                       (-26,0),(0,0),(26,0),
+                       (0,26)],
+                      # 8 -> four and four
+                      [.2, (-30,-10),(-10,-10),(10,-10),(30,-10),
+                       (-30,10),(-10,10),(10,10),(30,10)],
+                      # 9 -> three three and three
+                      [.3, (-26,-26),(0,-26),(26,-26),
+                       (-26,0),(0,0),(26,0),
+                       (-26,26),(0,26),(26,26)],
+                      # 10 -> in pile
+                      [.3, (-36,-30),(-12,-30),(12,-30),(36,-30),
+                       (-24,-10),(0,-10),(24,-10),
+                       (-12,10),(12,10),
+                       (0,30)]
+                      ]
+   
+   
    def arrange(self):
       # This can only work for a relatively small number, say up to 3
       # TODO: check for "in pale/fesse/bend/cross/saltire"
@@ -1273,33 +1302,6 @@ class ChargeGroup:            # Kind of an invisible ordinary
          def move(obj,location):
             obj.moveto(location)
       # Wish there were a better way to work this out than trial and error
-      # Defaults:
-      defaultplacements=[[1],[1,(0,0)],    # 0 charges, 1 charge ...
-                         [.5, (-22,0),(22,0)],            # 2
-                         [.5, (-25,-25),(25,-25),(0,20)], # 3
-                         # and so on
-                         [.4, (-22,-22),(22,-22),(-22,22),(22,22)], 
-                         # 5 -> in saltire:
-                         [.35, (-21,-21),(21,-21),(0,0),(-21,21),(21,21)],
-                         # 6 -> in pile:
-                         [.3, (-26,-26),(0,-26),(26,-26),(-13,0),(13,0),(0,26)],
-                         # 7 -> three three and one
-                         [.3, (-26,-26),(0,-26),(26,-26),
-                          (-26,0),(0,0),(26,0),
-                          (0,26)],
-                         # 8 -> four and four
-                         [.2, (-30,-10),(-10,-10),(10,-10),(30,-10),
-                          (-30,10),(-10,10),(10,10),(30,10)],
-                         # 9 -> three three and three
-                         [.3, (-26,-26),(0,-26),(26,-26),
-                          (-26,0),(0,0),(26,0),
-                          (-26,26),(0,26),(26,26)],
-                         # 10 -> in pile
-                         [.3, (-36,-30),(-12,-30),(12,-30),(36,-30),
-                          (-24,-10),(0,-10),(24,-10),
-                          (-12,10),(12,10),
-                          (0,30)]
-                         ]
       placements=None
       # Explicit arrangement takes precedence
       try:
@@ -1318,7 +1320,7 @@ class ChargeGroup:            # Kind of an invisible ordinary
             pass
       if not placements:
          try:
-            placements=defaultplacements[num]
+            placements=ChargeGroup.defaultplacements[num]
          except AttributeError:
             pass
       if not placements:
@@ -1492,6 +1494,20 @@ class Canton(Ordinary,TrueOrdinary):
       if not self.maingroup.attributes.has_key("transform"):
          self.maingroup.attributes["transform"]=""
       self.maingroup.attributes["transform"]=" translate(-%f,-%f)"%(Ordinary.FESSPTX*.7,Ordinary.FESSPTY*.7)
+
+   def patternContents(self,num):
+      rv=Ordinary.patternContents(self,num)
+      factor=0.3
+      if not rv:
+         rv=ChargeGroup.defaultplacements[num]
+      if rv:
+         if not type(rv[0])==tuple:
+            rv[0]*=factor               # scale it down, cantons are small.
+         else:
+            rv[0]=(rv[0][0],rv[0][1])
+         # Scaling all the translation values is also the Right Thing to do.
+         rv[1:]=map((lambda t: (factor*t[0],factor*t[1])),rv[1:])
+      return rv
 
 class Gyron(Ordinary,TrueOrdinary):
    "Like a canton; a right triangle in dexter chief."
@@ -1918,10 +1934,12 @@ class Blazon:
       bits=re.split("[<>]",blazon)
       # Splitting on the <>s means that every odd-indexed element in the
       # list is one that belongs in <>s and thus literal
+      # And no, it doesn't matter that maybe the string starts with a <.
+      # Such a thing would be an invalid blazon anyway.
       i=0
       for i in range(0,len(bits)):
          if i%2 == 0:
-            bits[i]=re.sub("[^a-z0-9() -]+"," ",bits[i].lower())
+            bits[i]=re.sub("[^a-z0-9() '-]+"," ",bits[i].lower())
          else:
             bits[i]='<'+bits[i]+'>'
       return ' '.join(bits)
