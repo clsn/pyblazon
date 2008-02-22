@@ -297,10 +297,7 @@ def lookup(key):
             # sys.stderr.write("Matching with: (%s)\n"%k)
             m=re.match(k+"$",key)
             if m:
-                # sys.stderr.write("Returning: %s\n"%Globals.lookup[m.re.pattern[:-1]])
-                # have to chop off the $ we added.
-                # sys.stderr.write("Found it: %s\n"%m.re.pattern)
-                return lookupdict[m.re.pattern[:-1]]
+                return lookupdict[k]
         return key
 
 def show_grammar(all=dir()):

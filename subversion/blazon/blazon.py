@@ -244,13 +244,24 @@ class TrueOrdinary:
 
 class Field(Ordinary,TrueOrdinary):
    "Class for the field as a whole.  It's an ordinary, of sorts."
+   std_desc="""This is an SVG of a blazon, a heraldic description of a shield.  It was generated with pyBlazon, by Mark Shoulson and Arnt Richard Johansen"""
    def __init__(self,tincture="argent"):
+      # Horrendously geeky trick to slip the blazon into the title element
+      # even though it is set long after.  The brackets that result are
+      # actually good, IMO.  I could get rid of them, but I am not going
+      # to.  Set self.blazon to a *list* containing the blazon, which is
+      # then passed as the contents of the title element.  We can then
+      # change the content of the list without changing the list address
+      # itself.
+      self.blazon=[None]
       self.svg=SVGdraw.svg(x=0,y=0,width="10cm",height="11cm",
                            viewBox=(-Ordinary.FESSPTX-3,
                                     -Ordinary.FESSPTY-3,
                                     Ordinary.WIDTH+6,
                                     Ordinary.HEIGHT+6))
       #        self.svg.attributes["transform"]="scale(1,-1)"
+      self.svg.addElement(SVGdraw.title(self.blazon))
+      self.svg.addElement(SVGdraw.description(self.__class__.std_desc))
       self.pdata=SVGdraw.pathdata()
       self.pdata.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
       self.pdata.vline(Ordinary.HEIGHT/3-Ordinary.FESSPTY)
@@ -283,6 +294,11 @@ class Field(Ordinary,TrueOrdinary):
       "add a Bordure, given as an argument."
       self.bordure=bordure
       bordure.parent=self
+
+   def setBlazon(self,blazon):
+      # Replace the *contents* of the blazon list.
+      self.blazon[0]=blazon.replace("&","&amp;"). \
+                      replace("<","&lt;").replace(">","&gt;")
       
    def __repr__(self):
       """Output the SVG of the whole thing."""
@@ -552,7 +568,8 @@ class Bar(Fesse,Charge):
                 [1, (0,10), (0,-10)],
                 [1, (0,25), (0,0), (0,-25)],
                 [(1,.6), (0,30), (0,10), (0,-10), (0,-30)],
-                [(1,.5), (0,30), (0,15), (0,0), (0,-15), (0,-30)]
+                [(1,.5), (0,30), (0,15), (0,0), (0,-15), (0,-30)],
+                [(1,.45), (0,40), (0,24), (0,8), (0,-8), (0,-24), (0,-40)]
                 ]
       try:
          return patterns[num]
@@ -1968,7 +1985,9 @@ class Blazon:
    def GetShield(self):
       if not hasattr(self.__class__,'lookup') or not self.__class__.lookup:
          self.getlookuptable()
-      return plyyacc.yacc.parse(self.GetBlazon())
+      shield=plyyacc.yacc.parse(self.GetBlazon())
+      shield.setBlazon(self.GetBlazon())
+      return shield
 
 if __name__=="__main__":
    cmdlineinput = " ".join(sys.argv[1:])
