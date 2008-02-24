@@ -217,6 +217,10 @@ class Ordinary:
       for i in range(1,len(pat)):
          x=list(pat[i])
          x[1]*=-1
+         try:
+            x[3]*=-1
+         except IndexError:
+            pass
          pat[i]=tuple(x)
 
 
@@ -420,6 +424,12 @@ class Charge(Ordinary):
          # charges are palewise in nature, but things like beasts couchant
          # or passant are fesswise.
          self.endtransforms+=" rotate(-90)"
+      else:                             # Hope we're being given a number here.
+         try:
+            num=int(direction)
+            self.endtransforms+=" rotate(%d)"%num
+         except ValueError:
+            pass
       if absolute and direction != "contourny" and direction!="reversed" and \
              direction != "inverted":
          self.absoluteRotation=True
@@ -653,9 +663,9 @@ class Pall(Ordinary,TrueOrdinary):
       
    def patternContents(self,num):
       patterns=[[.3],[.27,(0,0)],
-                [.2,(-25,-25),(25,-25)],
-                [.2,(-25,-25),(25,-25),(0,25)],
-                [.2,(-25,-25),(25,-25),(0,25),(0,0)]
+                [.2,(-25,-25,(),-45),(25,-25,(),45)],
+                [.2,(-25,-25,(),-45),(25,-25,(),45),(0,25)],
+                [.2,(-25,-25,(),-45),(25,-25,(),45),(0,25),(0,0)]
                 ]
       try:
          res=patterns[num]
@@ -755,14 +765,6 @@ class Bend(Ordinary,TrueOrdinary):
       # Hrm.  But now the outer clipping path (?) is clipping the end of
       # the bend??
       #
-      # Any charges have to be rotated...
-      # but only those that are not otherwise specified...
-      if hasattr(self,'charges'):
-         for c in self.charges:
-            if isinstance(self,BendSinister):
-               c.orient("bendwise sinister")
-            else:
-               c.orient("bendwise")
                
    @staticmethod
    def patternSiblings(num):
@@ -780,11 +782,11 @@ class Bend(Ordinary,TrueOrdinary):
 
    @staticmethod
    def patternContents(num):
-      # Should have something to rotate the charges too...
-      patterns=[[.25],[.25,(0,0)],
-                [.25,(-30,-30),(26,26)],
-                [.25,(-30,-30),(26,26),(0,0)],
-                [.25,(-30,-30),(-12,-12),(8,8),(26,26)]
+      patterns=[[.25],[.25,(0,0,(),-45)],
+                [.25,(-30,-30,(),-45),(26,26,(),-45)],
+                [.25,(-30,-30,(),-45),(26,26,(),-45),(0,0,(),-45)],
+                [.25,(-30,-30,(),-45),(-12,-12,(),-45),
+                 (8,8,(),-45),(26,26,(),-45)]
                 ]
       try:
          return patterns[num]
@@ -839,7 +841,13 @@ class BendSinister(Bend):
       rv=[]
       rv.append(b[0])
       for i in range(1,len(b)):
-         rv.append((-b[i][0],b[i][1]))
+         l=list(b[i])
+         l[0]=-l[0]
+         try:
+            l[3]=-l[3]
+         except IndexError:
+            pass
+         rv.append(tuple(l))
       return rv
 
    @staticmethod
@@ -1347,10 +1355,13 @@ class ChargeGroup:            # Kind of an invisible ordinary
          scale=(scale,scale)
       for i in range(1,num+1):
          move(self.charges[i-1], (placements[i][0],placements[i][1]))
-         if len(placements[i])>2 and len(placements[2]):
+         if len(placements[i])>2 and len(placements[i][2]):
             self.charges[i-1].resize(*placements[i][2])
          else:
             self.charges[i-1].resize(*scale)
+         if len(placements[i])>3:
+            # Allow rotating too...
+            self.charges[i-1].orient(placements[i][3])
 
    def patternSiblings(self,num):
       # Just use the first charge.

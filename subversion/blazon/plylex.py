@@ -279,6 +279,8 @@ lookupdict={
     "in chief": arrangement.InChief,
     "in base": arrangement.InBase,
     "in cross": arrangement.InCross,
+    "in chevron": arrangement.InChevron,
+    "in pall": arrangement.InPall,
     "in dexterchief": (lambda *a: arrangement.InChief(side="dexter")),
     "in sinisterchief": (lambda *a: arrangement.InChief(side="sinister")),
     "in dexterbase": (lambda *a: arrangement.InBase(side="dexter")),

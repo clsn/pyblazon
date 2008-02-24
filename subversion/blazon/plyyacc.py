@@ -320,6 +320,7 @@ def p_chief(p):
 
 def p_optarrange(p):
     """optarrange : IN optdir ORDINARY
+                  | IN optdir PALL
                   | IN optdir CHIEF
                   | IN optdir BORDURE
                   | empty"""

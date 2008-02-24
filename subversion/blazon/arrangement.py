@@ -74,6 +74,29 @@ class InBend(Arrangement):
              [.3,(-34,-34),(-14,-14),(6,6),(26,26)]
              ]
 
+class InChevron(Arrangement):
+   def pattern(self,num):
+      # Can't just call blazon.Chevron.patternContents, since it might be
+      # inverted.
+      chev=blazon.Chevron()
+      if hasattr(self,'inverted'):
+         chev.inverted=self.inverted
+      return chev.patternContents(num)
+
+class InPall(Arrangement):
+   def pattern(self,num):
+      # Same situation as with chevron.
+      pall=blazon.Pall()
+      if hasattr(self,"inverted"):
+         pall.inverted=self.inverted
+      # You know, the scale can be larger than what the pall ordinary says.
+      rv=pall.patternContents(num)
+      if num<4:
+         rv[0]*=3
+      elif num<5:
+         rv[0]*=1.5
+      return rv
+
 class InCross(Arrangement):
    # It only makes sense for 4 or more items in cross, really.
    # Ought to be able to infer this from InFesse and InPale.
