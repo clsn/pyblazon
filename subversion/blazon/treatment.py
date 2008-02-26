@@ -454,14 +454,16 @@ class PerPale(Paly):
         # Per Pale is just Paly of two!!
         Paly.__init__(self,2,*args,**kwargs)
 
-    @staticmethod
-    def patternContents(num):
-        patterns=[[1],[1,(0,0)]]
-        try:
-            return patterns[num]
-        except IndexError:
-            pass
-        return blazon.Pale.patternSiblings(num)
+# I'm thinking the pattern for a PerPale shield should be the same as normal.
+
+#    @staticmethod
+#    def patternContents(num):
+#        patterns=[[1],[1,(0,0)]]
+#        try:
+#            return patterns[num]
+#        except IndexError:
+#            pass
+#        return blazon.Pale.patternSiblings(num)
 
 class PerFesse(Barry):
     def __init__(self,*args,**kwargs):

@@ -50,6 +50,16 @@ class Arrangement:
                "Don't know how to arrange " + \
                str(num) + " charges " + self.__class__.__name__
 
+   def __init__(self,*args,**kwargs):
+      if kwargs.has_key('action') and callable(kwargs['action']):
+         kwargs['action'](self)
+
+   def invert(self):
+      if hasattr(self,'inverted') and self.inverted:
+         self.inverted=False
+      else:
+         self.inverted=True
+
 class InPale(Arrangement):
    # Doesn't need to scale quite as much as the patternContents of Pale.
    patterns=[[1],[1,(0,0)],
@@ -79,7 +89,7 @@ class InChevron(Arrangement):
       # Can't just call blazon.Chevron.patternContents, since it might be
       # inverted.
       chev=blazon.Chevron()
-      if hasattr(self,'inverted'):
+      if hasattr(self,'inverted') and self.inverted:
          chev.inverted=self.inverted
       return chev.patternContents(num)
 
@@ -87,14 +97,16 @@ class InPall(Arrangement):
    def pattern(self,num):
       # Same situation as with chevron.
       pall=blazon.Pall()
-      if hasattr(self,"inverted"):
+      # Come to think of it, "In Pall" for 2 elements would be okay as an
+      # interpretation of "In Pile", except they're too high.
+      if hasattr(self,"inverted") and self.inverted:
          pall.inverted=self.inverted
       # You know, the scale can be larger than what the pall ordinary says.
       rv=pall.patternContents(num)
       if num<4:
-         rv[0]*=3
+         rv[0]*=2
       elif num<5:
-         rv[0]*=1.5
+         rv[0]*=1.3
       return rv
 
 class InCross(Arrangement):
@@ -134,7 +146,7 @@ class InBendSinister(InBend):
       return rv
 
 class InChief(Arrangement):
-   def __init__(self,side=None):
+   def __init__(self,side=None,*args,**kwargs):
       self.side=side
 
    def shiftover(self,arr):
@@ -189,7 +201,7 @@ class InOrle(Arrangement):
       return blazon.Bordure.patternContents(num)
 
 class ByNumbers(Arrangement):
-   def __init__(self,rows=None):
+   def __init__(self,rows=None,*args,**kwargs):
       self.rows=rows
    
    def setRows(self,rows):

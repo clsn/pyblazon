@@ -319,8 +319,8 @@ def p_chief(p):
         p[0]=None
 
 def p_optarrange(p):
-    """optarrange : IN optdir ORDINARY
-                  | IN optdir PALL
+    """optarrange : IN optdir ORDINARY optinverted
+                  | IN optdir PALL optinverted
                   | IN optdir CHIEF
                   | IN optdir BORDURE
                   | empty"""
@@ -331,7 +331,7 @@ def p_optarrange(p):
             side=""
         else:
             side=p[2]
-        p[0]=lookup("in "+side+p[3])()
+        p[0]=lookup("in "+side+p[3])(action=p[4])
 
 def p_optdir(p):
     """optdir : DIRECTION

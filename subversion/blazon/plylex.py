@@ -281,6 +281,7 @@ lookupdict={
     "in cross": arrangement.InCross,
     "in chevron": arrangement.InChevron,
     "in pall": arrangement.InPall,
+    "in pile": arrangement.InPall,      # So-so... too high.
     "in dexterchief": (lambda *a: arrangement.InChief(side="dexter")),
     "in sinisterchief": (lambda *a: arrangement.InChief(side="sinister")),
     "in dexterbase": (lambda *a: arrangement.InBase(side="dexter")),
@@ -309,9 +310,9 @@ def show_grammar(all=dir()):
     for f in all:
         obj=getattr(sys.modules[__name__],f)
         if type(obj)==str:
-            print obj
+            print f, ":\t", obj
         else:
-            print obj.__doc__
+            print f, ":\t", obj.__doc__
 
 
 lex.lex()
