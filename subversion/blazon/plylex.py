@@ -105,11 +105,6 @@ t_FIMBRIATED=r"fimbriated|voided"
 t_COUNTERCHARGED=r"countercha[rn]ged"
 t_DIRECTION=r"dexter|sinister"
 
-def t_A(t):
-    r"an?"
-    return t
-
-
 def t_NUM(t):
     r"[0-9]+"
     t.value=int(t.value)
@@ -117,12 +112,16 @@ def t_NUM(t):
 
 
 def t_NUMWORD(t):
-    r"(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty|I|II|III|IV)"
+    r"(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty|I|II|III|IV|as[ ]many)"
     t.value={"one":1, "two":2, "three":3, "four":4, "five":5, "six":6,
              "seven":7, "eight":8, "nine":9, "ten":10, "eleven":11,
              "twelve":12, "thirteen":13, "fourteen":14, "fifteen":15,
              "sixteen":16, "seventeen":17, "eighteen":18, "nineteen":19,
-             "twenty":20,"I":1,"II":2,"III":3,"IV":4}[t.value]
+             "twenty":20,"I":1,"II":2,"III":3,"IV":4,"as many":-1}[t.value]
+    return t
+
+def t_A(t):
+    r"an?"
     return t
 
 def t_WORD(t):

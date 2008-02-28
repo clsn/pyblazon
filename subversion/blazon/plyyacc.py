@@ -14,6 +14,7 @@ class Globals:
     extracolorless=[]
     colors=[]
     shield=None
+    lastnum=0
 
 def fillin(col):
     for obj in Globals.colorless:
@@ -354,7 +355,11 @@ def p_rows(p):
 def p_amount(p):
     """amount : NUM
               | NUMWORD"""
-    p[0]=p[1]
+    if p[1] == -1:
+        p[0]=Globals.lastnum
+    else:
+        Globals.lastnum=p[1]
+        p[0]=p[1]
 
 def p_optamt(p):
     """optamt : OF amount

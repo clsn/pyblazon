@@ -12,7 +12,8 @@ Vital:
 - charges upon ordinaries (PRETTY MUCH DONE)
 - charges to end up in the conventional places according to divisions of the
   field. E.g. two annulets on a field parted per bend is supposed to go in
-  the sinister chief and dexter base, not (by default) per fess. (MOSTLY DONE)
+  the sinister chief and dexter base, not (by default) per fess. (MOSTLY
+  DONE, BUT NEEDS FIXING)
 
 Fairly important:
 - importing charges from file or database (it would get tedious to specify
@@ -20,7 +21,7 @@ Fairly important:
   - Going to need some more powerful equipment for more general case.
   - Probably some half-intelligent DOM-based solution. -arj
 - permit importing (referencing) of raster-graphic charges. (DONE)
-- back-references ("of the first" (DONE), "as many")
+- back-references ("of the first" (DONE), "as many" (DONE))
 - possible to specify each quarter in a quartered shield individually
 - thin black lines between everything (or at least the option of having it)
 - Implemented special case with "a fesse embattled", and also implement
@@ -43,6 +44,16 @@ Bugs:
   escutcheons too big.  Probably just a matter of adjusting the scaling
   factor on escutcheons, which may be too large in general.
 - Fimbriation and orientation ("bendwise") interact badly.
+- The kludge that makes "per bend or and sable a crescent and a goute
+  counterchanged" work, in joining the crescent and the goute into a single
+  chargegroup, is, well, a kludge.  And it does bad things with "argent an
+  escutcheon gules between mullets vert" etc.
+- Similarly, you can't say "ermine a roundel sable and a mullet gules in
+  pale".  You have to put the "in pale" after the *first* part, and say
+  "ermine a roundel sable in pale and a mullet gules", which is weird.
+  Part of the same hack.
+- Also related, "in chief" has to come after the charge, while blazons seem
+  to have it before the charge more often.
 
 Naming:
 The project should have a name. Suggestions thus far:
