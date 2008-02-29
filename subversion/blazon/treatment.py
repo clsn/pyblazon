@@ -23,8 +23,9 @@ class Treatment:                         # Metal or color.
              "d'or" : "yellow",
              "argent" : "white",
              "d'eau" : "white",
-             "sable" : "black",
-             "de poix" : "black",
+             # Allows a hint of detail in sable image charges:
+             "sable" : "#181818", 
+             "de poix" : "#181818",
              "vert" : "green",
              "d'huile" : "green",
              "purpure" : "purple",

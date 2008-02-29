@@ -1107,7 +1107,7 @@ class Chevronel(Chevron):
       Chevron.__init__(self,*args,**kwargs)
       self.chevronwidth=10
 
-class Pile(Ordinary,Charge,TrueOrdinary):
+class Pile(Charge,TrueOrdinary):
    "Pile: A big triangle pointing downward."
    def process(self):
       p=partLine()
@@ -1161,13 +1161,6 @@ class Pile(Ordinary,Charge,TrueOrdinary):
       if hasattr(self,"inverted") and self.inverted:
          self.invertPattern(res)
       return res
-
-   def moveto(self,loc):
-      Charge.moveto(self,loc)
-   def shiftto(self,loc):
-      Charge.shiftto(self,loc)
-   def scale(self,x,y=None):
-      Charge.scale(x,y)
 
    def resize(self,x,y=None):
       # I don't really care about y anyway.
@@ -1587,32 +1580,41 @@ class Fret(Ordinary,TrueOrdinary):
       else:
          return None
 
-class Flaunches(Ordinary,TrueOrdinary):
+class Flaunches(TrueOrdinary,Charge):
    "Curved 'bites' from the sides.  Always come in pairs."
-   # Always come in pairs.  Maybe each object draws the pair, and
-   # we'll just have duplicates on top of each other?  Bleah.
-   # Or just find a way to ignore number for flaunches
+   # Always come in pairs.  *Shrug* WTH, we'll just have each object draw a
+   # single flaunch, and patternWithOthers will arrange them.
 
-   # Maybe we can use patternWithOthers so the pairs get drawn in
-   # proper placement.  Then we could charge the flaunches too.
-   # Not having a lot of success with that so far.
-   
    def process(self):
       # I don't think flaunches can take lines of partition.
       # Are they too big, you think?
       p=SVGdraw.pathdata()
-      p.move(-Ordinary.FESSPTX-6,-Ordinary.FESSPTY)
+      p.move(-6,-Ordinary.FESSPTY)
       p.ellarc(Ordinary.WIDTH/4,Ordinary.HEIGHT/2,0,1,1,
-               -Ordinary.FESSPTX-6,Ordinary.FESSPTY)
-      p.closepath()
-      p.move(Ordinary.FESSPTX+6,-Ordinary.FESSPTY)
-      p.ellarc(Ordinary.WIDTH/4,Ordinary.HEIGHT/2,0,1,0,
-               Ordinary.FESSPTX+6,Ordinary.FESSPTY)
+               -6,Ordinary.FESSPTY)
       p.closepath()
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
 
-   def patternSiblings(self,num):
+   @staticmethod
+   def patternWithOthers(num):
+      # num had better be two.
+      # This winds up reflecting any charges on the sinister flaunch too,
+      # but yaknow, I think that's the Right Thing.
+      return [1,(-Ordinary.FESSPTX,0),(Ordinary.FESSPTY,0,(-1,1))]
+
+   @staticmethod
+   def patternContents(num):
+      W=Ordinary.WIDTH/5
+      patterns=[[1],[.3,(W,-5)],
+                [.3, (W,15),(W-2,-20)],
+                [.25,(W,15),(W,-5),(W-2,-25)],
+                [.23,(W-2,20),(W,0),(W,-20),(W-5,-40)],
+                ]
+      return patterns[num]
+
+   @staticmethod
+   def patternSiblings(num):
       # They go on a line down the center, only.
       return Pale.patternContents(num)
 
