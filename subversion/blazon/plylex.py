@@ -281,10 +281,10 @@ lookupdict={
     "in chevron": arrangement.InChevron,
     "in pall": arrangement.InPall,
     "in pile": arrangement.InPall,      # So-so... too high.
-    "in dexterchief": (lambda *a: arrangement.InChief(side="dexter")),
-    "in sinisterchief": (lambda *a: arrangement.InChief(side="sinister")),
-    "in dexterbase": (lambda *a: arrangement.InBase(side="dexter")),
-    "in sinisterbase": (lambda *a: arrangement.InBase(side="sinister")),
+    "in dexterchief": (lambda *a,**k: arrangement.InChief(side="dexter")),
+    "in sinisterchief": (lambda *a,**k: arrangement.InChief(side="sinister")),
+    "in dexterbase": (lambda *a,**k: arrangement.InBase(side="dexter")),
+    "in sinisterbase": (lambda *a,**k: arrangement.InBase(side="sinister")),
     "in orle": arrangement.InOrle
     }
 
