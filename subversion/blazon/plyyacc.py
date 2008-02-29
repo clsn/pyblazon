@@ -332,7 +332,11 @@ def p_optarrange(p):
             side=""
         else:
             side=p[2]
-        p[0]=lookup("in "+side+p[3])(action=p[4])
+        if len(p)>4:
+            act=p[4]
+        else:
+            act=None
+        p[0]=lookup("in "+side+p[3])(action=act)
 
 def p_optdir(p):
     """optdir : DIRECTION
