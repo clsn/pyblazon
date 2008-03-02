@@ -14,7 +14,7 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
         "PALL","WITHIN","BORDURE","BEZANTY","LP","RP","IN","DIRECTION",
-        "URL","MULLET","NAME")
+        "URL","MULLET","NAME","ANNULO")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -50,6 +50,10 @@ t_SEMY=r"semy"
 t_LP=r"{|lp"                           # leftparen
 t_RP=r"}|rp"                           # rightparen
 
+def t_ANNULO(t):
+    r"annulo"
+    return t
+
 def t_SEMYDELIS(t):
     r"(semy.de.l[iy]s|billett?y|go?utty|crusilly)"
     return t
@@ -63,7 +67,7 @@ def t_CARDINAL(t):
     return t
 
 def t_LINEY(t):
-    r"(paly|barry|bendy(.sinister)?|gyronny|checky|lozengy|pily|chevronny(.inverted)?)"
+    r"(paly|barry|bendy(.sinister)?|g[iy]ronny|checky|lozengy|pily|chevronny(.inverted)?)"
     return t
 
 def t_QUARTERLY(t):
@@ -233,6 +237,7 @@ lookupdict={
     "bendy": treatment.Bendy,
     "bendy.sinister": treatment.BendySinister,
     "gyronny": treatment.Gyronny,
+    "gironny": treatment.Gyronny,
     "ermine": blazon.Ermine,
     "ermines": (lambda *a: treatment.Ermine("sable","argent")),
     "erminois": (lambda *a: treatment.Ermine("or","sable")),
@@ -277,6 +282,7 @@ lookupdict={
     "in bend.sinister": arrangement.InBendSinister,
     "in chief": arrangement.InChief,
     "in base": arrangement.InBase,
+    "in annulo": arrangement.InAnnulo,
     "in cross": arrangement.InCross,
     "in chevron": arrangement.InChevron,
     "in pall": arrangement.InPall,

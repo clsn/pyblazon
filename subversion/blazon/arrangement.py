@@ -200,6 +200,20 @@ class InOrle(Arrangement):
    def pattern(self,num):
       return blazon.Bordure.patternContents(num)
 
+class InAnnulo(Arrangement):
+   "Arrange charges in annulo, i.e. in a ring, rotated radially"
+   def pattern(self,num,*args,**kwargs):
+      # Now, lessee.  Going to derive the placements and scales and rotations
+      radius=30                         # Radius of the ring--a guess?
+      scale=.7/(num/2.5)                # ???
+      rv=[scale]
+      for i in range(0,num):
+         place=(radius*math.cos(i*2*math.pi/num-math.pi/2),
+                radius*math.sin(i*2*math.pi/num-math.pi/2),(),
+                i*360.0/num)
+         rv.append(place)
+      return rv
+
 class ByNumbers(Arrangement):
    def __init__(self,rows=None,*args,**kwargs):
       self.rows=rows

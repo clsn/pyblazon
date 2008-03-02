@@ -324,6 +324,7 @@ def p_optarrange(p):
                   | IN optdir PALL optinverted
                   | IN optdir CHIEF
                   | IN optdir BORDURE
+                  | IN optdir ANNULO
                   | empty"""
     if not p[1]:
         p[0]=None
