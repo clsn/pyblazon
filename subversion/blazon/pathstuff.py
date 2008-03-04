@@ -114,13 +114,12 @@ class partLine:
         "engrailed": (10,5),
         "invected": (10,5)
         }
-    def makeline(self,x,y,align=0,shift=1):
+    def makeline(self,x,y,align=0,shift=1,*args,**kwargs):
         """draw a line using whatever linetype is called for"""        
-        # TODO: add parameter "align": if align is False (default),
-        # then put the leftover part (that doesn't make up a complete
-        # oscillation) at the other end.  If it's True, put it on the
-        # near end.  This will be easier to do when the whole
-        # functioning of this method is made neater.
+        # If align is False (default), then put the leftover part (that
+        # doesn't make up a complete oscillation) at the other end.  If
+        # it's True, put it on the near end.  This will be easier to do
+        # when the whole functioning of this method is made neater.
 
         if not hasattr(self,"lineType") or not self.lineType or self.lineType == "plain":
             self.line(x,y)
@@ -226,7 +225,7 @@ class partLine:
                     uptoY+=delY
                     direction *= -1
                 self.path.append(" L%f,%f"%(x,y))
-            elif self.lineType == "urdy":
+            elif self.lineType == "urdy" or self.lineType == "champaine":
                 for i in range(1,int(leng/wavelength)+1):
                     self.path.append("L%f,%f l%f,%f l%f,%f l%f,%f"%
                                      (uptoX,uptoY,
@@ -243,15 +242,22 @@ class partLine:
                 if self.lineType=="invected":
                     # I'm pretty sure this isn't correct in the general case.
                     sweep=1
+                    # Shifting them over like this keeps the lines from
+                    # being too wide or narrow.
+                    uptoX+=shiftX
+                    uptoY+=shiftY
                 else:
                     sweep=0
-                for i in range(0,int(leng/wavelength)):
+                    uptoX-=shiftX
+                    uptoY-=shiftY
+                for i in range(0,int(leng/wavelength)-1):
                     uptoX+=delX
                     uptoY+=delY
                     self.path.append(" A%f,%f 0 1 %d %f,%f"%
                                      (amplitude,amplitude,sweep,uptoX,uptoY))
                 self.path.append(" A%f,%f 0 1 %d %f,%f"%
                                  (amplitude, amplitude,sweep,x,y))
+
             #Rayonny doesn't quite work yet.
 #             elif self.lineType == "rayonny":
 #                 for i in range(0,int(leng/wavelength)):
