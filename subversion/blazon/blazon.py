@@ -1519,21 +1519,15 @@ class Canton(Ordinary,TrueOrdinary):
       # We can always move the upper left corner a little offscreen.
       if not self.maingroup.attributes.has_key("transform"):
          self.maingroup.attributes["transform"]=""
-      self.maingroup.attributes["transform"]=" translate(-%f,-%f)"%(Ordinary.FESSPTX*.7,Ordinary.FESSPTY*.7)
+      self.maingroup.attributes["transform"]+=" translate(-%f,-%f)"%(Ordinary.FESSPTX*.7,Ordinary.FESSPTY*.7)
 
-   def patternContents(self,num):
-      rv=Ordinary.patternContents(self,num)
-      factor=0.3
-      if not rv:
-         rv=ChargeGroup.defaultplacements[num]
-      if rv:
-         if not type(rv[0])==tuple:
-            rv[0]*=factor               # scale it down, cantons are small.
-         else:
-            rv[0]=(rv[0][0],rv[0][1])
-         # Scaling all the translation values is also the Right Thing to do.
-         rv[1:]=map((lambda t: (factor*t[0],factor*t[1])),rv[1:])
-      return rv
+   def addCharge(self,charge):
+      Ordinary.addCharge(self,charge)
+      if not charge.maingroup.attributes.has_key("transform"):
+         charge.maingroup.attributes["transform"]=""
+      # I'd rather this be in a single group that all the charges are in,
+      # but at the moment things aren't arranged to allow that easily.
+      charge.maingroup.attributes["transform"]+=" scale(0.3)"
 
 class Gyron(Ordinary,TrueOrdinary):
    "Like a canton; a right triangle in dexter chief."
