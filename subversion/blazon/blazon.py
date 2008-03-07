@@ -1512,22 +1512,19 @@ class Canton(Ordinary,TrueOrdinary):
       # patternContents do its thing, then just diddle its
       # positioning.
       # Do not touch the scaling, lest furs and stuff get unduly resized.
-      self.clipPath=SVGdraw.rect(-Ordinary.WIDTH/3/2, -Ordinary.WIDTH/3/2,
-                                 Ordinary.WIDTH/3, Ordinary.HEIGHT/3)
+      wid=Ordinary.WIDTH
+      hit=Ordinary.WIDTH
+      self.clipPath=SVGdraw.rect(-wid/2.0, -hit/2.0, wid, hit)
       self.clipPathElt.addElement(self.clipPath)
       # Is the fimbriation right, though?  And does anyone fimbriate cantons?
       # We can always move the upper left corner a little offscreen.
       if not self.maingroup.attributes.has_key("transform"):
          self.maingroup.attributes["transform"]=""
-      self.maingroup.attributes["transform"]+=" translate(-%f,-%f)"%(Ordinary.FESSPTX*.7,Ordinary.FESSPTY*.7)
-
-   def addCharge(self,charge):
-      Ordinary.addCharge(self,charge)
-      if not charge.maingroup.attributes.has_key("transform"):
-         charge.maingroup.attributes["transform"]=""
-      # I'd rather this be in a single group that all the charges are in,
-      # but at the moment things aren't arranged to allow that easily.
-      charge.maingroup.attributes["transform"]+=" scale(0.3)"
+      scale=0.4
+      self.maingroup.attributes["transform"]+=" translate(%f,%f) "%(-Ordinary.FESSPTX+wid*scale/2.0, -Ordinary.FESSPTY+hit*scale/2.0)
+      if not self.clipPathElt.attributes.has_key("transform"):
+         self.clipPathElt.attributes["transform"]=""
+      self.clipPathElt.attributes["transform"]+=" scale(%f)"%scale
 
 class Gyron(Ordinary,TrueOrdinary):
    "Like a canton; a right triangle in dexter chief."

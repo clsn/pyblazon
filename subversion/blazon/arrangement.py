@@ -231,7 +231,7 @@ class ByNumbers(Arrangement):
       # Determine the scale by the larger of: the number of rows, and
       # the largest number of elements in a row.
       index=max(len(self.rows),max(self.rows))
-      scale=[1, 1, .4, .3, .25, .2, .2, .2, .15, .15, .15, .1, .1, .1][index]
+      scale=[1, 1, .4, .3, .25, .2, .2, .2, .15, .12, .12, .1, .1, .1][index]
       # Assemble the return value...
       rv=[scale]
       totalrows=len(self.rows)
