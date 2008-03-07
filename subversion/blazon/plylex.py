@@ -14,7 +14,7 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
         "PALL","WITHIN","BORDURE","BEZANTY","LP","RP","IN","DIRECTION",
-        "URL","MULLET","NAME","ANNULO")
+        "URL","MULLET","NAME","ANNULO","GROUPS")
 
 # For some reason, things seem to work better when functions are defined,
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
@@ -40,6 +40,7 @@ def t_BEZANTY(t):
     r"be[sz]anty|platey|pellety|hurty|tortoilly"
     return t
 
+t_GROUPS="groups"
 t_OF=r"of"
 t_EACH=r"each"
 t_CHARGED=r"charged"

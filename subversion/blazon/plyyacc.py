@@ -143,6 +143,7 @@ def p_treatment_8(p):
 def p_treatment_9(p):
     """treatment : COLOR SEMY OF charge
                  | COLOR SEMYDELIS opttreatment
+                 | COLOR SEMY OF GROUPS OF group
                  | COLOR BEZANTY"""
     # The second is actually syntactically like ALTERED
     if len(p)==5:
@@ -151,6 +152,11 @@ def p_treatment_9(p):
         f=lookup(p[2])()
         f.tincture=p[3]
         p[0]=treatment.Semy(treatment.Treatment(p[1]),f)
+    elif len(p)==7:
+        gp=blazon.BigRect()
+        gp.tincture=treatment.Treatment("proper")
+        gp.addCharge(copy.deepcopy(p[6]))
+        p[0]=treatment.Semy(treatment.Treatment(p[1]),gp)
     else:                               # len(p)==3
         p[0]=treatment.Semy(treatment.Treatment(p[1]),lookup(p[2])())
     fillin(p[0])
@@ -216,6 +222,20 @@ def p_group_1(p):
     # We wind up having two different places for treatment and fimbriation,
     # but that's okay.  If you specify both, one wins, but GIGO after all.
     p[5](p[0])
+
+def p_group_1a(p):
+    "group : amount GROUPS optarrange optrows OF charges"
+    # The same as above, just taking it to mean "areas proper each charged with"
+    area=blazon.BigRect()
+    area.tincture=blazon.Treatment("proper")
+    res=blazon.ChargeGroup(p[1],area)
+    for elt in res.charges:
+        elt.extendCharges(copy.deepcopy(p[6]))
+    res.arrangement=p[3]
+    if p[4]:
+        res.arrangement=ByNumbers(p[4])
+    p[0]=res
+    
 
 def p_group_2(p):
     """group : LP charges RP"""
