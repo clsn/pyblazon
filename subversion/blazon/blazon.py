@@ -1953,7 +1953,8 @@ class Blazon:
       # Our parser is somewhat finicky, so we want to convert the raw,
       # user-provided text into something it can handle.
       self.blazon=self.Normalize(blazon)
-   def Normalize(self, blazon):
+   @staticmethod
+   def Normalize(blazon):
       # Can't just toss all the non-alphanumeric chars, if we're going
       # to accept URLs...
       # return re.sub("[^a-z0-9 ']+"," ",blazon.lower())
