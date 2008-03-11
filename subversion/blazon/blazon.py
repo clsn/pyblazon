@@ -1348,9 +1348,22 @@ class ChargeGroup:            # Kind of an invisible ordinary
             pass
       if not placements:
          raise "Too many objects"
+      # Let's see.  If there's ANOTHER chargegroup here, we need to, um...
+      # I guess... scale down?
+      # This is crude.
+      # THIS DOES NOT WORK RIGHT.
+      # It breaks behavior that worked before in cases like
+      # {Or a bend sable between two roundels gules}
+      # The roundels get double-shrunk.
+      # if len(self.parent.charges) > 1:
+      #   extrascale=0.4
+      # else:
+      #   extrascale=1.0
+      extrascale=1.0
       scale=placements[0]
       if type(scale) is not type(()):
          scale=(scale,scale)
+      scale=tuple(map((lambda x: x*extrascale), scale))
       for i in range(1,num+1):
          move(self.charges[i-1], (placements[i][0],placements[i][1]))
          if len(placements[i])>2 and len(placements[i][2]):

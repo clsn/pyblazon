@@ -8,8 +8,7 @@ Prerequisites for Initial Rollout:
 
 Vital:
 - support all charges that are simple, geometrical figures (MOSTLY DONE)
-- a charge or a group "between" a group
-- charges upon ordinaries (PRETTY MUCH DONE)
+- a charge or a group "between" a group (STARTING ON THIS)
 - charges to end up in the conventional places according to divisions of the
   field. E.g. two annulets on a field parted per bend is supposed to go in
   the sinister chief and dexter base, not (by default) per fess. (MOSTLY
@@ -33,9 +32,9 @@ Wishlist:
 - "Gules within a bordure or a chief argent." looks horrible (squashing the
   bordure makes it look very odd).
 - semy of _anything_ (even crazy, complex things like "a
-  cross-crosslet or between four bezants"
+  cross-crosslet or between four bezants" (GETTING THERE)
 - multilingual support (e.g. blazons in French, German, Norwegian ...)
-- marshalling
+- marshalling (quarterly, impaled, etc)
 - support for other shield shapes
 - support for using a flag instead of a shield
 
@@ -54,6 +53,12 @@ Bugs:
   Part of the same hack.
 - Also related, "in chief" has to come after the charge, while blazons seem
   to have it before the charge more often.
+- Stuff like "Or on a bend sable between a mullet and a roundel gules, a
+  crescent argent" is going to be near impossible from a grammar
+  standpoint, without putting some extra restrictions on use of
+  conjunctions (maybe).  Even extended lookahead won't make it easy.  And
+  "Sable on a fess argent between two lozenges or a roundel gules between
+  an increscent and a decrescent azure" is even tougher.
 
 Naming:
 The project should have a name. Suggestions thus far:

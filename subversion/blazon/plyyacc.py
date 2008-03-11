@@ -179,15 +179,22 @@ def p_charges(p):
     if len(p)==2:
         p[0]=[p[1]]
     else:
-        # If the last elt of p[1] is a (group of) regular charges and not
-        # ordinaries, then *consolidate* p[3] into it as a single chargegroup.
-        # This is to permit {azure a bend argent between a fusil
-        # and a roundel or}
+        # OK, let's try to work out this business of "consolidating"
+        # charges into chargegroups.  Charges conjoined with "and" can join
+        # into a group.  Charges conjoined with "between" cannot.  Let's
+        # see if we can do this without separate lexemes for "and" and
+        # "between", just different values for it.
+        #
+        # We need to be able to consolidate in order to make things like
+        # {azure a bend argent between a fusil and a roundel or}
         lastgroup=p[1][-1]
-        if not isinstance(lastgroup.charges[0], blazon.TrueOrdinary) and \
-               not isinstance(p[3].charges[0], blazon.TrueOrdinary):
+        if not p[2] == "between" and \
+                 not isinstance(lastgroup.charges[0], blazon.TrueOrdinary) and \
+                 not isinstance(p[3].charges[0], blazon.TrueOrdinary):
             lastgroup.charges.extend(p[3].charges)
             p[0]=p[1]
+            # Works, but then we have two chargegroups that don't know how
+            # to interact.
         else:
             p[0]=p[1]+[p[3]]
 
@@ -428,7 +435,7 @@ def p_optfimbriation(p):
 def p_optand(p):
     """optand : AND
               | empty"""
-    pass
+    p[0]=p[1]
 
 def p_optA(p):
     """optA : A

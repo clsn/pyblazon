@@ -20,95 +20,69 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
 # even if they don't do anything.  e.g. "vair" would overshadow "vairy"
 # when they were just strings.
 
+# I'm thinking this'll go away once I surround all the lexemes with \b's
+
 t_ignore=" \n\t"
 
 
-# Hmm.  How to handle "*in* a bordure..." ?
-def t_BORDURE(t):
-    r"bordure|orle|tressure|double.tressure"
-    return t
+t_BORDURE=r"\b(bordure|orle|tressure|double\W+tressure)\b"
 
-def t_COLOR(t):
-    r"((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de.larmes|de.poix|de.sang|d'huile|d'eau|proper)"
-    return t
+t_COLOR=r"\b((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de[ ]larmes|de[ ]poix|de[ ]sang|d'huile|d'eau|proper)\b"
 
-def t_AND(t):
-    r"(and|&|between)"              # FOR NOW, between is a synonym of and.
-    return t
+t_AND=r"\b(and|&|between)\b"
 
-def t_BEZANTY(t):
-    r"be[sz]anty|platey|pellety|hurty|tortoilly"
-    return t
+t_BEZANTY=r"\b(be[sz]anty|platey|pellety|hurty|tortoilly)\b"
 
-t_GROUPS="groups"
-t_OF=r"of"
-t_EACH=r"each"
-t_CHARGED=r"charged"
-t_WITH=r"with"
-t_THE=r"the"
-t_IN="in"
-t_SEMY=r"semy"
-t_LP=r"{|lp"                           # leftparen
-t_RP=r"}|rp"                           # rightparen
+t_GROUPS="\bgroups\b"
+t_OF=r"\bof\b"
+t_EACH=r"\beach\b"
+t_CHARGED=r"\bcharged\b"
+t_WITH=r"\bwith\b"
+t_THE=r"\bthe\b"
+t_IN=r"\bin\b"
+t_SEMY=r"\bsemy\b"
+t_LP=r"\b({|lp)\b"                           # leftparen
+t_RP=r"\b(}|rp)\b"                           # rightparen
 
-def t_ANNULO(t):
-    r"annulo"
-    return t
+t_ANNULO=r"\bannulo\b"
 
-def t_SEMYDELIS(t):
-    r"(semy.de.l[iy]s|billett?y|go?utty|crusilly)"
-    return t
+t_SEMYDELIS=r"\b(semy\W+de\W+l[iy]s|billett?y|go?utty|crusilly)\b"
 
 # t_QUARTERED=r"quartered"
-t_WITHIN=r"within"
+t_WITHIN=r"\bwithin\b"
 
-def t_CARDINAL(t):
-    r"(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|field|last)"
+t_CARDINAL=r"\b(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|field|last)\b"
     # Field and last aren't really cardinals, but it's just as easy
-    return t
 
-def t_LINEY(t):
-    r"(paly|barry|bendy(.sinister)?|g[iy]ronny|checky|lozengy|pily|chevronny(.inverted)?)"
-    return t
+t_LINEY=r"\b(paly|barry|bendy(\W+sinister)?|g[iy]ronny|checky|lozengy|pily|chevronny(\W+inverted)?)\b"
 
-def t_QUARTERLY(t):
-    r"quarterly"
-    return t
+t_QUARTERLY=r"\bquarterly\b"
 
-def t_CHARGE(t):
-    r"roundels?|annulets?|lozenges?|fleurs?.de.l[iy]s|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?.(passant|rampant)|pallets?|fir.twigs?|fusils?|mascles?|triangles?|canton|gyron|(in|de)?crescents?|escutcheons?|shakeforks?|escallops?|fountains?|areas?"
-    return t
+t_CHARGE=r"\b(roundels?|annulets?|lozenges?|fleurs?.de.l[iy]s|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?\W+(passant|rampant)|pallets?|fir\W+twigs?|fusils?|mascles?|triangles?|canton|gyron|(in|de)?crescents?|escutcheons?|shakeforks?|escallops?|fountains?|areas?)\b"
+t_MULLET=r"\bmullets?\b"
 
-t_MULLET="mullets?"
+t_INVERTED=r"\b(inverted|bendwise(\W+sinister)?|reversed|contourny|fesswise|palewise)\b"
 
-def t_INVERTED(t):
-    r"inverted|bendwise(.sinister)?|reversed|contourny|fesswise|palewise"
-    return t
+t_ORDINARY=r"\b(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(\W+gemelles?)?|fret|flaunches|batons?|gore)\b"
 
-t_ORDINARY=r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(.gemelles?)?|fret|flaunches|batons?|gore)"
-
-t_PALL=r"pall"
+t_PALL=r"\bpall\b"
 
 # Chief is not an ordinary
-t_CHIEF=r"chief"
-t_ON=r"on"
+t_CHIEF=r"\bchief\b"
+t_ON=r"\bon\b"
 
-t_LINETYPE=r"(plain|indented|dancetty|embattled|invected|engrailed|wavy|rayonny|dovetailed|raguly|nebuly|urdy|champaine)"
+t_LINETYPE=r"\b(plain|indented|dancetty|embattled|invected|engrailed|wavy|rayonny|dovetailed|raguly|nebuly|urdy|champaine)\b"
 
-def t_FURRY(t):
-    r"(vairy.in.pale|vairy|counter.vairy)"
-    return t
+t_FURRY=r"\b(vairy\W+in\W+pale|vairy|counter\W+vairy)\b"
 
-def t_ALTERED(t):
-    r"(fretty|ermined|masoned|estencelly)"
-    return t
+t_ALTERED=r"\b(fretty|ermined|masoned|estencelly)\b"
 
-t_FUR=r"(vair.in.pale|vair|counter.vair|ermines?|erminois|pean)"
+t_FUR=r"\b(vair.in.pale|vair|counter\W+vair|ermines?|erminois|pean|counter\W+ermine)\b"
 
-t_PARTYPER=r"(party[ ]per|per)"
-t_FIMBRIATED=r"fimbriated|voided"
-t_COUNTERCHARGED=r"countercha[rn]ged"
-t_DIRECTION=r"dexter|sinister"
+t_PARTYPER=r"\b(party\W+per|per)\b"
+t_FIMBRIATED=r"\b(fimbriated|voided)\b"
+t_COUNTERCHARGED=r"\bcountercha[rn]ged\b"
+t_DIRECTION=r"\b(dexter|sinister)\b"
 
 def t_NUM(t):
     r"[0-9]+"
@@ -117,7 +91,7 @@ def t_NUM(t):
 
 
 def t_NUMWORD(t):
-    r"(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty|I|II|III|IV|as[ ]many)"
+    r"\b(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty|I|II|III|IV|as[ ]many)\b"
     t.value={"one":1, "two":2, "three":3, "four":4, "five":5, "six":6,
              "seven":7, "eight":8, "nine":9, "ten":10, "eleven":11,
              "twelve":12, "thirteen":13, "fourteen":14, "fifteen":15,
@@ -125,14 +99,10 @@ def t_NUMWORD(t):
              "twenty":20,"I":1,"II":2,"III":3,"IV":4,"as many":-1}[t.value]
     return t
 
-def t_A(t):
-    r"an?"
-    return t
+t_A=r"\ban?\b"
 
-def t_WORD(t):
-    r"points"
+t_WORD=r"\bpoints\b"
     # Word that's required but doesn't mean much.
-    return t
 
 def t_URL(t):
     r"<[^>]*>"
@@ -201,7 +171,7 @@ lookupdict={
     "triangles?": blazon.Triangle,
     "canton": blazon.Canton,            # There can be no more than one canton.
     "gyron": blazon.Gyron,
-    "fleurs?.de.l[iy]s": (lambda *a: blazon.ExtCharge("fleur")),
+    "fleurs?\\W+de\\W+l[iy]s": (lambda *a: blazon.ExtCharge("fleur")),
     "goutes?": (lambda *a: blazon.ExtCharge("goute")),
     "cross(es)?.formy": (lambda *a: blazon.ExtCharge("formy")),
     "cross(es)?.pattee": (lambda *a: blazon.ExtCharge("formy")),
@@ -213,9 +183,9 @@ lookupdict={
     "mullets?": (lambda *a: blazon.ExtCharge("mullet",extension=a)),
     "escutcheons?": (lambda *a: blazon.ExtCharge("escutcheon")),
     "shakeforks?": (lambda *a: blazon.ExtCharge("shakefork")),
-    "semy.de.l[iy]s": (lambda *a: blazon.ExtCharge("fleur")),
+    r"semy\W+de\W+l[iy]s": (lambda *a: blazon.ExtCharge("fleur")),
     "go?utty": (lambda *a: blazon.ExtCharge("goute")),
-    "fir.twigs?": (lambda *a: blazon.ExtCharge("firtwig")),
+    "fir\\W+twigs?": (lambda *a: blazon.ExtCharge("firtwig")),
     "crescents?": (lambda *a: blazon.ExtCharge("crescent")),
     "increscents?": (lambda *a: blazon.ExtCharge("crescent",
                                                  postprocessing=(lambda x: x.rotate(-90)))),
@@ -227,27 +197,28 @@ lookupdict={
     "bordure": blazon.Bordure,
     "orle": blazon.Orle,
     "tressure": blazon.Tressure,
-    "double.tressure": blazon.DoubleTressure,
+    "double\\W+tressure": blazon.DoubleTressure,
     "paly": treatment.Paly,
     "pily": treatment.Pily,
     "barrypily": treatment.BarryPily,
     "bendypily": treatment.BendyPily,
     "barry": treatment.Barry,
     "chevronny": treatment.Chevronny,
-    "chevronny.inverted": (lambda *a,**k: treatment.Chevronny(inverted=True,*a,**k)),
+    "chevronny\\W+inverted": (lambda *a,**k: treatment.Chevronny(inverted=True,*a,**k)),
     "bendy": treatment.Bendy,
-    "bendy.sinister": treatment.BendySinister,
+    "bendy\\W+sinister": treatment.BendySinister,
     "gyronny": treatment.Gyronny,
     "gironny": treatment.Gyronny,
     "ermine": blazon.Ermine,
     "ermines": (lambda *a: treatment.Ermine("sable","argent")),
+    "counter\\W+ermine": (lambda *a: treatment.Ermine("sable","argent")),
     "erminois": (lambda *a: treatment.Ermine("or","sable")),
     "pean": (lambda *a: treatment.Ermine("sable","or")),
     "ermined": treatment.Ermine,
     "masoned": treatment.Masoned,
     "estencelly": treatment.Estencelly,
     "fretty": treatment.Fretty,
-    "vairy?.in.pale": treatment.VairInPale,
+    "vairy?\\W+in\\W+pale": treatment.VairInPale,
     "vairy": treatment.Vair,
     "per cross": treatment.PerCross,
     "per saltire": treatment.PerSaltire,
@@ -256,7 +227,7 @@ lookupdict={
     # Unfortunately, ATM it won't work, probably because the crummy lexer
     # can't handle both quartered in this sense, and quartered in the sense
     # of t_QUARTERLY.
-    "per saltire quartered": treatment.PerSaltire,
+    "per\\W+saltire\\W+quartered": treatment.PerSaltire,
     "per fesse?": treatment.PerFesse,
     "per pale": treatment.PerPale,
     "per bend": treatment.PerBend,
