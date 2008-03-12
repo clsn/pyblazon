@@ -58,7 +58,7 @@ t_LINEY=r"\b(paly|barry|bendy(\W+sinister)?|g[iy]ronny|checky|lozengy|pily|chevr
 
 t_QUARTERLY=r"\bquarterly\b"
 
-t_CHARGE=r"\b(roundels?|annulets?|lozenges?|fleurs?.de.l[iy]s|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross-crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?\W+(passant|rampant)|pallets?|fir\W+twigs?|fusils?|mascles?|triangles?|canton|gyron|(in|de)?crescents?|escutcheons?|shakeforks?|escallops?|fountains?|areas?)\b"
+t_CHARGE=r"\b(roundels?|annulets?|lozenges?|fleurs?.de.l[iy]s|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross(es)?\W+crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?\W+(passant|rampant)|pallets?|fir\W+twigs?|fusils?|mascles?|triangles?|canton|gyron|(in|de)?crescents?|escutcheons?|shakeforks?|escallops?|fountains?|areas?)\b"
 t_MULLET=r"\bmullets?\b"
 
 t_INVERTED=r"\b(inverted|bendwise(\W+sinister)?|reversed|contourny|fesswise|palewise)\b"
@@ -179,7 +179,7 @@ lookupdict={
     "cross(es)?.bottony": (lambda *a: blazon.ExtCharge("bottony")),
     "cross(es)?.humetty": (lambda *a: blazon.ExtCharge("humetty")),
     "cross(es)?.flory": (lambda *a: blazon.ExtCharge("flory")),
-    "cross-crosslets?": (lambda *a: blazon.ExtCharge("crosscrosslet")),
+    "cross(es)?\W+crosslets?": (lambda *a: blazon.ExtCharge("crosscrosslet")),
     "mullets?": (lambda *a: blazon.ExtCharge("mullet",extension=a)),
     "escutcheons?": (lambda *a: blazon.ExtCharge("escutcheon")),
     "shakeforks?": (lambda *a: blazon.ExtCharge("shakefork")),

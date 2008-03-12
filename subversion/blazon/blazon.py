@@ -223,6 +223,22 @@ class Ordinary:
             pass
          pat[i]=tuple(x)
 
+   def getBaseURL(self):
+      if hasattr(self,"base"):
+         return self.base
+      try:
+         return self.parent.getBaseURL()
+      except Exception:
+         return None
+
+   def urlProc(self,path):
+      try:
+         if not re.match('[a-zA-Z]{,10}://',path):
+            return self.getBaseURL()+path
+         else:
+            return path
+      except Exception:
+         return path
 
    def moveto(self,loc):
       pass
@@ -249,7 +265,7 @@ class TrueOrdinary:
 class Field(Ordinary,TrueOrdinary):
    "Class for the field as a whole.  It's an ordinary, of sorts."
    std_desc="""This is an SVG of a blazon, a heraldic description of a shield.  It was generated with pyBlazon, by Mark Shoulson and Arnt Richard Johansen"""
-   def __init__(self,tincture="argent"):
+   def __init__(self,tincture="argent",base=None):
       # Horrendously geeky trick to slip the blazon into the title element
       # even though it is set long after.  The brackets that result are
       # actually good, IMO.  I could get rid of them, but I am not going
@@ -303,6 +319,9 @@ class Field(Ordinary,TrueOrdinary):
       # Replace the *contents* of the blazon list.
       self.blazon[0]=blazon.replace("&","&amp;"). \
                       replace("<","&lt;").replace(">","&gt;")
+
+   def setBase(self,base):
+      self.base=base
       
    def __repr__(self):
       """Output the SVG of the whole thing."""
@@ -1702,20 +1721,21 @@ class ExtCharge(Charge):
             
 
     def process(self):
-        u=SVGdraw.use(self.path)
-        if hasattr(self,"inverted") and self.inverted:
-           if not u.attributes.has_key("transform"):
-              u.attributes["transform"]=""
-           u.attributes["transform"]+=" rotate(180)"
-        self.clipPathElt.addElement(u)
+       u=SVGdraw.use(self.urlProc(self.path))
+       if hasattr(self,"inverted") and self.inverted:
+          if not u.attributes.has_key("transform"):
+             u.attributes["transform"]=""
+          u.attributes["transform"]+=" rotate(180)"
+       self.clipPathElt.addElement(u)
 
     def do_fimbriation(self):
-       self.maingroup.addElement(SVGdraw.SVGelement('use',
-                                                    attributes={"xlink:href":"%s"%self.path,
-                                                                "stroke":self.fimbriation,
-                                                                "stroke-width":self.fimbriation_width,
-                                                                "fill":"none",
-                                                                "transform":self.clipPathElt.attributes.get("transform")}))
+       self.maingroup.addElement(
+          SVGdraw.SVGelement('use',
+                             attributes={"xlink:href":"%s"%self.urlProc(self.path),
+                                         "stroke":self.fimbriation,
+                                         "stroke-width":self.fimbriation_width,
+                                         "fill":"none",
+                                         "transform":self.clipPathElt.attributes.get("transform")}))
 
 
 # Another external charge class, this one for things not used as clipping
@@ -1756,7 +1776,7 @@ class Symbol(Charge):
       mask=SVGdraw.SVGelement('mask',attributes={"id" : "Mask%04d"%Ordinary.id})
       Ordinary.id+=1
       for i in range(0,4):
-         el=SVGdraw.use(self.path)
+         el=SVGdraw.use(self.urlProc(self.path))
          el.attributes["transform"]="translate(%d,%d)"%([-2,2,0,0][i],
                                                         [0,0,-2,2][i])
          mask.addElement(el)
@@ -1770,7 +1790,7 @@ class Symbol(Charge):
 
    def finalizeSVG(self):
       self.process()
-      self.use=SVGdraw.use(self.path)
+      self.use=SVGdraw.use(self.urlProc(self.path))
       self.clipPath=self.use
       self.clipPathElt.addElement(self.clipPath)
       self.maingroup.addElement(self.baseRect)
@@ -1860,7 +1880,8 @@ class Image(Charge):
       (self.width,self.height)=(width, height)
 
    def process(self):
-      self.ref=SVGdraw.image(self.url, x= -self.width/2.0, y= -self.height/2.0,
+      self.ref=SVGdraw.image(self.urlProc(self.url), x= -self.width/2.0,
+                             y= -self.height/2.0,
                              width=self.width,
                              height=self.height)
 
@@ -1962,9 +1983,10 @@ import plyyacc
 class Blazon:
    """A blazon is a heraldic definition. We would like to be as liberal
    as possible in what we accept."""
-   def __init__(self, blazon):
+   def __init__(self, blazon, base=None):
       # Our parser is somewhat finicky, so we want to convert the raw,
       # user-provided text into something it can handle.
+      self.base=base
       self.blazon=self.Normalize(blazon)
    @staticmethod
    def Normalize(blazon):
@@ -2009,6 +2031,8 @@ class Blazon:
       if not hasattr(self.__class__,'lookup') or not self.__class__.lookup:
          self.getlookuptable()
       shield=plyyacc.yacc.parse(self.GetBlazon())
+      if self.base:
+         shield.setBase(self.base)
       shield.setBlazon(self.GetBlazon())
       return shield
 
