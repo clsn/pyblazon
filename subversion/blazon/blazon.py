@@ -1910,6 +1910,12 @@ class Image(Charge):
          if not self.ref.attributes.has_key("transform"):
             self.ref.attributes["transform"]=""
          self.ref.attributes["transform"]+=self.endtransforms
+      # Images don't have clipPaths, so we won't output one
+      # and we mustn't refer to one either:
+      try:
+         del(self.maingroup.attributes["mask"])
+      except KeyError:
+         pass
       if hasattr(self,'tincture') and self.tincture and not \
              (hasattr(self.tincture,'color') and self.tincture.color=="none"):
          # There's a color!  Have to do some brilliant filter stuff.
