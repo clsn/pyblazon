@@ -231,15 +231,6 @@ class Ordinary:
       except Exception:
          return None
 
-   def urlProc(self,path):
-      try:
-         if not re.match('[a-zA-Z]{,10}://',path):
-            return self.getBaseURL()+path
-         else:
-            return path
-      except Exception:
-         return path
-
    def moveto(self,loc):
       pass
    def shiftto(self,loc):
@@ -1721,7 +1712,9 @@ class ExtCharge(Charge):
             
 
     def process(self):
-       u=SVGdraw.use(self.urlProc(self.path))
+       u=SVGdraw.use(self.path)
+       if self.getBaseURL():
+          u.attributes["xml:base"]=self.getBaseURL()
        if hasattr(self,"inverted") and self.inverted:
           if not u.attributes.has_key("transform"):
              u.attributes["transform"]=""
@@ -1729,13 +1722,15 @@ class ExtCharge(Charge):
        self.clipPathElt.addElement(u)
 
     def do_fimbriation(self):
+       attributes={"xlink:href":"%s"%self.path,
+                   "stroke":self.fimbriation,
+                   "stroke-width":self.fimbriation_width,
+                   "fill":"none",
+                   "transform":self.clipPathElt.attributes.get("transform")}
+       if self.getBaseURL():
+         attributes["xml:base"]=self.getBaseURL()
        self.maingroup.addElement(
-          SVGdraw.SVGelement('use',
-                             attributes={"xlink:href":"%s"%self.urlProc(self.path),
-                                         "stroke":self.fimbriation,
-                                         "stroke-width":self.fimbriation_width,
-                                         "fill":"none",
-                                         "transform":self.clipPathElt.attributes.get("transform")}))
+          SVGdraw.SVGelement('use',attributes=attributes))
 
 
 # Another external charge class, this one for things not used as clipping
@@ -1776,7 +1771,9 @@ class Symbol(Charge):
       mask=SVGdraw.SVGelement('mask',attributes={"id" : "Mask%04d"%Ordinary.id})
       Ordinary.id+=1
       for i in range(0,4):
-         el=SVGdraw.use(self.urlProc(self.path))
+         el=SVGdraw.use(self.path)
+         if self.getBaseURL():
+            el.attributes["xml:base"]=self.getBaseURL()
          el.attributes["transform"]="translate(%d,%d)"%([-2,2,0,0][i],
                                                         [0,0,-2,2][i])
          mask.addElement(el)
@@ -1790,7 +1787,9 @@ class Symbol(Charge):
 
    def finalizeSVG(self):
       self.process()
-      self.use=SVGdraw.use(self.urlProc(self.path))
+      self.use=SVGdraw.use(self.path)
+      if self.getBaseURL():
+         self.use.attributes["xml:base"]=self.getBaseURL()
       self.clipPath=self.use
       self.clipPathElt.addElement(self.clipPath)
       self.maingroup.addElement(self.baseRect)
@@ -1880,10 +1879,12 @@ class Image(Charge):
       (self.width,self.height)=(width, height)
 
    def process(self):
-      self.ref=SVGdraw.image(self.urlProc(self.url), x= -self.width/2.0,
+      self.ref=SVGdraw.image(self.url, x= -self.width/2.0,
                              y= -self.height/2.0,
                              width=self.width,
                              height=self.height)
+      if self.getBaseURL():
+         self.ref.attributes["xml:base"]=self.getBaseURL()
 
    def invert(self):
       if not hasattr(self,"endtransforms"):
