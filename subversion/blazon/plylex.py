@@ -46,7 +46,7 @@ t_RP=r"\b(}|rp)\b"                           # rightparen
 
 t_ANNULO=r"\bannulo\b"
 
-t_SEMYDELIS=r"\b(semy\W+de\W+l[iy]s|billett?y|go?utty|crusilly)\b"
+t_SEMYDELIS=r"\b(semy\W+de\W+l[iy]s|billett?y|go?utty|crusilly|mulletty)\b"
 
 # t_QUARTERED=r"quartered"
 t_WITHIN=r"\bwithin\b"
@@ -194,6 +194,7 @@ lookupdict={
     "escallops?": (lambda *a: blazon.ExtCharge("escallop")),
     "billett?y": blazon.Billet,
     "crusilly": (lambda *a: blazon.ExtCharge("humetty")),
+    "mulletty": (lambda *a: blazon.ExtCharge("mullet")),
     "bordure": blazon.Bordure,
     "orle": blazon.Orle,
     "tressure": blazon.Tressure,

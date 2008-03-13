@@ -73,14 +73,15 @@ class Ordinary:
                                        -Ordinary.FESSPTY,
                                        Ordinary.WIDTH,
                                        Ordinary.HEIGHT))
+      # OK, can't set the id of the clipPathElt here; mustn't do that
+      # in setup because if this charge gets copied then there'll be
+      # multiple elements with the same ID, and that's a no-no.  But
+      # we can set it later on, in process or in finalizeSVG.
       self.clipPathElt=SVGdraw.SVGelement('mask',
-                                          id=('Clip%04d'%Ordinary.id),
                                           attributes={"fill":"white"})
-      Ordinary.id=Ordinary.id+1
       self.svg.addElement(self.clipPathElt)
       self.svg.attributes["xmlns:xlink"]="http://www.w3.org/1999/xlink"
       self.maingroup=SVGdraw.group()
-      self.maingroup.attributes["mask"]="url(#%s)"%self.clipPathElt.attributes["id"]
       self.baseRect=SVGdraw.rect(x=-Ordinary.FESSPTX,
                                  y=-Ordinary.FESSPTY,
                                  width=Ordinary.WIDTH,
@@ -157,6 +158,10 @@ class Ordinary:
       defs=SVGdraw.defs()
       self.svg.addElement(defs)
       self.defsElt=defs
+      # NOW we can set the id for the clippath.
+      self.clipPathElt.attributes["id"]="Clip%04d"%Ordinary.id
+      Ordinary.id += 1
+      self.maingroup.attributes["mask"]="url(#%s)"%self.clipPathElt.attributes["id"]
       if hasattr(self,"clipPath"): 
          # For fimbriation (at least one way to do it), need an id on the actual
          # path, not just the group:
