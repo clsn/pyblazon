@@ -1950,7 +1950,7 @@ class Image(Charge):
             Ordinary.ImageFilters=True  # Don't do this again.
          self.mask=SVGdraw.SVGelement('mask',
                                       attributes={'id' : 'Mask%04d'%Ordinary.id,
-                                                  'maskUnits':'UserSpaceOnUse'})
+                                                  'maskUnits':'userSpaceOnUse'})
          Ordinary.id+=1
          img=copy.deepcopy(self.ref)
          img.attributes['filter']='url(#AlphaFilter)'
