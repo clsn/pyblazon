@@ -73,13 +73,21 @@ class Ordinary:
                                        -Ordinary.FESSPTY,
                                        Ordinary.WIDTH,
                                        Ordinary.HEIGHT))
-      # OK, can't set the id of the clipPathElt here; mustn't do that
+      # OK, can't set the id of the mask here; mustn't do that
       # in setup because if this charge gets copied then there'll be
       # multiple elements with the same ID, and that's a no-no.  But
       # we can set it later on, in process or in finalizeSVG.
-      self.clipPathElt=SVGdraw.SVGelement('mask',
-                                          attributes={"fill":"white"})
-      self.svg.addElement(self.clipPathElt)
+      self.mask=SVGdraw.SVGelement('mask',
+                                   attributes={"x":str(-Ordinary.FESSPTX),
+                                               "y":str(-Ordinary.FESSPTY),
+                                               "width":"100%",
+                                               "height":"100%",
+                                               "maskUnits":"userSpaceOnUse"})
+      self.svg.addElement(self.mask)
+      # Must separate clipPathElt from the mask containing it, since
+      # masks can't have transforms, etc.  So it is now a group inside the mask.
+      self.clipPathElt=SVGdraw.group(attributes={'fill':'white'})
+      self.mask.addElement(self.clipPathElt)
       self.svg.attributes["xmlns:xlink"]="http://www.w3.org/1999/xlink"
       self.maingroup=SVGdraw.group()
       self.baseRect=SVGdraw.rect(x=-Ordinary.FESSPTX,
@@ -158,10 +166,11 @@ class Ordinary:
       defs=SVGdraw.defs()
       self.svg.addElement(defs)
       self.defsElt=defs
-      # NOW we can set the id for the clippath.
-      self.clipPathElt.attributes["id"]="Clip%04d"%Ordinary.id
+      # NOW we can set the id for the mask
+      # I guess we could also use the hash of self.  Whatever.
+      self.mask.attributes["id"]="Clip%04d"%Ordinary.id
       Ordinary.id += 1
-      self.maingroup.attributes["mask"]="url(#%s)"%self.clipPathElt.attributes["id"]
+      self.maingroup.attributes["mask"]="url(#%s)"%self.mask.attributes["id"]
       if hasattr(self,"clipPath"): 
          # For fimbriation (at least one way to do it), need an id on the actual
          # path, not just the group:
@@ -294,6 +303,12 @@ class Field(Ordinary,TrueOrdinary):
       self.pdata.closepath()
       self.charges=[]
       self.setup(tincture)
+      # The Field can't be duplicated, so it's safe to set its mask id now.
+      # Besides, if we don't then it blows up when it tries to copy it
+      # if there's a chief
+      self.mask.attributes["id"]="Mask%04s"%Ordinary.id
+      Ordinary.id+=1
+      self.maingroup.attributes["mask"]="url(#%s)"%self.mask.attributes["id"]
       self.clipPath=SVGdraw.path(self.pdata)
       self.clipPathElt.addElement(self.clipPath)
       self.svg.addElement(SVGdraw.path(self.pdata,stroke="black",
@@ -1773,7 +1788,13 @@ class Symbol(Charge):
    # This isn't much of an improvement.
    def do_fimbriation(self):
       self.fimb=SVGdraw.group()
-      mask=SVGdraw.SVGelement('mask',attributes={"id" : "Mask%04d"%Ordinary.id})
+      mask=SVGdraw.SVGelement('mask',
+                              attributes={"id" : "Mask%04d"%Ordinary.id,
+                                          "maskUnits":"userSpaceOnUse",
+                                          "x":self.mask.attributes["x"],
+                                          "y":self.mask.attributes["y"],
+                                          "width":self.mask.attributes["width"],
+                                          "height":self.mask.attributes["height"]})
       Ordinary.id+=1
       for i in range(0,4):
          el=SVGdraw.use(self.path)
@@ -1813,7 +1834,7 @@ class Symbol(Charge):
       #self.maingroup=self.tincture.fill(self.maingroup)
       self.maingroup.attributes["fill"]="none"
       self.baseRect=self.tincture.fill(self.baseRect)
-      self.maingroup.attributes["mask"]="url(#%s)"%self.clipPathElt.attributes["id"]
+      self.maingroup.attributes["mask"]="url(#%s)"%self.mask.attributes["id"]
       # Last-minute transforms
       if hasattr(self,"endtransforms"):
          if not self.use.attributes.has_key("transform"):
@@ -1955,7 +1976,11 @@ class Image(Charge):
             Ordinary.ImageFilters=True  # Don't do this again.
          self.mask=SVGdraw.SVGelement('mask',
                                       attributes={'id' : 'Mask%04d'%Ordinary.id,
-                                                  'maskUnits':'userSpaceOnUse'})
+                                                  'maskUnits':'userSpaceOnUse',
+                                                  'x':str(-Ordinary.FESSPTX),
+                                                  'y':str(-Ordinary.FESSPTY),
+                                                  'width':'100%',
+                                                  'height':'100%'})
          Ordinary.id+=1
          img=copy.deepcopy(self.ref)
          img.attributes['filter']='url(#AlphaFilter)'
