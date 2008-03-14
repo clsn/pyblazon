@@ -77,12 +77,7 @@ class Ordinary:
       # in setup because if this charge gets copied then there'll be
       # multiple elements with the same ID, and that's a no-no.  But
       # we can set it later on, in process or in finalizeSVG.
-      self.mask=SVGdraw.SVGelement('mask',
-                                   attributes={"x":str(-Ordinary.FESSPTX),
-                                               "y":str(-Ordinary.FESSPTY),
-                                               "width":"100%",
-                                               "height":"100%",
-                                               "maskUnits":"userSpaceOnUse"})
+      self.mask=SVGdraw.SVGelement('mask')
       self.svg.addElement(self.mask)
       # Must separate clipPathElt from the mask containing it, since
       # masks can't have transforms, etc.  So it is now a group inside the mask.
@@ -1789,12 +1784,7 @@ class Symbol(Charge):
    def do_fimbriation(self):
       self.fimb=SVGdraw.group()
       mask=SVGdraw.SVGelement('mask',
-                              attributes={"id" : "Mask%04d"%Ordinary.id,
-                                          "maskUnits":"userSpaceOnUse",
-                                          "x":self.mask.attributes["x"],
-                                          "y":self.mask.attributes["y"],
-                                          "width":self.mask.attributes["width"],
-                                          "height":self.mask.attributes["height"]})
+                              attributes={"id" : "Mask%04d"%Ordinary.id})
       Ordinary.id+=1
       for i in range(0,4):
          el=SVGdraw.use(self.path)
@@ -1975,12 +1965,7 @@ class Image(Charge):
             Ordinary.defs.append(filter2)
             Ordinary.ImageFilters=True  # Don't do this again.
          self.mask=SVGdraw.SVGelement('mask',
-                                      attributes={'id' : 'Mask%04d'%Ordinary.id,
-                                                  'maskUnits':'userSpaceOnUse',
-                                                  'x':str(-Ordinary.FESSPTX),
-                                                  'y':str(-Ordinary.FESSPTY),
-                                                  'width':'100%',
-                                                  'height':'100%'})
+                                      attributes={'id': 'Mask%04d'%Ordinary.id})
          Ordinary.id+=1
          img=copy.deepcopy(self.ref)
          img.attributes['filter']='url(#AlphaFilter)'
