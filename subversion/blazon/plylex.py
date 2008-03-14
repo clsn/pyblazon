@@ -33,7 +33,7 @@ t_AND=r"\b(and|&|between)\b"
 
 t_BEZANTY=r"\b(be[sz]anty|platey|pellety|hurty|tortoilly)\b"
 
-t_GROUPS="\bgroups\b"
+t_GROUPS=r"\bgroups\b"
 t_OF=r"\bof\b"
 t_EACH=r"\beach\b"
 t_CHARGED=r"\bcharged\b"
