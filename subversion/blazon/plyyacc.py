@@ -162,6 +162,11 @@ def p_treatment_9(p):
     fillin(p[0])
     if len(p)==4 and not f.tincture:
         Globals.extracolorless.append(f)
+
+def p_treatment_9a(p):
+    "treatment : COLOR SEMY OF charge CHARGED WITH grouporcharge"
+    p[4].addCharge(p[7])
+    p[0]=treatment.Semy(treatment.Treatment(p[1]),p[4])
     
 def p_opttreatment(p):
     """opttreatment : fulltreatment

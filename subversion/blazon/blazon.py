@@ -110,6 +110,10 @@ class Ordinary:
       t=self.clipPathElt.attributes.get("transform")
       if not t:
          t=""
+      try:
+         t+=self.endtransforms
+      except AttributeError:
+         pass
       self.maingroup.addElement(SVGdraw.SVGelement('use',
                                                    attributes={"xlink:href":"#%s"%self.clipPath.attributes["id"],
                                                                "stroke":self.fimbriation,
@@ -1742,6 +1746,10 @@ class ExtCharge(Charge):
                    "stroke-width":self.fimbriation_width,
                    "fill":"none",
                    "transform":self.clipPathElt.attributes.get("transform")}
+       try:
+          attributes["transform"]+=self.endtransforms
+       except AttributeError:
+          pass
        if self.getBaseURL():
          attributes["xml:base"]=self.getBaseURL()
        self.maingroup.addElement(
