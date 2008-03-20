@@ -61,7 +61,7 @@ t_QUARTERLY=r"\bquarterly\b"
 t_CHARGE=r"\b(roundels?|annulets?|lozenges?|fleurs?.de.l[iy]s|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross(es)?\W+crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?\W+(passant|rampant)|pallets?|fir\W+twigs?|fusils?|mascles?|triangles?|canton|gyron|(in|de)?crescents?|escutcheons?|shakeforks?|escallops?|fountains?|areas?)\b"
 t_MULLET=r"\bmullets?\b"
 
-t_INVERTED=r"\b(inverted|bendwise(\W+sinister)?|reversed|contourny|fesswise|palewise)\b"
+t_INVERTED=r"\b(inverted|bendwise(\W+sinister)?|reversed|contourny|fesswise|palewise|endorsed|cotised)\b"
 
 t_ORDINARY=r"\b(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(\W+gemelles?)?|fret|flaunches|batons?|gore)\b"
 

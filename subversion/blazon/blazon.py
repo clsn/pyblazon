@@ -145,12 +145,43 @@ class Ordinary:
    def orient(self,direction,*args,**kwargs):
       pass
 
+   def modify(self,name,*args,**kwargs):
+      # Special cases:
+      if name =="inverted":
+         self.invert()
+      elif name in ("reversed","fesswise","contourny",
+                    "bendwise","bendwise sinister","palewise"):
+         self.orient(name,**kwargs)
+      else:
+         # General mucking about!
+         # Right, this is for general "modification" of a charge/ordinary.
+         # The motivation for this was handling "endorsed" and "cotised"
+         # by just giving their names.  BUT it has to be done AFTER the
+         # "process" and all, otherwise it doesn't know about the linetype.
+         # So we make an attribute full of functions that finalizeSVG will
+         # call when it's good and ready.
+         if not hasattr(self,"mods"):
+            self.mods=[]
+         # Will I need (*args,**kwargs) ?
+         def it(self):
+            try:
+               getattr(self,name)(*args, **kwargs)
+            except AttributeError:
+               # print "Method %s not found."%name
+               pass
+         self.mods.append(it)
+            
+
    def finalizeSVG(self):
       "Do all the actual work, recur down into charges, etc, to build the SVG for this ordinary."
       # we really should only ever do this once.
       # if self.done:
       #   return self.svg
       self.process()
+      # Do any mods waiting around
+      if hasattr(self,"mods"):
+         for f in self.mods:
+            f(self)
       # Keep the "defs" property around for general use, but fill it
       # automatically if possible.
       if not hasattr(self,"mydefs"):
@@ -716,6 +747,15 @@ class Pale(Ordinary,TrueOrdinary):
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
 
+   def endorsed(self):
+      # Try it really simply; this will probably run into trouble sooner or
+      # later.
+      p=partLine()
+      p.lineType=self.lineType
+      p.rect(-14,-Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
+      p.rect(12, -Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
+      self.clipPathElt.addElement(SVGdraw.path(p))
+
    @staticmethod
    def patternSiblings(num):
       patterns=[[.4],[.4,(-26,0)],
@@ -766,6 +806,13 @@ class Pallet(Pale,Charge):
       except IndexError:
          return None
 
+   def endorsed(self):
+      p=partLine()
+      p.lineType=self.lineType
+      p.rect(-9,-Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
+      p.rect(7, -Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
+      self.clipPathElt.addElement(SVGdraw.path(p))
+
    def moveto(self,loc):
       Charge.moveto(self,loc)
    def shiftto(self,loc):
@@ -797,6 +844,16 @@ class Bend(Ordinary,TrueOrdinary):
       # Hrm.  But now the outer clipping path (?) is clipping the end of
       # the bend??
       #
+
+   def cotised(self):
+      p=partLine()
+      p.lineType=self.lineType
+      p.rect(-14, -Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
+      p.rect(12, -Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
+      p=SVGdraw.path(p)
+      # Wonder why this isn't on the clipPathElt instead??
+      p.attributes["transform"]=self.clipPath.attributes["transform"]
+      self.clipPathElt.addElement(p)
                
    @staticmethod
    def patternSiblings(num):
@@ -852,6 +909,16 @@ class Bendlet(Bend,Charge):
       except IndexError:
          return None
 
+   def cotised(self):
+      p=partLine()
+      p.lineType=self.lineType
+      p.rect(-9, -Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
+      p.rect(7, -Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
+      p=SVGdraw.path(p)
+      # Wonder why this isn't on the clipPathElt instead??
+      p.attributes["transform"]=self.clipPath.attributes["transform"]
+      self.clipPathElt.addElement(p)
+
    def moveto(self,loc):
       Charge.moveto(self,loc)
    def shiftto(self,loc):
@@ -893,7 +960,7 @@ class BendSinister(Bend):
          rv.append((-b[i][0],b[i][1]))
       return rv
 
-class BendletSinister(BendSinister,Bendlet):
+class BendletSinister(Bendlet,BendSinister):
    "Diminutive of Bend Sinister.  Actually this should probably be called a Scarpe"
    def __init__(self,*args,**kwargs):
       BendSinister.__init__(self,*args,**kwargs)
@@ -1818,6 +1885,8 @@ class Symbol(Charge):
       self.clipPathElt.addElement(self.clipPath)
       self.maingroup.addElement(self.baseRect)
       self.maingroup.addElement(self.use)
+      self.mask.attributes["id"]="Clip%04d"%Ordinary.id
+      Ordinary.id+=1
       if hasattr(self,"clipPath"): 
          # For fimbriation (at least one way to do it), need an id on the actual
          # path, not just the group:

@@ -104,7 +104,7 @@ class partLine:
     lineInfo={
         "indented": (2,1),
         "dancetty": (8,5),
-        "rayonny": (3,5),
+        "rayonny": (2,6),
         "wavy": (8,5),
         "embattled": (6,2),
         "dovetailed": (6,2),
@@ -257,25 +257,20 @@ class partLine:
                                      (amplitude,amplitude,sweep,uptoX,uptoY))
                 self.path.append(" A%f,%f 0 1 %d %f,%f"%
                                  (amplitude, amplitude,sweep,x,y))
-
-            #Rayonny doesn't quite work yet.
-#             elif self.lineType == "rayonny":
-#                 for i in range(0,int(leng/wavelength)):
-#                     midX=delX/2+shiftX*direction
-#                     midY=delY/2+shiftY*direction
-#                     # Make these q soon.
-#                     # Try to keep the math straight here....
-#                     self.path.append("L%.4f,%.4f %.4f,%.4f"%
-#                                      (uptoX+midX/3-delX/4,
-#                                       uptoY+midY/3-delY/4,
-#                                       uptoX+midX,uptoY+midY))
-#                     self.path.append("l%.4f,%.4f"%
-#                                      (delX/2-shiftX*direction,
-#                                       delY/2-shiftY*direction))
-#                     uptoX+=delX
-#                     uptoY+=delY
-#                     # direction*=-1
-#                 self.path.append(" L%.4f,%.4f"%(x,y))
+                
+            elif self.lineType == "rayonny":
+                for i in range(0,int(leng/wavelength)):
+                    self.path.append("l%.4f,%.4f %.4f,%.4f %.4f,%.4f "%
+                                     (delX/4+shiftX/2*direction,
+                                      delY/4+shiftY/2*direction,
+                                      -delX/4+shiftX/2*direction,
+                                      -delY/4+shiftY/2*direction,
+                                      delX-shiftX*direction,
+                                      delY-shiftY*direction,))
+                    uptoX+=delX
+                    uptoY+=delY
+                    direction*= -1
+                self.path.append(" L%.4f,%.4f"%(x,y))
             else:                       # Just pretend it's plain.
                 self.line(x,y)
             self.update(x,y)

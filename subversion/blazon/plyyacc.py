@@ -70,13 +70,15 @@ def p_fulltreatment_1(p):
 def p_fulltreatment_2(p):
     "fulltreatment : PARTYPER ORDINARY optinverted optlinetype fulltreatment AND fulltreatment"
     p[0]=lookup("per "+p[2])(p[5],p[7],linetype=p[4])
-    p[3](p[0])
+    for f in p[3]:
+        f(p[0])
     fillin(p[0])
 
 def p_fulltreatment_2_1(p):
     "fulltreatment : PARTYPER PALL optinverted optlinetype fulltreatment fulltreatment AND fulltreatment"
     p[0]=lookup("per "+p[2])(p[5],p[6],p[8],linetype=p[4])
-    p[3](p[0])
+    for f in p[3]:
+        f(p[0])
     fillin(p[0])
 
 def p_treatment_1(p):
@@ -281,7 +283,8 @@ def p_mullet(p):
 def p_charge_1(p):
     "charge : optA ordinary optinverted optlinetype opttreatment optfimbriation"
     res=p[2]
-    p[3](res)
+    for f in p[3]:
+        f(res)
     res.lineType=p[4]
     if not p[5]:
         if not res.tincture or not hasattr(res.tincture,"color") or not res.tincture.color or res.tincture.color == "none":
@@ -366,6 +369,7 @@ def p_optarrange(p):
         else:
             side=p[2]
         if len(p)>4:
+            # WRONG!!!
             act=p[4]
         else:
             act=None
@@ -407,23 +411,15 @@ def p_optamt(p):
         p[0]=8
 
 
-# Have to allow for *two* INVERTEDs, for "palewise contourny" etc.
+# Have to allow for multiple INVERTEDs, for "palewise contourny" etc.
 def p_optinverted(p):
-    """optinverted : INVERTED
-                   | INVERTED INVERTED
+    """optinverted : INVERTED optinverted
                    | empty"""
-    if len(p)<3:
-        if not p[1]:
-            p[0]=lambda x:x
-        elif p[1]=="inverted":
-            p[0]=lambda x:x.invert()
-        else:
-            s=p[1]                          # Have to make a copy
-            p[0]=(lambda x:x.orient(s,absolute=True))
+    if not p[1]:
+        p[0]=[(lambda x:x)]
     else:
-        s1=p[1]
-        s2=p[2]
-        p[0]=(lambda x:x.orient(s1,absolute=True,andThen=s2))
+        s=p[1]
+        p[0]=[(lambda x:x.modify(s))] + p[2]
         
 def p_optfimbriation(p):
     """optfimbriation : FIMBRIATED COLOR
