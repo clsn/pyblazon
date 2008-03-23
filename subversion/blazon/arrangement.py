@@ -114,6 +114,9 @@ class InCross(Arrangement):
    # Ought to be able to infer this from InFesse and InPale.
 
    def pattern(self,num):
+      if num == 2:
+         # Means something special for two things to be "in cross"
+         return [0.9,(0,0,(),0),(0,0,(),90)]
       if num < 4:
          return InFesse.patterns[num]
       # If the number is not congruent to zero or one modulo four,
@@ -135,6 +138,19 @@ class InCross(Arrangement):
       if num%4:
          rv+=[(0,0)]
       return rv
+
+class InSaltire(Arrangement):
+   def pattern(self,num):
+      if num==2:
+         # Means something special for two things to be "in saltire"
+         return [0.9,(0,0,(),-45),(0,0,(),45)]
+      else:
+         # Can't just use InCross because it derives things from Fesse and
+         # Pale which might not work out being square when rotated.
+         t=blazon.Saltire()
+         return t.patternContents(num)
+      # Bleah.  Still stinky; doesn't handle large numbers well, scaling
+      # bad...  Well, it's a start.
 
 class InBendSinister(InBend):
    def pattern(self,num):

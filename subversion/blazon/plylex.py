@@ -257,6 +257,7 @@ lookupdict={
     "in base": arrangement.InBase,
     "in annulo": arrangement.InAnnulo,
     "in cross": arrangement.InCross,
+    "in saltire": arrangement.InSaltire,
     "in chevron": arrangement.InChevron,
     "in pall": arrangement.InPall,
     "in pile": arrangement.InPall,      # So-so... too high.
