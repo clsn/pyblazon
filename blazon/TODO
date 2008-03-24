@@ -1,0 +1,62 @@
+Remove items from here as soon as they are implemented.
+
+Prerequisites for Initial Rollout:
+(from arj letter 27 X 06)
+
+- Other Features:
+  - Lines of partition on bordures (YES BUT UGLY)
+
+Vital:
+- support all charges that are simple, geometrical figures (MOSTLY DONE)
+- a charge or a group "between" a group (STARTING ON THIS)
+- charges to end up in the conventional places according to divisions of the
+  field. E.g. two annulets on a field parted per bend is supposed to go in
+  the sinister chief and dexter base, not (by default) per fess. (MOSTLY
+  DONE)
+
+Fairly important:
+- importing charges from file or database (it would get tedious to specify
+  the outline of, say, a lion, in the source code itself) (GETTING THERE)
+  - Going to need some more powerful equipment for more general case.
+  - Probably some half-intelligent DOM-based solution. -arj
+    - I sure hope not -mes
+- permit importing (referencing) of raster-graphic charges. (DONE)
+- back-references ("of the first" (DONE), "as many" (DONE))
+- possible to specify each quarter in a quartered shield individually
+- thin black lines between everything (or at least the option of having it)
+- Implemented special case with "a fesse embattled", and also implement
+  counter-embattled
+- Compony (I have my doubts about this one --mes)
+
+
+Wishlist:
+- "Gules within a bordure or a chief argent." looks horrible (squashing the
+  bordure makes it look very odd).
+- semy of _anything_ (even crazy, complex things like "a
+  cross-crosslet or between four bezants" (GETTING THERE)
+- multilingual support (e.g. blazons in French, German, Norwegian ...)
+- marshalling (quarterly, impaled, etc)
+- support for other shield shapes
+- support for using a flag instead of a shield
+
+Bugs:
+- "Argent six roundels azure each charged with an escutcheon or" makes the
+  escutcheons too big.  Probably just a matter of adjusting the scaling
+  factor on escutcheons, which may be too large in general.
+- The kludge that makes "per bend or and sable a crescent and a goute
+  counterchanged" work, in joining the crescent and the goute into a single
+  chargegroup, is, well, a kludge.  And it does bad things with "argent an
+  escutcheon gules between mullets vert" etc.
+- Similarly, you can't say "ermine a roundel sable and a mullet gules in
+  pale".  You have to put the "in pale" after the *first* part, and say
+  "ermine a roundel sable in pale and a mullet gules", which is weird.
+  Part of the same hack.
+- Also related, "in chief" has to come after the charge, while blazons seem
+  to have it before the charge more often.
+- Stuff like "Or on a bend sable between a mullet and a roundel gules, a
+  crescent argent" is going to be near impossible from a grammar
+  standpoint, without putting some extra restrictions on use of
+  conjunctions (maybe).  Even extended lookahead won't make it easy.  And
+  "Sable on a fess argent between two lozenges or a roundel gules between
+  an increscent and a decrescent azure" is even tougher.
+
