@@ -16,12 +16,6 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "PALL","WITHIN","BORDURE","BEZANTY","LP","RP","IN","DIRECTION",
         "URL","MULLET","NAME","ANNULO","GROUPS")
 
-# For some reason, things seem to work better when functions are defined,
-# even if they don't do anything.  e.g. "vair" would overshadow "vairy"
-# when they were just strings.
-
-# I'm thinking this'll go away once I surround all the lexemes with \b's
-
 t_ignore=" \n\t"
 
 

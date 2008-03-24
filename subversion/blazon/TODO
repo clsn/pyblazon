@@ -4,7 +4,7 @@ Prerequisites for Initial Rollout:
 (from arj letter 27 X 06)
 
 - Other Features:
-  - Lines of partition on bordures (SORTA)
+  - Lines of partition on bordures (YES BUT UGLY)
 
 Vital:
 - support all charges that are simple, geometrical figures (MOSTLY DONE)
@@ -12,13 +12,14 @@ Vital:
 - charges to end up in the conventional places according to divisions of the
   field. E.g. two annulets on a field parted per bend is supposed to go in
   the sinister chief and dexter base, not (by default) per fess. (MOSTLY
-  DONE, BUT NEEDS FIXING)
+  DONE)
 
 Fairly important:
 - importing charges from file or database (it would get tedious to specify
   the outline of, say, a lion, in the source code itself) (GETTING THERE)
   - Going to need some more powerful equipment for more general case.
   - Probably some half-intelligent DOM-based solution. -arj
+    - I sure hope not -mes
 - permit importing (referencing) of raster-graphic charges. (DONE)
 - back-references ("of the first" (DONE), "as many" (DONE))
 - possible to specify each quarter in a quartered shield individually
@@ -42,7 +43,6 @@ Bugs:
 - "Argent six roundels azure each charged with an escutcheon or" makes the
   escutcheons too big.  Probably just a matter of adjusting the scaling
   factor on escutcheons, which may be too large in general.
-- Fimbriation and orientation ("bendwise") interact badly.
 - The kludge that makes "per bend or and sable a crescent and a goute
   counterchanged" work, in joining the crescent and the goute into a single
   chargegroup, is, well, a kludge.  And it does bad things with "argent an
@@ -60,37 +60,3 @@ Bugs:
   "Sable on a fess argent between two lozenges or a roundel gules between
   an increscent and a decrescent azure" is even tougher.
 
-Naming:
-The project should have a name. Suggestions thus far:
-
-arj's favourites:
-10. Dovetail
-15. Coronet
-18. Gauntlet
-19. Trefoil
-20. Ardent
-25. Saltire
-30. Albion
-35. Cockatrice
-40. Rampant
-42. Cinquefoil
-50. Bezant
-60. Ermine
-
-clsn's favourites:
-(no particular order)
-Hatchment
-Saltire
-Bezant
-Ermine
-
-Other suggestion (non-ordered, ATM): Gyron, Wyvern, Pheon, Estoile,
-Quatrefoil, Dexter, Tabard
-Rejected names: Fusil, Pile
-
-De facto name is looking to be pyBlazon.
-
-Gratuitous acronyms would be nice, but is not a
-requirement. Uniqueness of the name *is* a requirement. Search
-Freshmeat/Sourceforge to check for collisions.
-See if it's possible to combine two words to cut down on Google interference.

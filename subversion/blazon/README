@@ -1,6 +1,6 @@
 INTRODUCTION
 ------------
-Untitled is a program that interprets a blazon (a very terse and
+pyBlazon is a program that interprets a blazon (a very terse and
 formulaic description of a heraldic coat of arms), and turns it into a
 picture.
 
@@ -57,24 +57,24 @@ Of course, the idea of blazonry being a programming language is only
 half-serious. There are many blazons that need real artistic judgement
 to be executed in a reasonable way, if at all. But maybe 80 to 90 % of
 shields use only a small set of elements that are combined in a simple
-way. The goal of Untitled is to cover all of these.
+way. The goal of pyBlazon is to cover all of these.
 
 A few of you might instead ask, "Why _another_ blazonry interpreter?"
 Those of you who are into heraldry might know of a Windows program
-called Blazons! that does more or less the same thing as Untitled
+called Blazons! that does more or less the same thing as pyBlazon
 does.
 
 The main difference is that, whereas Blazons! draws bitmap images in
-only one set size, Untitled produces vector graphics. Since bitmaps
+only one set size, pyBlazon produces vector graphics. Since bitmaps
 don't scale well, you can't use the images drawn by Blazons! for any
 serious purpose. But you can scale vector graphics to any size without
 loss of quality, and you can even use it in print.
 
-Blazons! has a big advantage over Untitled, however, in that it
+Blazons! has a big advantage over pyBlazon, however, in that it
 contains a much larger library of charges. In general, it can be said
 that when Blazons! fails to render a blazon, it is because it gets
 confused about the grammatical structure of the blazon, but when
-Untitled fails to render a blazon, it is because it contains charges
+pyBlazon fails to render a blazon, it is because it contains charges
 it doesn't know about.
 
 LITERATURE
