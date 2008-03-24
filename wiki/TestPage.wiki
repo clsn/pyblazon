@@ -1,5 +1,0 @@
-#summary One-sentence summary of this page.
-
-= Testing =
-
-Just seeing how this works now.
