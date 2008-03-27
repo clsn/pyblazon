@@ -14,89 +14,58 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
         "PALL","WITHIN","BORDURE","BEZANTY","LP","RP","IN","DIRECTION",
-        "URL","MULLET","NAME","ANNULO","GROUPS")
+        "URL","MULLET","NAME","ANNULO","GROUPS",
+        "TOKEN",)
 
 t_ignore=" \n\t"
 
+word_REs={
+    'BORDURE':r"(bordure|orle|tressure|double\W+tressure)",
+    'COLOR':r"((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de[ ]larmes|de[ ]poix|de[ ]sang|d'huile|d'eau|proper)",
+    'AND':r"(and|&|between)",
+    'BEZANTY':r"(be[sz]anty|platey|pellety|hurty|tortoilly)",
+    'GROUPS':r"groups",
+    'OF':r"of",
+    'EACH':r"each",
+    'CHARGED':r"charged",
+    'WITH':r"with",
+    'THE':r"the",
+    'IN':r"in",
+    'SEMY':r"semy",
+    'LP':r"({|lp)",                 # leftparen
+    'RP':r"(}|rp)",                 # rightparen
+    'ANNULO':r"annulo",
 
-t_BORDURE=r"\b(bordure|orle|tressure|double\W+tressure)\b"
+    'SEMYDELIS':r"(semy\W+de\W+l[iy]s|billett?y|go?utty|crusilly|mulletty)",
 
-t_COLOR=r"\b((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de[ ]larmes|de[ ]poix|de[ ]sang|d'huile|d'eau|proper)\b"
-
-t_AND=r"\b(and|&|between)\b"
-
-t_BEZANTY=r"\b(be[sz]anty|platey|pellety|hurty|tortoilly)\b"
-
-t_GROUPS=r"\bgroups\b"
-t_OF=r"\bof\b"
-t_EACH=r"\beach\b"
-t_CHARGED=r"\bcharged\b"
-t_WITH=r"\bwith\b"
-t_THE=r"\bthe\b"
-t_IN=r"\bin\b"
-t_SEMY=r"\bsemy\b"
-t_LP=r"\b({|lp)\b"                           # leftparen
-t_RP=r"\b(}|rp)\b"                           # rightparen
-
-t_ANNULO=r"\bannulo\b"
-
-t_SEMYDELIS=r"\b(semy\W+de\W+l[iy]s|billett?y|go?utty|crusilly|mulletty)\b"
-
-# t_QUARTERED=r"quartered"
-t_WITHIN=r"\bwithin\b"
-
-t_CARDINAL=r"\b(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|field|last)\b"
-    # Field and last aren't really cardinals, but it's just as easy
-
-t_LINEY=r"\b(paly|barry|bendy(\W+sinister)?|g[iy]ronny|checky|lozengy|pily|chevronny(\W+inverted)?)\b"
-
-t_QUARTERLY=r"\bquarterly\b"
-
-t_CHARGE=r"\b(roundels?|annulets?|lozenges?|fleurs?.de.l[iy]s|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross(es)?\W+crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?\W+(passant|rampant)|pallets?|fir\W+twigs?|fusils?|mascles?|triangles?|canton|gyron|(in|de)?crescents?|escutcheons?|shakeforks?|escallops?|fountains?|areas?)\b"
-t_MULLET=r"\bmullets?\b"
-
-t_INVERTED=r"\b(inverted|bendwise(\W+sinister)?|reversed|contourny|fesswise|palewise|endorsed|cotised)\b"
-
-t_ORDINARY=r"\b(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(\W+gemelles?)?|fret|flaunches|batons?|gore)\b"
-
-t_PALL=r"\bpall\b"
-
-# Chief is not an ordinary
-t_CHIEF=r"\bchief\b"
-t_ON=r"\bon\b"
-
-t_LINETYPE=r"\b(plain|indented|dancetty|embattled|invected|engrailed|wavy|rayonny|dovetailed|raguly|nebuly|urdy|champaine)\b"
-
-t_FURRY=r"\b(vairy\W+in\W+pale|vairy|counter\W+vairy)\b"
-
-t_ALTERED=r"\b(fretty|ermined|masoned|estencelly)\b"
-
-t_FUR=r"\b(vair.in.pale|vair|counter\W+vair|ermines?|erminois|pean|counter\W+ermine)\b"
-
-t_PARTYPER=r"\b(party\W+per|per)\b"
-t_FIMBRIATED=r"\b(fimbriated|voided)\b"
-t_COUNTERCHARGED=r"\bcountercha[rn]ged\b"
-t_DIRECTION=r"\b(dexter|sinister)\b"
+    'WITHIN':r"within",
+    'CARDINAL':r"(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|field|last)",
+    'LINEY':r"(paly|barry|bendy(\W+sinister)?|g[iy]ronny|checky|lozengy|pily|chevronny(\W+inverted)?)",
+    'QUARTERLY':r"quarterly",
+    'CHARGE':r"(roundels?|annulets?|lozenges?|fleurs?.de.l[iy]s|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross(es)?\W+crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?\W+(passant|rampant)|pallets?|fir\W+twigs?|fusils?|mascles?|triangles?|canton|gyron|(in|de)?crescents?|escutcheons?|shakeforks?|escallops?|fountains?|areas?)",
+    'MULLET':r"mullets?",
+    'INVERTED':r"(inverted|bendwise(\W+sinister)?|reversed|contourny|fesswise|palewise|endorsed|cotised)",
+    'ORDINARY':r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(\W+gemelles?)?|fret|flaunches|batons?|gore)",
+    'PALL':r"pall",
+    'CHIEF':r"chief",
+    'ON':r"on",
+    'LINETYPE':r"(plain|indented|dancetty|embattled|invected|engrailed|wavy|rayonny|dovetailed|raguly|nebuly|urdy|champaine)",
+    'FURRY':r"(vairy\W+in\W+pale|vairy|counter\W+vairy)",
+    'ALTERED':r"(fretty|ermined|masoned|estencelly)",
+    'FUR':r"(vair.in.pale|vair|counter\W+vair|ermines?|erminois|pean|counter\W+ermine)",
+    'PARTYPER':r"(party\W+per|per)",
+    'FIMBRIATED':r"(fimbriated|voided)",
+    'COUNTERCHARGED':r"countercha[rn]ged",
+    'DIRECTION':r"(dexter|sinister)",
+    'NUMWORD':r"(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty|I|II|III|IV|as[ ]many)",
+    'A':r'an?',
+    'WORD':r'points',
+    }
 
 def t_NUM(t):
     r"[0-9]+"
     t.value=int(t.value)
     return t
-
-
-def t_NUMWORD(t):
-    r"\b(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty|I|II|III|IV|as[ ]many)\b"
-    t.value={"one":1, "two":2, "three":3, "four":4, "five":5, "six":6,
-             "seven":7, "eight":8, "nine":9, "ten":10, "eleven":11,
-             "twelve":12, "thirteen":13, "fourteen":14, "fifteen":15,
-             "sixteen":16, "seventeen":17, "eighteen":18, "nineteen":19,
-             "twenty":20,"I":1,"II":2,"III":3,"IV":4,"as many":-1}[t.value]
-    return t
-
-t_A=r"\ban?\b"
-
-t_WORD=r"\bpoints\b"
-    # Word that's required but doesn't mean much.
 
 def t_URL(t):
     r"<[^>]*>"
@@ -108,6 +77,75 @@ def t_NAME(t):
     if t.value[-1]=='s':
         t.value=t.value[:-1]
     t.value=t.value[1:-1].strip()
+    return t
+
+def t_COLOR(t):
+    r"bleu[ ]celeste|de[ ]poix|de[ ]larmes|de[ ]sang|d'or"
+    return t
+
+def t_BORDURE(t):
+    r"double\W+tressure"
+    return t
+
+def t_LINEY(t):
+    r"bendy\W+sinister"
+    return t
+
+def t_CHARGE(t):
+    r"cross(es)?\W+crosslets?|fir\W+twigs?|cross(es)?\W+(formy|pattee|pommee|bottony|humetty|flory)|lions?\W+(passant|rampant)"
+    return t
+
+def t_INVERTED(t):
+    r"bendwise\W+sinister"
+    return t
+
+def t_ORDINARY(t):
+    r"bend(lets?)?\W+sinister"
+    return t
+
+def t_FURRY(t):
+    r"vairy\W+in\W+pale|counter\W+vairy"
+    return t
+
+def t_FUR(t):
+    r"vair\W+in\W+pale|counter\W+vair|counter\W+ermine"
+    return t
+
+def t_PARTYPER(t):
+    r"party\W+per"
+    return t
+
+def t_NUMWORD(t):
+    r"as\W+many"
+    t.value= -1
+    return t
+
+def t_TOKEN(t):
+    r'[a-z]+'
+    # Massive function that seeks out just about all the reserved words
+    found='TOKEN'
+    foundlen=0
+    for kwd in word_REs.keys():
+        rexp=word_REs[kwd]
+        mtch=rexp.match(t.value)
+        # FAILS, for tokens with spaces in them.  Finding the longest one
+        # doesn't work: e.g. "party per" sends back "party" as a TOKEN first.
+        # Move such things into the parser?
+        if mtch:
+            l=mtch.end()
+            # print "l=",l,"kwd=",kwd
+            if l>foundlen:
+                foundlen=l
+                found=kwd
+    t.type=found
+    # Special case:
+    if found=="NUMWORD":
+        t.value={"one":1, "two":2, "three":3, "four":4, "five":5, "six":6,
+                 "seven":7, "eight":8, "nine":9, "ten":10, "eleven":11,
+                 "twelve":12, "thirteen":13, "fourteen":14, "fifteen":15,
+                 "sixteen":16, "seventeen":17, "eighteen":18, "nineteen":19,
+                 "twenty":20,"I":1,"II":2,"III":3,"IV":4,"as many":-1}[t.value]
+    # print "returning: ",t
     return t
 
 def t_error(t):
@@ -173,7 +211,7 @@ lookupdict={
     "cross(es)?.bottony": (lambda *a: blazon.ExtCharge("bottony")),
     "cross(es)?.humetty": (lambda *a: blazon.ExtCharge("humetty")),
     "cross(es)?.flory": (lambda *a: blazon.ExtCharge("flory")),
-    "cross(es)?\W+crosslets?": (lambda *a: blazon.ExtCharge("crosscrosslet")),
+    "cross(es)?\\W+crosslets?": (lambda *a: blazon.ExtCharge("crosscrosslet")),
     "mullets?": (lambda *a: blazon.ExtCharge("mullet",extension=a)),
     "escutcheons?": (lambda *a: blazon.ExtCharge("escutcheon")),
     "shakeforks?": (lambda *a: blazon.ExtCharge("shakefork")),
@@ -287,6 +325,12 @@ def show_grammar(all=dir()):
         else:
             print f, ":\t", obj.__doc__
 
+
+# Compile all the REs.
+for kwd in word_REs.keys():
+    rexp=word_REs[kwd]
+    word_REs[kwd]=re.compile(r'\b'+rexp+r'\b')
+    
 
 lex.lex()
 
