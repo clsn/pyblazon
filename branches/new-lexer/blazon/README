@@ -1,0 +1,122 @@
+INTRODUCTION
+------------
+pyBlazon is a program that interprets a blazon (a very terse and
+formulaic description of a heraldic coat of arms), and turns it into a
+picture.
+
+[Description of what SVG is and why it matters (scalable)]
+
+That is the theory, anyway. In practice, the SVG doesn't work with
+some viewers, including Mozilla Firefox. This is not our fault - we
+generate 100% genuine and certified SVG code - but we do so using a
+number of advanced features that the aforementioned viewers simply
+don't support. We suggest you use RSVG, since that's what we did.
+
+SET-UP
+------
+This software requires the following:
+- Python
+- the Python base library
+- SVGDraw
+- PLY
+
+In Debian, PLY is packaged as python-ply (still only in unstable). It
+is also available from http://www.dabeaz.com/ply/ .
+SVGDraw is not packaged yet as far as we know, but it is available at
+http://www2.sfk.nl/svg .
+
+Usage:
+   python gen.py <blazon>
+
+Example:
+   python gen.py Vert a saltire argent.
+
+Though, to actually view the shield, you need to save the SVG output
+with redirection, e.g.:
+
+   python gen.py Vert a saltire argent. > test.svg
+
+Or pipe it into a viewer, such as:
+
+   python gen.py Vert a saltire argent. | rsvg-view --stdin
+
+If you are unfamiliar with blazonry, the Wikipedia article
+http://en.wikipedia.org/wiki/Blazon is a good starting point. Some
+examples of blazons that are currently supported can be found in
+blazons-good.txt in the tests/ subdirectory.
+
+WHY A BLAZONRY INTERPRETER?
+---------------------------
+Blazonry has been referred to as "the world's oldest programming
+language" by several people. As language nerds and fans of historical
+programming languages we thought that it would be the pinnacle of
+coolness to actually have a proper implementation of this ancient
+programming language.
+
+Of course, the idea of blazonry being a programming language is only
+half-serious. There are many blazons that need real artistic judgement
+to be executed in a reasonable way, if at all. But maybe 80 to 90 % of
+shields use only a small set of elements that are combined in a simple
+way. The goal of pyBlazon is to cover all of these.
+
+A few of you might instead ask, "Why _another_ blazonry interpreter?"
+Those of you who are into heraldry might know of a Windows program
+called Blazons! that does more or less the same thing as pyBlazon
+does.
+
+The main difference is that, whereas Blazons! draws bitmap images in
+only one set size, pyBlazon produces vector graphics. Since bitmaps
+don't scale well, you can't use the images drawn by Blazons! for any
+serious purpose. But you can scale vector graphics to any size without
+loss of quality, and you can even use it in print.
+
+Blazons! has a big advantage over pyBlazon, however, in that it
+contains a much larger library of charges. In general, it can be said
+that when Blazons! fails to render a blazon, it is because it gets
+confused about the grammatical structure of the blazon, but when
+pyBlazon fails to render a blazon, it is because it contains charges
+it doesn't know about.
+
+LITERATURE
+----------
+James Parker (1894): A Glossary of Terms Used in Heraldry.
+http://www.heraldsnet.org/saitou/parker/index.htm
+
+St. George's Roll.
+http://perso.numericable.fr/~briantimms/rolls/StGeorgesE1.html
+
+FOR DEVELOPERS
+--------------
+If you want to run the regression tests, you also need the following
+components:
+
+- xml.parsers.xmlproc library, which is a part of PyXML. In Debian,
+  install the python-xml package.
+- PIL (Python Imaging Library). In Debian, install the python-imaging package.
+
+To run the regression tests, do:
+   python regressiontest.py
+
+It should output a lot of stuff, but end with OK. If it ends with
+FAILED, you need to figure out if the production code or the test code
+is wrong, and fix accordingly.
+
+An easy way of adding a new gold standard shield is to add the blazon
+at the end of gsblazons.txt, but prepended by an existing image file
+(which of course will give a bogus result). For instance:
+
+   1.png Azure semy-de-lis or.
+
+When you run the test suite again, you will get an error (because the
+new image looks nothing at all like 1.png). But do not despair! Simply
+copy the newly generated tests/gsshields/out.png to an unused
+filename, and updated gsblazons.txt accordingly, and rerun. There
+should be no test failures this time.
+
+Gyronny sable and argent on a roundel gyronny argent and sable on a roundel gyronny sable and argent on a roundel gyronny argent and sable a torteau
+Per cross bendy argent and azure and bendy sinister argent and azure.
+Per pall azure, vert and gules, a pall barry of twelve argent and sable.
+Sable seventeen triangles or five, five, three, three, and one.
+Vert two bendlets sinister argent.
+Bendy-barry gules and or
+Argent pellety.
