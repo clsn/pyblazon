@@ -19,6 +19,7 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
 
 t_ignore=" \n\t"
 
+word_RE_text={}
 word_REs={
     'BORDURE':r"(bordure|orle|tressure|double\W+tressure)",
     'COLOR':r"((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de[ ]larmes|de[ ]poix|de[ ]sang|d'huile|d'eau|proper)",
@@ -79,49 +80,70 @@ def t_NAME(t):
     t.value=t.value[1:-1].strip()
     return t
 
+# Here's the weirdness of the new-style parser:
+
+# PLY matches lexer tokens in the following order: first, it matches
+# against all the tokens that are defined as functions, in the order
+# specified in the file.  Then it goes against ones that are defined as
+# variables, sorted in order of decreasing regexp length.  Now, it seems to
+# me that what would be good is to match all the "special" words and
+# anything else would be considered an "identifier" (to borrow a term from
+# programming languages), basically a general charge that has to be looked
+# up someplace.  The PLY documentation actually suggests that for such
+# things it's best to have a rule that matches nearly everything, and
+# inside that check the actual value of the token and adjust its type
+# accordingly, if necessary.  So that's what I'm doing: that's what that
+# big word_REs dictionary above is for: helps look up the token it's
+# supposed to be.  Then the t_TOKEN rule below does all the lookups.
+# Trouble is that some of my tokens are already multi-word (e.g. "bend
+# sinister").  I can't have the TOKEN rule include spaces, or it gobbles up
+# everything.  So instead I put all the multi-word tokens in individual
+# functions above the TOKEN rule (so they are done first).  It's kind of
+# ugly, I think; maybe there are better ways.
+
 def t_COLOR(t):
-    r"bleu[ ]celeste|de[ ]poix|de[ ]larmes|de[ ]sang|d'or"
+    r"\b(bleu[ ]celeste|de[ ]poix|de[ ]larmes|de[ ]sang|d'or)\b"
     return t
 
 def t_BORDURE(t):
-    r"double\W+tressure"
+    r"\b(double\W+tressure)\b"
     return t
 
 def t_LINEY(t):
-    r"bendy\W+sinister"
+    r"\b(bendy\W+sinister)\b"
     return t
 
 def t_CHARGE(t):
-    r"cross(es)?\W+crosslets?|fir\W+twigs?|cross(es)?\W+(formy|pattee|pommee|bottony|humetty|flory)|lions?\W+(passant|rampant)"
+    r"\b(fleurs?\W+de\W+lis|cross(es)?\W+crosslets?|fir\W+twigs?|cross(es)?\W+(formy|pattee|pommee|bottony|humetty|flory)|lions?\W+(passant|rampant))\b"
     return t
 
 def t_INVERTED(t):
-    r"bendwise\W+sinister"
+    r"\b(bendwise\W+sinister)\b"
     return t
 
 def t_ORDINARY(t):
-    r"bend(lets?)?\W+sinister"
+    r"\b(bend(lets?)?\W+sinister)\b"
     return t
 
 def t_FURRY(t):
-    r"vairy\W+in\W+pale|counter\W+vairy"
+    r"\b(vairy\W+in\W+pale|counter\W+vairy)\b"
     return t
 
 def t_FUR(t):
-    r"vair\W+in\W+pale|counter\W+vair|counter\W+ermine"
+    r"\b(vair\W+in\W+pale|counter\W+vair|counter\W+ermine)\b"
     return t
 
 def t_PARTYPER(t):
-    r"party\W+per"
+    r"\b(party\W+per)\b"
     return t
 
 def t_NUMWORD(t):
-    r"as\W+many"
+    r"\bas\W+many\b"
     t.value= -1
     return t
 
 def t_TOKEN(t):
-    r'[a-z]+'
+    r"\b[a-z'-]+\b"
     # Massive function that seeks out just about all the reserved words
     found='TOKEN'
     foundlen=0
@@ -130,7 +152,7 @@ def t_TOKEN(t):
         mtch=rexp.match(t.value)
         # FAILS, for tokens with spaces in them.  Finding the longest one
         # doesn't work: e.g. "party per" sends back "party" as a TOKEN first.
-        # Move such things into the parser?
+        # So we have to do those above.
         if mtch:
             l=mtch.end()
             # print "l=",l,"kwd=",kwd
@@ -302,17 +324,12 @@ lookupdict={
 
 def lookup(key):
     # sys.stderr.write("Looking up: (%s)\n"%key)
-    try:
-        return lookupdict[key.lower()]
-    except KeyError:
-        key=key.lower()
-        for k in lookupdict.keys():
-            # Need the match to be anchored at the end too.
-            # sys.stderr.write("Matching with: (%s)\n"%k)
-            m=re.match(k+"$",key)
-            if m:
-                return lookupdict[k]
-        return key
+    key=key.lower()
+    for k in lookupdict.keys():
+        m=k.match(key)
+        if m:
+            return lookupdict[k]
+    return key
 
 def show_grammar(all=dir()):
     all=filter((lambda x: x[0:2] == 't_'), all)
@@ -324,13 +341,24 @@ def show_grammar(all=dir()):
             print f, ":\t", obj
         else:
             print f, ":\t", obj.__doc__
+    # Most of the tokens are now in word_REs...
+    for k in word_RE_text.keys():
+        print k, ":\t", word_RE_text[k]
 
 
 # Compile all the REs.
 for kwd in word_REs.keys():
     rexp=word_REs[kwd]
+    # Save the text for the show_grammar function, otherwise it can't
+    # print them out.
+    word_RE_text[kwd]=rexp
     word_REs[kwd]=re.compile(r'\b'+rexp+r'\b')
-    
+# Compile the lookupdict too
+newdict={}
+for kwd in lookupdict.keys():
+    # has to match at the end also.
+    newdict[re.compile(kwd+'$')]=lookupdict[kwd]
+lookupdict=newdict
 
 lex.lex()
 
