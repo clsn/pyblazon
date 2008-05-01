@@ -326,7 +326,8 @@ def p_ordinary_5(p):
     try:
         p[0]=blazon.Image(blazon.Blazon.lookupcharge(p[2]), 80, 80)
     except KeyError:
-        p[0]=blazon.Image(p[2], 80, 80)
+        p[0]=blazon.ExtCharge("question")
+        # p[0]=blazon.Image(p[2], 80, 80)
 
 def p_bordure(p):
     """bordure : empty

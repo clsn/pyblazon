@@ -1778,7 +1778,8 @@ class ExtCharge(Charge):
         "escutcheon":("data/Charges.svg#escutcheon",3,None),
         "shakefork":("data/Charges.svg#shakefork",3,None),
         "escallop":("data/Escallop.svg#escallop",2,None),
-        "firtwig":("data/Firtwig.svg#firtwig",2,None)
+        "firtwig":("data/Firtwig.svg#firtwig",2,None),
+        "question":("data/Charges.svg#question",2,None)
         }
     
     def __init__(self,name,*args,**kwargs):
