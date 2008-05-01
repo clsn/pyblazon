@@ -312,6 +312,23 @@ def p_ordinary_4(p):
         # Punt.
         p[0]=blazon.Image(p[2], 80, 80)
 
+def p_tokenlist(p):
+    """tokenlist : TOKEN
+                 | TOKEN tokenlist"""
+    if len(p)==2:
+        p[0]=p[1]
+    else:
+        p[0]=p[1]+" "+p[2]
+
+def p_ordinary_5(p):
+    "ordinary : optA tokenlist"
+    # How about we treat these as a form of (name)?
+    try:
+        p[0]=blazon.Image(blazon.Blazon.lookupcharge(p[2]), 80, 80)
+    except KeyError:
+        p[0]=blazon.ExtCharge("question")
+        # p[0]=blazon.Image(p[2], 80, 80)
+
 def p_bordure(p):
     """bordure : empty
                | WITHIN A BORDURE optlinetype opttreatment
