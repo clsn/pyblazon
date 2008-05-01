@@ -1778,7 +1778,8 @@ class ExtCharge(Charge):
         "escutcheon":("data/Charges.svg#escutcheon",3,None),
         "shakefork":("data/Charges.svg#shakefork",3,None),
         "escallop":("data/Escallop.svg#escallop",2,None),
-        "firtwig":("data/Firtwig.svg#firtwig",2,None)
+        "firtwig":("data/Firtwig.svg#firtwig",2,None),
+        "question":("data/Charges.svg#question",2,None)
         }
     
     def __init__(self,name,*args,**kwargs):
@@ -2113,18 +2114,25 @@ class Blazon:
          for line in fh:
             if line[0]!='#':            # Skip comments.
                (key, value)=line.split(':',1)
-               self.__class__.lookup[key.strip()]=value.strip()
+               # Compile 'em into regexps in advance.
+               self.__class__.lookup[re.compile(key.strip())]=value.strip()
       except IOError:
          pass
    @classmethod
    def lookupcharge(cls,name):
-      try:
-         return cls.lookup[name]
-      except KeyError:
-         pass
+      # No sense in doing a direct lookup; they're all compiled into REs.
+      # Probably for the best to require that we find the *longest* match.
+      found=None
+      foundlen=0
       for (key,value) in cls.lookup.items():
-         if re.match(key,name):
-            return value
+         mtch=key.match(name)
+         if mtch:
+            # we're searching with "match"; the start is always the same place
+            if foundlen<mtch.end():
+               foundlen=mtch.end()
+               found=value
+      if found:
+         return found
       raise KeyError
    def GetShield(self):
       if not hasattr(self.__class__,'lookup') or not self.__class__.lookup:

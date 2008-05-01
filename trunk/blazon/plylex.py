@@ -14,89 +14,59 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
         "PALL","WITHIN","BORDURE","BEZANTY","LP","RP","IN","DIRECTION",
-        "URL","MULLET","NAME","ANNULO","GROUPS")
+        "URL","MULLET","NAME","ANNULO","GROUPS",
+        "TOKEN",)
 
 t_ignore=" \n\t"
 
+word_RE_text={}
+word_REs={
+    'BORDURE':r"(bordure|orle|tressure|double\W+tressure)",
+    'COLOR':r"((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de[ ]larmes|de[ ]poix|de[ ]sang|d'huile|d'eau|proper)",
+    'AND':r"(and|&|between)",
+    'BEZANTY':r"(be[sz]anty|platey|pellety|hurty|tortoilly)",
+    'GROUPS':r"groups",
+    'OF':r"of",
+    'EACH':r"each",
+    'CHARGED':r"charged",
+    'WITH':r"with",
+    'THE':r"the",
+    'IN':r"in",
+    'SEMY':r"semy",
+    'LP':r"({|lp)",                 # leftparen
+    'RP':r"(}|rp)",                 # rightparen
+    'ANNULO':r"annulo",
 
-t_BORDURE=r"\b(bordure|orle|tressure|double\W+tressure)\b"
+    'SEMYDELIS':r"(semy\W+de\W+l[iy]s|billett?y|go?utty|crusilly|mulletty)",
 
-t_COLOR=r"\b((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de[ ]larmes|de[ ]poix|de[ ]sang|d'huile|d'eau|proper)\b"
-
-t_AND=r"\b(and|&|between)\b"
-
-t_BEZANTY=r"\b(be[sz]anty|platey|pellety|hurty|tortoilly)\b"
-
-t_GROUPS=r"\bgroups\b"
-t_OF=r"\bof\b"
-t_EACH=r"\beach\b"
-t_CHARGED=r"\bcharged\b"
-t_WITH=r"\bwith\b"
-t_THE=r"\bthe\b"
-t_IN=r"\bin\b"
-t_SEMY=r"\bsemy\b"
-t_LP=r"\b({|lp)\b"                           # leftparen
-t_RP=r"\b(}|rp)\b"                           # rightparen
-
-t_ANNULO=r"\bannulo\b"
-
-t_SEMYDELIS=r"\b(semy\W+de\W+l[iy]s|billett?y|go?utty|crusilly|mulletty)\b"
-
-# t_QUARTERED=r"quartered"
-t_WITHIN=r"\bwithin\b"
-
-t_CARDINAL=r"\b(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|field|last)\b"
-    # Field and last aren't really cardinals, but it's just as easy
-
-t_LINEY=r"\b(paly|barry|bendy(\W+sinister)?|g[iy]ronny|checky|lozengy|pily|chevronny(\W+inverted)?)\b"
-
-t_QUARTERLY=r"\bquarterly\b"
-
-t_CHARGE=r"\b(roundels?|annulets?|lozenges?|fleurs?.de.l[iy]s|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross(es)?\W+crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?\W+(passant|rampant)|pallets?|fir\W+twigs?|fusils?|mascles?|triangles?|canton|gyron|(in|de)?crescents?|escutcheons?|shakeforks?|escallops?|fountains?|areas?)\b"
-t_MULLET=r"\bmullets?\b"
-
-t_INVERTED=r"\b(inverted|bendwise(\W+sinister)?|reversed|contourny|fesswise|palewise|endorsed|cotised)\b"
-
-t_ORDINARY=r"\b(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(\W+gemelles?)?|fret|flaunches|batons?|gore)\b"
-
-t_PALL=r"\bpall\b"
-
-# Chief is not an ordinary
-t_CHIEF=r"\bchief\b"
-t_ON=r"\bon\b"
-
-t_LINETYPE=r"\b(plain|indented|dancetty|embattled|invected|engrailed|wavy|rayonny|dovetailed|raguly|nebuly|urdy|champaine)\b"
-
-t_FURRY=r"\b(vairy\W+in\W+pale|vairy|counter\W+vairy)\b"
-
-t_ALTERED=r"\b(fretty|ermined|masoned|estencelly)\b"
-
-t_FUR=r"\b(vair.in.pale|vair|counter\W+vair|ermines?|erminois|pean|counter\W+ermine)\b"
-
-t_PARTYPER=r"\b(party\W+per|per)\b"
-t_FIMBRIATED=r"\b(fimbriated|voided)\b"
-t_COUNTERCHARGED=r"\bcountercha[rn]ged\b"
-t_DIRECTION=r"\b(dexter|sinister)\b"
+    'WITHIN':r"within",
+    'CARDINAL':r"(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|field|last)",
+    'LINEY':r"(paly|barry|bendy(\W+sinister)?|g[iy]ronny|checky|lozengy|pily|chevronny(\W+inverted)?)",
+    'QUARTERLY':r"quarterly",
+    'CHARGE':r"(roundels?|annulets?|lozenges?|fleurs?.de.l[iy]s|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross(es)?\W+crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?\W+(passant|rampant)|pallets?|fir\W+twigs?|fusils?|mascles?|triangles?|canton|gyron|(in|de)?crescents?|escutcheons?|shakeforks?|escallops?|fountains?|areas?)",
+    'MULLET':r"mullets?",
+    'INVERTED':r"(inverted|bendwise(\W+sinister)?|reversed|contourny|fesswise|palewise|endorsed|cotised)",
+    'ORDINARY':r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(\W+gemelles?)?|fret|flaunches|batons?|gore)",
+    'PALL':r"pall",
+    'CHIEF':r"chief",
+    'ON':r"on",
+    'LINETYPE':r"(plain|indented|dancetty|embattled|invected|engrailed|wavy|rayonny|dovetailed|raguly|nebuly|urdy|champaine)",
+    'FURRY':r"(vairy\W+in\W+pale|vairy|counter\W+vairy)",
+    'ALTERED':r"(fretty|ermined|masoned|estencelly)",
+    'FUR':r"(vair.in.pale|vair|counter\W+vair|ermines?|erminois|pean|counter\W+ermine)",
+    'PARTYPER':r"(party\W+per|per)",
+    'FIMBRIATED':r"(fimbriated|voided)",
+    'COUNTERCHARGED':r"countercha[rn]ged",
+    'DIRECTION':r"(dexter|sinister)",
+    'NUMWORD':r"(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty|I|II|III|IV|as[ ]many)",
+    'A':r'an?',
+    'WORD':r'points',
+    }
 
 def t_NUM(t):
     r"[0-9]+"
     t.value=int(t.value)
     return t
-
-
-def t_NUMWORD(t):
-    r"\b(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty|I|II|III|IV|as[ ]many)\b"
-    t.value={"one":1, "two":2, "three":3, "four":4, "five":5, "six":6,
-             "seven":7, "eight":8, "nine":9, "ten":10, "eleven":11,
-             "twelve":12, "thirteen":13, "fourteen":14, "fifteen":15,
-             "sixteen":16, "seventeen":17, "eighteen":18, "nineteen":19,
-             "twenty":20,"I":1,"II":2,"III":3,"IV":4,"as many":-1}[t.value]
-    return t
-
-t_A=r"\ban?\b"
-
-t_WORD=r"\bpoints\b"
-    # Word that's required but doesn't mean much.
 
 def t_URL(t):
     r"<[^>]*>"
@@ -108,6 +78,96 @@ def t_NAME(t):
     if t.value[-1]=='s':
         t.value=t.value[:-1]
     t.value=t.value[1:-1].strip()
+    return t
+
+# Here's the weirdness of the new-style parser:
+
+# PLY matches lexer tokens in the following order: first, it matches
+# against all the tokens that are defined as functions, in the order
+# specified in the file.  Then it goes against ones that are defined as
+# variables, sorted in order of decreasing regexp length.  Now, it seems to
+# me that what would be good is to match all the "special" words and
+# anything else would be considered an "identifier" (to borrow a term from
+# programming languages), basically a general charge that has to be looked
+# up someplace.  The PLY documentation actually suggests that for such
+# things it's best to have a rule that matches nearly everything, and
+# inside that check the actual value of the token and adjust its type
+# accordingly, if necessary.  So that's what I'm doing: that's what that
+# big word_REs dictionary above is for: helps look up the token it's
+# supposed to be.  Then the t_TOKEN rule below does all the lookups.
+# Trouble is that some of my tokens are already multi-word (e.g. "bend
+# sinister").  I can't have the TOKEN rule include spaces, or it gobbles up
+# everything.  So instead I put all the multi-word tokens in individual
+# functions above the TOKEN rule (so they are done first).  It's kind of
+# ugly, I think; maybe there are better ways.
+
+def t_COLOR(t):
+    r"\b(bleu[ ]celeste|de[ ]poix|de[ ]larmes|de[ ]sang|d'or)\b"
+    return t
+
+def t_BORDURE(t):
+    r"\b(double\W+tressure)\b"
+    return t
+
+def t_LINEY(t):
+    r"\b(bendy\W+sinister)\b"
+    return t
+
+def t_CHARGE(t):
+    r"\b(fleurs?\W+de\W+lis|cross(es)?\W+crosslets?|fir\W+twigs?|cross(es)?\W+(formy|pattee|pommee|bottony|humetty|flory)|lions?\W+(passant|rampant))\b"
+    return t
+
+def t_INVERTED(t):
+    r"\b(bendwise\W+sinister)\b"
+    return t
+
+def t_ORDINARY(t):
+    r"\b(bend(lets?)?\W+sinister)\b"
+    return t
+
+def t_FURRY(t):
+    r"\b(vairy\W+in\W+pale|counter\W+vairy)\b"
+    return t
+
+def t_FUR(t):
+    r"\b(vair\W+in\W+pale|counter\W+vair|counter\W+ermine)\b"
+    return t
+
+def t_PARTYPER(t):
+    r"\b(party\W+per)\b"
+    return t
+
+def t_NUMWORD(t):
+    r"\bas\W+many\b"
+    t.value= -1
+    return t
+
+def t_TOKEN(t):
+    r"\b[a-z'-]+\b"
+    # Massive function that seeks out just about all the reserved words
+    found='TOKEN'
+    foundlen=0
+    for kwd in word_REs.keys():
+        rexp=word_REs[kwd]
+        mtch=rexp.match(t.value)
+        # FAILS, for tokens with spaces in them.  Finding the longest one
+        # doesn't work: e.g. "party per" sends back "party" as a TOKEN first.
+        # So we have to do those above.
+        if mtch:
+            l=mtch.end()
+            # print "l=",l,"kwd=",kwd
+            if l>foundlen:
+                foundlen=l
+                found=kwd
+    t.type=found
+    # Special case:
+    if found=="NUMWORD":
+        t.value={"one":1, "two":2, "three":3, "four":4, "five":5, "six":6,
+                 "seven":7, "eight":8, "nine":9, "ten":10, "eleven":11,
+                 "twelve":12, "thirteen":13, "fourteen":14, "fifteen":15,
+                 "sixteen":16, "seventeen":17, "eighteen":18, "nineteen":19,
+                 "twenty":20,"I":1,"II":2,"III":3,"IV":4,"as many":-1}[t.value]
+    # print "returning: ",t
     return t
 
 def t_error(t):
@@ -173,7 +233,7 @@ lookupdict={
     "cross(es)?.bottony": (lambda *a: blazon.ExtCharge("bottony")),
     "cross(es)?.humetty": (lambda *a: blazon.ExtCharge("humetty")),
     "cross(es)?.flory": (lambda *a: blazon.ExtCharge("flory")),
-    "cross(es)?\W+crosslets?": (lambda *a: blazon.ExtCharge("crosscrosslet")),
+    "cross(es)?\\W+crosslets?": (lambda *a: blazon.ExtCharge("crosscrosslet")),
     "mullets?": (lambda *a: blazon.ExtCharge("mullet",extension=a)),
     "escutcheons?": (lambda *a: blazon.ExtCharge("escutcheon")),
     "shakeforks?": (lambda *a: blazon.ExtCharge("shakefork")),
@@ -264,17 +324,12 @@ lookupdict={
 
 def lookup(key):
     # sys.stderr.write("Looking up: (%s)\n"%key)
-    try:
-        return lookupdict[key.lower()]
-    except KeyError:
-        key=key.lower()
-        for k in lookupdict.keys():
-            # Need the match to be anchored at the end too.
-            # sys.stderr.write("Matching with: (%s)\n"%k)
-            m=re.match(k+"$",key)
-            if m:
-                return lookupdict[k]
-        return key
+    key=key.lower()
+    for k in lookupdict.keys():
+        m=k.match(key)
+        if m:
+            return lookupdict[k]
+    return key
 
 def show_grammar(all=dir()):
     all=filter((lambda x: x[0:2] == 't_'), all)
@@ -286,7 +341,24 @@ def show_grammar(all=dir()):
             print f, ":\t", obj
         else:
             print f, ":\t", obj.__doc__
+    # Most of the tokens are now in word_REs...
+    for k in word_RE_text.keys():
+        print k, ":\t", word_RE_text[k]
 
+
+# Compile all the REs.
+for kwd in word_REs.keys():
+    rexp=word_REs[kwd]
+    # Save the text for the show_grammar function, otherwise it can't
+    # print them out.
+    word_RE_text[kwd]=rexp
+    word_REs[kwd]=re.compile(r'\b'+rexp+r'\b')
+# Compile the lookupdict too
+newdict={}
+for kwd in lookupdict.keys():
+    # has to match at the end also.
+    newdict[re.compile(kwd+'$')]=lookupdict[kwd]
+lookupdict=newdict
 
 lex.lex()
 
