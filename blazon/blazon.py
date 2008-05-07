@@ -1762,7 +1762,7 @@ data, and output it (when called from finalizeSVG) as a mask.
 class ExtCharge(Charge):
     # * Path, fimbriation-width, and default tincture (for "proper")
     # * Each ext charge should specify patternSiblings/patternContents.
-    #   Perhaps through external matadata?
+    #   Perhaps through external metadata?
     "External charge: defined by some path in an SVG elsewhere."
     paths={
         "fleur":("data/Fleur.svg#fleur",4,None),
@@ -1791,6 +1791,10 @@ class ExtCharge(Charge):
              self.path+=str(kwargs["extension"][0])
        except KeyError:
           self.path=name              # Punt.
+       if kwargs.get("transform"):
+          self.transform=kwargs.get("transform")
+       if kwargs.get("fimbriation_width"):
+          self.fimbriation_width=kwargs.get("fimbriation_width")
        # On one hand, this is a hack.  On the other hand, there is
        # something to be said for it.  It is potentially awfully
        # generic.
@@ -1802,10 +1806,15 @@ class ExtCharge(Charge):
        u=SVGdraw.use(self.path)
        if self.getBaseURL():
           u.attributes["xml:base"]=self.getBaseURL()
+       if hasattr(self,"transform") and self.transform:
+          if not u.attributes.has_key("transform"):
+             u.attributes["transform"]=""
+          u.attributes["transform"]+=" "+self.transform
        if hasattr(self,"inverted") and self.inverted:
           if not u.attributes.has_key("transform"):
              u.attributes["transform"]=""
           u.attributes["transform"]+=" rotate(180)"
+       self.use=u
        self.clipPathElt.addElement(u)
 
     def do_fimbriation(self):
@@ -1813,7 +1822,14 @@ class ExtCharge(Charge):
                    "stroke":self.fimbriation,
                    "stroke-width":self.fimbriation_width,
                    "fill":"none",
-                   "transform":self.clipPathElt.attributes.get("transform")}
+                   "transform":self.clipPathElt.attributes.get("transform")
+                   }
+       if not attributes["transform"]:
+          attributes["transform"]=""
+       try:
+          attributes["transform"]+=self.use.attributes["transform"]
+       except AttributeError:
+          pass
        try:
           attributes["transform"]+=self.endtransforms
        except AttributeError:
@@ -1971,6 +1987,8 @@ class Image(Charge):
       self.setup(*args)
       self.url=url
       (self.width,self.height)=(width, height)
+      if kwargs.has_key("transform"):
+         self.transform=kwargs["transform"]
 
    def process(self):
       self.ref=SVGdraw.image(self.url, x= -self.width/2.0,
@@ -1979,6 +1997,10 @@ class Image(Charge):
                              height=self.height)
       if self.getBaseURL():
          self.ref.attributes["xml:base"]=self.getBaseURL()
+      if hasattr(self,"transform"):
+         if not self.ref.attributes.has_key("transform"):
+            self.ref.attributes["transform"]=""
+         self.ref.attributes["transform"]+=self.transform
 
    def invert(self):
       if not hasattr(self,"endtransforms"):
@@ -2088,6 +2110,7 @@ class Blazon:
       # user-provided text into something it can handle.
       self.base=base
       self.blazon=self.Normalize(blazon)
+
    @staticmethod
    def Normalize(blazon):
       # Can't just toss all the non-alphanumeric chars, if we're going
@@ -2105,8 +2128,10 @@ class Blazon:
          else:
             bits[i]='<'+bits[i]+'>'
       return ' '.join(bits)
+
    def GetBlazon(self):
       return self.blazon
+
    def getlookuptable(self):
       self.__class__.lookup={}
       try:
@@ -2118,6 +2143,7 @@ class Blazon:
                self.__class__.lookup[re.compile(key.strip())]=value.strip()
       except IOError:
          pass
+
    @classmethod
    def lookupcharge(cls,name):
       # No sense in doing a direct lookup; they're all compiled into REs.
@@ -2134,6 +2160,54 @@ class Blazon:
       if found:
          return found
       raise KeyError
+
+   @staticmethod
+   def outside_element(data):
+      """Handle URLs, either directly from blazon or from Chargelist file.
+      The data may contain spaces, in which case it is *split* along those
+      spaces in order to allow extra information, like SVG data."""
+      # OK, here's how the data should be handled:
+      # 1. If it has no internal whitespace, it's a (raster) image URL.
+      #    So all the <http://foo.com/image.png> charges work, etc.  In theory
+      #    an SVG image SHOULD work, but scaling of external SVGs doesn't work
+      #    right, owing to silliness in SVG, see
+      #    http://www.w3.org/Bugs/Public/show_bug.cgi?id=5560
+      # 2. If there's whitespace, split at the whitespace so we can put in
+      #    some other info.  Let's see what that split should be like...
+      #
+      # Maybe make it context-sensitive, at least for now.  So if the first
+      # token after the spaces is "SVGpath", then expect the second token
+      # in quotes, containing the transform for the path, and the third one
+      # to be the fimbriation-width (defaulting to something).  Other data-types
+      # will have to handle themselves as they get invented.
+      pieces=re.split(r"\s+",data)
+      if len(pieces) < 1:
+         # Bweah!!  Shouldn't happen!  I dunno, complain.
+         raise "Empty charge data!!"
+      if len(pieces) == 1:
+         # Image url
+         return Image(pieces[0], 80, 80)
+      if pieces[1] == "SVGpath":
+         # SVG path ('ExtCharge') behavior.
+         m=re.match(r'\S+\s+SVGpath\s+"([^"]*)"\s*([0-9.]+)?',data)
+         if not m:
+            # Match failed.  Error-handling is for wimps.
+            raise "Invalid charge data"
+         f=m.group(2)
+         if f == None:
+            f="3.0"
+         return ExtCharge(pieces[0], transform=" "+m.group(1),
+                          fimbriation_width=float(f))
+      elif pieces[1] == "IMAGE":
+         # long-form image.
+         m=re.match(r'\S+\s+IMAGE\s+"([^"]*)"', data)
+         if not m:
+            raise "Invalid charge data"
+         return Image(pieces[0], 80, 80, transform=m.group(1))
+      # Otherwise... hell if I know.
+      return Image(data,80,80)
+         
+   
    def GetShield(self):
       if not hasattr(self.__class__,'lookup') or not self.__class__.lookup:
          self.getlookuptable()
