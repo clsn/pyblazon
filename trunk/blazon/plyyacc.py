@@ -302,12 +302,12 @@ def p_charge_2(p):
 
 def p_ordinary_3(p):
     "ordinary : optA URL"
-    p[0]=blazon.Image(p[2], 80, 80) # use same numbers always?
+    p[0]=blazon.Blazon.outside_element(p[2])
 
 def p_ordinary_4(p):
     "ordinary : optA NAME"
     try:
-        p[0]=blazon.Image(blazon.Blazon.lookupcharge(p[2]), 80, 80)
+        p[0]=blazon.Blazon.outside_element(blazon.Blazon.lookupcharge(p[2]))
     except KeyError:
         # Punt.
         p[0]=blazon.Image(p[2], 80, 80)
@@ -324,7 +324,7 @@ def p_ordinary_5(p):
     "ordinary : optA tokenlist"
     # How about we treat these as a form of (name)?
     try:
-        p[0]=blazon.Image(blazon.Blazon.lookupcharge(p[2]), 80, 80)
+        p[0]=blazon.Blazon.outside_element(blazon.Blazon.lookupcharge(p[2]))
     except KeyError:
         p[0]=blazon.ExtCharge("question")
         # p[0]=blazon.Image(p[2], 80, 80)

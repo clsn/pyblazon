@@ -1,4 +1,28 @@
-# Most of these come from http://fr.wikipedia.org/wiki/Projet:Blasons/Meubles
+# File of lookup-charges for pyBlazon.
+# Basically, if a charge isn't recognized, look here to see what it is.
+#
+# Basic case: name:    URL
+# This is an <image> tag, the URL being a pointer to the raster image being
+# included.  SVG images don't scale right just yet, 
+# see http://www.w3.org/Bugs/Public/show_bug.cgi?id=5560
+#
+# More fully: name:    URL tag otherstuff
+# where the tag says what kind of object.  Currently the choices are:
+# name:    URL IMAGE "transform"
+# which is as above except you get to specify a transform.  Not generally
+# needed, since you generally just want to use the picture.  Note that transform
+# must be in double-quotes.
+#
+# name:    URL SVGpath "transform" fimbwidth
+# This specifies something that is to be used with the <use> element in the SVG,
+# as simply a path; the "ExtCharge" class in blazon.py.  Transform is much
+# more important here, and must be in double-quotes.  fimbwidth is a number,
+# the width of fimbriation (in internal-system units) (don't worry about it).
+#
+# expand to handle "Symbol" class?
+#
+# Most of these will come from http://fr.wikipedia.org/wiki/Projet:Blasons/Meubles
 swords?:			data/Sword.png
 trefoils? slipped:	data/trefoil-filled.png
 griff[io]n:		http://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/H%C3%A9raldique_meuble_Griffon.svg/286px-H%C3%A9raldique_meuble_Griffon.svg.png
+hearts?:	data/Charges.svg#heart	SVGpath "scale(0.3) translate(-335.235,-519.18)" 10
