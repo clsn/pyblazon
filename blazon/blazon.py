@@ -1813,7 +1813,7 @@ class ExtCharge(Charge):
        if hasattr(self,"inverted") and self.inverted:
           if not u.attributes.has_key("transform"):
              u.attributes["transform"]=""
-          u.attributes["transform"]+=" rotate(180)"
+          u.attributes["transform"]=" rotate(180)"+ u.attributes["transform"]
        self.use=u
        self.clipPathElt.addElement(u)
 
@@ -1830,8 +1830,10 @@ class ExtCharge(Charge):
           attributes["transform"]+=self.use.attributes["transform"]
        except AttributeError:
           pass
+       except KeyError:
+          pass
        try:
-          attributes["transform"]+=self.endtransforms
+          attributes["transform"]=self.endtransforms+attributes["transform"]
        except AttributeError:
           pass
        if self.getBaseURL():
