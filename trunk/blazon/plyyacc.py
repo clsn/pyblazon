@@ -347,7 +347,7 @@ def p_bordure(p):
 
 def p_chief(p):
     """chief : empty
-             | optand A CHIEF optlinetype opttreatment
+             | AND A CHIEF optlinetype opttreatment
              | optand ON A CHIEF optlinetype opttreatment charges"""
     if len(p)<=2:
         p[0]=None

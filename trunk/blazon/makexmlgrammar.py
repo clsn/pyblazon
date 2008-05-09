@@ -1,11 +1,24 @@
 import plyyacc
 import sys
+import re
 
 def make_xml_grammar(all=dir(plyyacc)):
     # OUTPUT another Python program that recreates this one's grammar, by
     # copying the function names and __doc__ strings.  The functions just
     # build an XML doc of the parse tree.
     all=filter((lambda x: x[0:2] == 'p_'), all)
+    # Dammit, I have to get the order the same!!!
+    # some conflicts are resolved by PLY based on ordering in the source
+    source=open("plyyacc.py","r")
+    reorder=[]
+    dre=re.compile("def\s+(p_.*)\(")
+    for line in source:
+        m=dre.match(line)
+        if m:
+            name=m.group(1)
+            all.remove(name)
+            reorder.append(name)
+    all=reorder
     print """
 import sys
 import ply.yacc as yacc
