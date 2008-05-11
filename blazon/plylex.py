@@ -14,7 +14,7 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
         "PALL","WITHIN","BORDURE","BEZANTY","LP","RP","IN","DIRECTION",
-        "URL","MULLET","NAME","ANNULO","GROUPS",
+        "URL","MULLET","NAME","ANNULO","GROUPS", "OVERALL",
         "TOKEN",)
 
 t_ignore=" \n\t"
@@ -61,6 +61,7 @@ word_REs={
     'NUMWORD':r"(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty|I|II|III|IV|as[ ]many)",
     'A':r'an?',
     'WORD':r'points',
+    'OVERALL':r'overall',
     }
 
 def t_NUM(t):
@@ -114,7 +115,7 @@ def t_LINEY(t):
     return t
 
 def t_CHARGE(t):
-    r"\b(fleurs?\W+de\W+lis|cross(es)?\W+crosslets?|fir\W+twigs?|cross(es)?\W+(formy|pattee|pommee|bottony|humetty|flory)|lions?\W+(passant|rampant))\b"
+    r"\b(fleurs?\W+de\W+lis|cross(es)?\W+crosslets?|fir\W+twigs?|cross(es)?\W+(formy|pattee|pommee|bottony|humetty|flory)|lions?\W+(passant|rampant)|bars?(\W+gemelles?)?)\b"
     return t
 
 def t_INVERTED(t):
