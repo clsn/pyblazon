@@ -104,6 +104,15 @@ class Ordinary:
       self.fimbriate(color)
       self.tincture=Treatment("none")
 
+   def setOverall(self):
+      self.overall=True
+
+   def isOverall(self):
+      if hasattr(self,'overall'):
+         return self.overall
+      else:
+         return False
+
    # Is this too brittle a way to do it?
    def do_fimbriation(self):
       "actually do the fimbriation.  Called during process()"
@@ -1329,6 +1338,15 @@ class ChargeGroup:            # Kind of an invisible ordinary
       if num and charge:
          self.numcharges(num,charge)
 
+   def setOverall(self):
+      self.overall=True
+
+   def isOverall(self):
+      if hasattr(self,'overall'):
+         return self.overall
+      else:
+         return False
+   
    def fromarray(self,array):
       "Build a ChargeGroup from an array of charges (or chargegroups)"
       # OK, this may be wrong, but at the moment anyway, single charges
@@ -1427,16 +1445,17 @@ class ChargeGroup:            # Kind of an invisible ordinary
          placements=self.arrangement.pattern(len(self.charges))
       except AttributeError:
          pass
-      if not placements:
-         try:
-            placements=self.charges[0].patternWithOthers(len(self.charges))
-         except AttributeError:
-            pass
-      if not placements:
-         try:
-            placements=self.parent.patternContents(len(self.charges))
-         except AttributeError:
-            pass
+      if not self.isOverall():
+         if not placements:
+            try:
+               placements=self.charges[0].patternWithOthers(len(self.charges))
+            except AttributeError:
+               pass
+         if not placements:
+            try:
+               placements=self.parent.patternContents(len(self.charges))
+            except AttributeError:
+               pass
       if not placements:
          try:
             placements=ChargeGroup.defaultplacements[num]

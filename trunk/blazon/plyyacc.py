@@ -206,15 +206,19 @@ def p_charges(p):
             p[0]=p[1]+[p[3]]
 
 def p_grouporcharge_a(p):
-    """grouporcharge : group"""
-    p[0]=p[1]
+    """grouporcharge : optoverall group"""
+    p[0]=p[2]
+    if p[1]:
+        p[0].setOverall()
 
 def p_grouporcharge_b(p):
-    """grouporcharge : charge optarrange"""
-    p[0]=blazon.ChargeGroup(1,p[1])
-    if not p[1].tincture:
+    """grouporcharge : optoverall charge optarrange"""
+    p[0]=blazon.ChargeGroup(1,p[2])
+    if not p[2].tincture:
         Globals.colorless.append(p[0].charges[0])
-    p[0].arrangement=p[2]
+    p[0].arrangement=p[3]
+    if p[1]:
+        p[0].setOverall()
 
 def p_group_1(p):
     """group : amount charge optarrange opttreatment optfimbriation optrows
@@ -427,6 +431,11 @@ def p_optamt(p):
     else:
         p[0]=8
 
+def p_optoverall(p):
+    """optoverall : OVERALL
+                  | empty
+    """
+    p[0]=p[1]
 
 # Have to allow for multiple INVERTEDs, for "palewise contourny" etc.
 def p_optinverted(p):
