@@ -2096,6 +2096,7 @@ class Image(Charge):
                                     y=-Ordinary.FESSPTY,
                                     width=Ordinary.WIDTH,
                                     height=Ordinary.HEIGHT)
+         self.baseRect.charge=self
          self.baseRect=self.tincture.fill(self.baseRect)
          self.baseRect.attributes['mask']='url(#%s)'%self.mask.attributes['id']
          self.ref.attributes['filter']='url(#BlendFilter)'
