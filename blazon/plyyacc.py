@@ -182,7 +182,7 @@ def p_optlinetype(p):
 
 def p_charges(p):
     """charges : grouporcharge
-               | charges optand grouporcharge"""
+               | charges optand optoverall grouporcharge"""
     if len(p)==2:
         p[0]=[p[1]]
     else:
@@ -197,13 +197,15 @@ def p_charges(p):
         lastgroup=p[1][-1]
         if not p[2] == "between" and \
                  not isinstance(lastgroup.charges[0], blazon.TrueOrdinary) and \
-                 not isinstance(p[3].charges[0], blazon.TrueOrdinary):
-            lastgroup.charges.extend(p[3].charges)
+                 not isinstance(p[4].charges[0], blazon.TrueOrdinary):
+            lastgroup.charges.extend(p[4].charges)
             p[0]=p[1]
             # Works, but then we have two chargegroups that don't know how
             # to interact.
         else:
-            p[0]=p[1]+[p[3]]
+            p[0]=p[1]+[p[4]]
+        if p[3]:
+            p[4].setOverall()
 
 def p_grouporcharge_a(p):
     """grouporcharge : group"""
@@ -452,6 +454,11 @@ def p_optfimbriation(p):
 def p_optand(p):
     """optand : AND
               | empty"""
+    p[0]=p[1]
+
+def p_optoverall(p):
+    """optoverall : OVERALL
+                  | empty"""
     p[0]=p[1]
 
 def p_optA(p):
