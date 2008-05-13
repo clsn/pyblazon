@@ -2222,10 +2222,18 @@ class Blazon:
                           fimbriation_width=float(f))
       elif pieces[1] == "IMAGE":
          # long-form image.
-         m=re.match(r'\S+\s+IMAGE\s+"([^"]*)"', data)
+         m=re.match(r'\S+\s+IMAGE\s+((\w+\s*=\s*"[^"]*"\s*)*)', data)
          if not m:
             raise "Invalid charge data"
-         return Image(pieces[0], 80, 80, transform=m.group(1))
+         atts=re.findall(r'\s*(\w*)\s*=\s*"([^"]*)"',m.group(1))
+         kw={}
+         kw["width"]=80
+         kw["height"]=80
+         for t in atts:
+            kw[t[0]]=t[1]
+         kw["width"]=float(kw["width"]) # Transform back into numbers.
+         kw["height"]=float(kw["height"])
+         return Image(pieces[0], **kw)
       # Otherwise... hell if I know.
       return Image(data,80,80)
          
