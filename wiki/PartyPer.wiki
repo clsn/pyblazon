@@ -1,0 +1,26 @@
+#summary Complex field treatments
+=Field Treatments=
+
+You can also color the field or a charge with more than one color or fur,
+by specifying how it should be split up:
+
+|| _Per pale or and sable_ || _Per fess or and sable_ || _Per bend or and sable_ || _Per bend sinister or and sable_ || _Per cross or and sable_ || _Per saltire or and sable_ || _Per chevron or and sable_ ||
+|| http://pyblazon.googlecode.com/svn/wiki/img/per_pale_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_fess_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_bend_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_bend_sinister_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_cross_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_saltire_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_chevron_or_and_sable.png ||
+
+The names used are also names of "ordinaries": geometric shapes used as
+designs on a shield; we will get to those shortly.  Note that the order the
+colors are given in makes a difference: the first color is the one that
+goes on _top_ or on the _left_.
+
+I used _or and sable_ here only for the purposes of illustration; you can
+use any colors or even any furs, or even more complex treatments.
+
+==Lines of Partition==
+
+The lines separating the pieces of the shield do not have to be straight.
+There are permitted variant lines:
+
+|| _Per fess wavy or and sable_ || _Per fess indented or and sable_ || _Per fess dancetty or and sable_ || _Per fess nebuly or and sable_ || _Per fess embattled or and sable_ || _Per fess dovetailed or and sable_ || _Per fess raguly or and sable_ ||
+
+(It isn't so easy to see some of them; the teeth in "indented" are pretty
+small, and this list isn't exhaustive anyway.)
