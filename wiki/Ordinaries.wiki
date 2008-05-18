@@ -1,4 +1,4 @@
-#summary: Ordinaries: basic shapes for shield designs
+#summary Ordinaries: basic shapes for shield designs
 =Ordinaries=
 
 The main ordinaries consist of big stripes or areas on a shield.
@@ -18,9 +18,11 @@ Note that these are blazoned as _Argent a
 cross/chief/fess/pale/etc. gules_.  That is, the background first
 (_Argent_), followed by the ordinary, which is given by its name followed
 by its color (or other treatment).  So, yes, the treatment doesn't have to
-be a simple color; you can do things like
-_[http://pyblazon.googlecode.com/svn/wiki/img/ermine_a_fess_bendy_azure_and_or.png
-Ermine a fess bendy azure and or]_.
+be a simple color; you can do things like _Ermine a fess bendy azure and or_. 
+
+http://pyblazon.googlecode.com/svn/wiki/img/ermine_a_fess_bendy_azure_and_or.png
+
+----
 
 These "full-sized" ordinaries usually only come one to a shield.  When
 you're dealing with more than one, you use smaller versions (which can also
@@ -28,8 +30,8 @@ be used singly).  pyBlazon will *sometimes* automatically convert to the
 smaller ones when you call for more than one, but I think it isn't always
 perfectly done.
 
-|| _3 palets_ || _3 bars_ || _3 bendlets_ || _3 chevronels_ || _3 bars gemelles_ ||
-|| http://pyblazon.googlecode.com/svn/wiki/img/argent_3_palets_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_3_bars_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_3_bendlets_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_3_chevronels_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_3_bars_gemelles_gules.png ||
+|| _3 pallets_ || _3 bars_ || _3 bendlets_ || _3 chevronels_ || _3 bars gemelles_ ||
+|| http://pyblazon.googlecode.com/svn/wiki/img/argent_3_pallets_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_3_bars_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_3_bendlets_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_3_chevronels_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_3_bars_gemelles_gules.png ||
 
 Note that _bars gemelles_ are *pairs* of narrow bars.
 
