@@ -62,3 +62,7 @@ There are also some other variants of vair recognized:
 See how to combine these on the PartyPer page, or if you don't want to get
 more complicated backgrounds but want to see how to place shapes *on* the
 background, look at the [Ordinaries] page.
+
+==PartyPer -- for more complex treatments==
+==[Ordinaries] -- for putting shapes on the shield==
+

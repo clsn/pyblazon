@@ -53,3 +53,5 @@ though, since the colors alternate.
 
 The first color stated is the one that shows up on the upper part of the
 upper left-hand corner.
+
+==Move on to [Ordinaries]==
