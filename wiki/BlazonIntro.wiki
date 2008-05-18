@@ -1,0 +1,67 @@
+=Introduction to Blazonry=
+
+Blazonry is a stylized jargon for describing coats of arms.  In this site,
+we will be dealing with describing shields in particular, but blazonry also
+applies to the larger "achievement" of arms, including mottos, supporters,
+crests, etc.
+
+The point of blazonry is to provide a description of a shield that is
+detailed enough to enable someone to draw a picture of it (maybe not a
+perfect one) that does not differ from the original in any "significant"
+way.  The nature of "significant" of course relies on the rules of
+heraldry.
+
+Blazonry has been compared to a primitive programming language, or maybe a
+markup language like HTML or a drawing language like PostScript or SVG
+would be closer.  And indeed, that is what this project is all about:
+translating blazonry (or a subset thereof) into SVG.
+
+=Tinctures and Treatments=
+
+A shield is always "blazoned" or described starting with the background,
+and working up in notional layers as charges are drawn on it and on each
+other.  So the first thing in any blazon will be what the background of the
+shield looks like.
+
+The simplest background is a solid color.  The colors in blazonry have
+special names:
+
+|| _Or_ || http://pyblazon.googlecode.com/svn/wiki/img/or.png ||
+|| _Argent_ || http://pyblazon.googlecode.com/svn/wiki/img/argent.png ||
+|| _Sable_ || http://pyblazon.googlecode.com/svn/wiki/img/sable.png ||
+|| _Gules_ || http://pyblazon.googlecode.com/svn/wiki/img/gules.png ||
+|| _Azure_ || http://pyblazon.googlecode.com/svn/wiki/img/azure.png ||
+|| _Vert_ || http://pyblazon.googlecode.com/svn/wiki/img/vert.png ||
+|| _Purpure_ || http://pyblazon.googlecode.com/svn/wiki/img/purpure.png ||
+
+Real mediæval heraldry uses the first five colors listed above more
+frequently _by far_ than the others.  Rarely does a single shield have more
+than three colors.  There are some lesser-used tinctures that pyBlazon
+understands:
+
+|| _Bleu Celeste_ || _Tenne_ || _Sanguine_ || _Murrey_ || _Rose_ || _Copper_ ||
+|| http://pyblazon.googlecode.com/svn/wiki/img/bleuC.png || http://pyblazon.googlecode.com/svn/wiki/img/tenne.png || http://pyblazon.googlecode.com/svn/wiki/img/sanguine.png || http://pyblazon.googlecode.com/svn/wiki/img/murrey.png || http://pyblazon.googlecode.com/svn/wiki/img/rose.png || http://pyblazon.googlecode.com/svn/wiki/img/copper.png ||
+
+There is a rule in heraldry that "metals" (_Or_ and _Argent_) should not
+touch other metals, and "tinctures" (the other colors) should not touch
+other tinctures; _i.e._, metals only touch tinctures and vice-versa.  But
+that rule starts to get strange when dealing with furs (see below), and it
+was not always observed even in mediæval times, so don't stress too much.
+pyBlazon won't care.
+
+==Furs==
+
+Other "solid" treatments of the field (or charges) are called "furs":
+
+|| _Ermine_ || _Ermines_ || _Erminois_ || _Pean_ || _Vair_ ||
+|| http://pyblazon.googlecode.com/svn/wiki/img/ermine.png || http://pyblazon.googlecode.com/svn/wiki/img/ermines.png || http://pyblazon.googlecode.com/svn/wiki/img/erminois.png || http://pyblazon.googlecode.com/svn/wiki/img/pean.png || http://pyblazon.googlecode.com/svn/wiki/img/vair.png ||
+
+You can also generalize these patterns by saying things like _Or ermined
+gules_ (for ermine-style furs) or _Vairy or and sable_ (for vair-style).
+There are also some other variants of vair recognized:
+
+|| _Or ermined gules_ || http://pyblazon.googlecode.com/svn/wiki/img/or_ermined_gules.png ||
+|| _Vairy or and sable_ || http://pyblazon.googlecode.com/svn/wiki/img/vairy_or_and_sable.png ||
+|| _Counter-vair || http://pyblazon.googlecode.com/svn/wiki/img/counter-vair.png ||
+|| _Vair in pale || http://pyblazon.googlecode.com/svn/wiki/img/vair_in_pale.png ||
+
