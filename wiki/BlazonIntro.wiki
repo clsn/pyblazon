@@ -59,4 +59,6 @@ There are also some other variants of vair recognized:
 || _Or ermined gules_ || _Vairy or and sable_ || _Counter-vair_ || _Vair in pale_ ||
 || http://pyblazon.googlecode.com/svn/wiki/img/or_ermined_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/vairy_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/counter-vair.png || http://pyblazon.googlecode.com/svn/wiki/img/vair_in_pale.png ||
 
-See how to combine these on the PartyPer page.
+See how to combine these on the PartyPer page, or if you don't want to get
+more complicated backgrounds but want to see how to place shapes *on* the
+background, look at the [Ordinaries] page.

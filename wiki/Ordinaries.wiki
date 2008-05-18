@@ -1,0 +1,18 @@
+#summary: Ordinaries: basic shapes for shield designs
+=Ordinaries=
+
+The main ordinaries consist of big stripes or areas on a shield.
+
+|| _Cross_ || _Chief_ || _Fess_ || _Pale_ || _Bend_ || _Bend Sinister_ || _Saltire_ || 
+|| http://pyblazon.googlecode.com/svn/wiki/img/argent_a_cross_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_a_chief_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_a_fess_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_a_pale_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_a_bend_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_a_bend_sinister_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_a_saltire_gules.png ||
+|| _Base_ || _Chevron_ || _Pall_ || _Chevron Inverted_ || _Pall Inverted_ ||
+|| http://pyblazon.googlecode.com/svn/wiki/img/argent_a_base_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_a_chevron_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_a_pall_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_a_chevron_inverted_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_a_pall_inverted_gules.png ||
+
+Generally, an ordinary can have its outline altered in the same way that
+lines of partition can be (see PartyPer).
+
+|| _Cross wavy_ || _Bend dancetty_ || _Pale embattled_ ||
+|| http://pyblazon.googlecode.com/svn/wiki/img/argent_a_cross_wavy_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_a_bend_dancetty_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/argent_a_pale_embattled_gules.png ||
+
+
+
