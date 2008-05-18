@@ -21,7 +21,7 @@ The lines separating the pieces of the shield do not have to be straight.
 There are permitted variant lines:
 
 || _Per fess wavy or and sable_ || _Per fess indented or and sable_ || _Per fess dancetty or and sable_ || _Per fess nebuly or and sable_ || _Per fess embattled or and sable_ || _Per fess dovetailed or and sable_ || _Per fess raguly or and sable_ ||
-|| http://pyblazon.googlecode.com/svn/wiki/img/per_fess_wavy_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_fess_indented_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_fess_dancetty_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_fess_nebuly_sinister_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_fess_embattled_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_fess_dovetailed_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_fess_raguly_or_and_sable.png ||
+|| http://pyblazon.googlecode.com/svn/wiki/img/per_fess_wavy_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_fess_indented_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_fess_dancetty_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_fess_nebuly_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_fess_embattled_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_fess_dovetailed_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/per_fess_raguly_or_and_sable.png ||
 
 (It isn't so easy to see some of them; the teeth in "indented" are pretty
 small, and this list isn't exhaustive anyway.)
