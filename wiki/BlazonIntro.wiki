@@ -1,3 +1,4 @@
+#summary Introduction to Blazonry the pyBlazon way
 =Introduction to Blazonry=
 
 Blazonry is a stylized jargon for describing coats of arms.  In this site,
@@ -26,13 +27,8 @@ shield looks like.
 The simplest background is a solid color.  The colors in blazonry have
 special names:
 
-|| _Or_ || http://pyblazon.googlecode.com/svn/wiki/img/or.png ||
-|| _Argent_ || http://pyblazon.googlecode.com/svn/wiki/img/argent.png ||
-|| _Sable_ || http://pyblazon.googlecode.com/svn/wiki/img/sable.png ||
-|| _Gules_ || http://pyblazon.googlecode.com/svn/wiki/img/gules.png ||
-|| _Azure_ || http://pyblazon.googlecode.com/svn/wiki/img/azure.png ||
-|| _Vert_ || http://pyblazon.googlecode.com/svn/wiki/img/vert.png ||
-|| _Purpure_ || http://pyblazon.googlecode.com/svn/wiki/img/purpure.png ||
+|| _Or_ || _Argent_ || _Sable_ || _Gules_ || _Azure_ || _Vert_ || _Purpure_ ||
+|| http://pyblazon.googlecode.com/svn/wiki/img/or.png || http://pyblazon.googlecode.com/svn/wiki/img/argent.png || http://pyblazon.googlecode.com/svn/wiki/img/sable.png || http://pyblazon.googlecode.com/svn/wiki/img/gules.png || http://pyblazon.googlecode.com/svn/wiki/img/azure.png || http://pyblazon.googlecode.com/svn/wiki/img/vert.png || http://pyblazon.googlecode.com/svn/wiki/img/purpure.png ||
 
 Real mediæval heraldry uses the first five colors listed above more
 frequently _by far_ than the others.  Rarely does a single shield have more
@@ -60,8 +56,6 @@ You can also generalize these patterns by saying things like _Or ermined
 gules_ (for ermine-style furs) or _Vairy or and sable_ (for vair-style).
 There are also some other variants of vair recognized:
 
-|| _Or ermined gules_ || http://pyblazon.googlecode.com/svn/wiki/img/or_ermined_gules.png ||
-|| _Vairy or and sable_ || http://pyblazon.googlecode.com/svn/wiki/img/vairy_or_and_sable.png ||
-|| _Counter-vair || http://pyblazon.googlecode.com/svn/wiki/img/counter-vair.png ||
-|| _Vair in pale || http://pyblazon.googlecode.com/svn/wiki/img/vair_in_pale.png ||
+|| _Or ermined gules_ || _Vairy or and sable_ || _Counter-vair_ || _Vair in pale_ ||
+|| http://pyblazon.googlecode.com/svn/wiki/img/or_ermined_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/vairy_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/counter-vair.png || http://pyblazon.googlecode.com/svn/wiki/img/vair_in_pale.png ||
 
