@@ -25,3 +25,31 @@ There are permitted variant lines:
 
 (It isn't so easy to see some of them; the teeth in "indented" are pretty
 small, and this list isn't exhaustive anyway.)
+
+==More Pieces==
+
+You can also divide up the field into more pieces, along "ordinary" lines:
+
+|| _Paly or and sable_ || _Barry or and sable_ || _Bendy or and sable_ || _Bendy sinister or and sable_ || _Checky or and sable_ || _Lozengy or and sable_ ||
+||
+|| http://pyblazon.googlecode.com/svn/wiki/img/paly_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/barry_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/bendy_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/bendy_sinister_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/checky_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/lozengy_or_and_sable.png
+
+You can use lines of partition on these as well, and also specify just how
+many pieces you mean:
+
+|| _Bendy dancetty or and sable_ || _Paly of six or and sable_ || _Bendy sinister of sixteen or and sable_ ||
+|| http://pyblazon.googlecode.com/svn/wiki/img/bendy_dancetty_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/paly_of_six_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/bendy_sinister_of_sixteen_or_and_sable.png ||
+
+Proper rules of heraldry say that the number of pieces should always be
+even, but pyBlazon doesn't really care.
+
+You can also divide the field up radially, describing it as "Gyronny."
+Normally gyronny is in eight pieces, but as before, you can make it as many
+as you like.  Using an odd number here will probably not do what you want,
+though, since the colors alternate.
+
+|| _Gyronny or and sable_ || _Gyronny of twelve or and sable_ || _Gyronny of 32 or and sable_ ||
+|| http://pyblazon.googlecode.com/svn/wiki/img/gyronny_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/gyronny_of_twelve_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/gyronny_of_32_or_and_sable.png ||
+
+The first color stated is the one that shows up on the upper part of the
+upper left-hand corner.
