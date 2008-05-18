@@ -32,7 +32,7 @@ You can also divide up the field into more pieces, along "ordinary" lines:
 
 || _Paly or and sable_ || _Barry or and sable_ || _Bendy or and sable_ || _Bendy sinister or and sable_ || _Checky or and sable_ || _Lozengy or and sable_ ||
 ||
-|| http://pyblazon.googlecode.com/svn/wiki/img/paly_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/barry_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/bendy_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/bendy_sinister_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/checky_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/lozengy_or_and_sable.png
+|| http://pyblazon.googlecode.com/svn/wiki/img/paly_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/barry_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/bendy_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/bendy_sinister_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/checky_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/lozengy_or_and_sable.png ||
 
 You can use lines of partition on these as well, and also specify just how
 many pieces you mean:
