@@ -17,6 +17,12 @@ markup language like HTML or a drawing language like PostScript or SVG
 would be closer.  And indeed, that is what this project is all about:
 translating blazonry (or a subset thereof) into SVG.
 
+This introduction to blazonry will be focussing on what pyBlazon can do,
+and even within that it will not be exhaustive.  You'll have to learn more
+blazonry to explore more of the features of pyBlazon; I'm just giving you
+an idea so you can express some simple designs and understand some simple
+blazons.  All the examples shown will be rendered by pyBlazon.
+
 =Tinctures and Treatments=
 
 A shield is always "blazoned" or described starting with the background,
@@ -54,10 +60,11 @@ Other "solid" treatments of the field (or charges) are called "furs":
 
 You can also generalize these patterns by saying things like _Or ermined
 gules_ (for ermine-style furs) or _Vairy or and sable_ (for vair-style).
-There are also some other variants of vair recognized:
+There are also some other variants of vair recognized, and other
+alterations you can do to the colors:
 
-|| _Or ermined gules_ || _Vairy or and sable_ || _Counter-vair_ || _Vair in pale_ ||
-|| http://pyblazon.googlecode.com/svn/wiki/img/or_ermined_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/vairy_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/counter-vair.png || http://pyblazon.googlecode.com/svn/wiki/img/vair_in_pale.png ||
+|| _Or ermined gules_ || _Vairy or and sable_ || _Counter-vair_ || _Vair in pale_ || _Or fretty gules_ || _Or masoned guled_ ||
+|| http://pyblazon.googlecode.com/svn/wiki/img/or_ermined_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/vairy_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/counter-vair.png || http://pyblazon.googlecode.com/svn/wiki/img/vair_in_pale.png || http://pyblazon.googlecode.com/svn/wiki/img/or_fretty_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/or_masoned_gules.png ||
 
 See how to combine these on the PartyPer page, or if you don't want to get
 more complicated backgrounds but want to see how to place shapes *on* the
