@@ -36,9 +36,7 @@ word_REs={
     'LP':r"({|lp)",                 # leftparen
     'RP':r"(}|rp)",                 # rightparen
     'ANNULO':r"annulo",
-
-    'SEMYDELIS':r"(semy\W+de\W+l[iy]s|billett?y|go?utty|crusilly|mulletty)",
-
+    'SEMYDELIS':r"(billett?y|go?utty|crusilly|mulletty)",
     'WITHIN':r"within",
     'CARDINAL':r"(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|field|last)",
     'LINEY':r"(paly|barry|bendy(\W+sinister)?|g[iy]ronny|checky|lozengy|pily|chevronny(\W+inverted)?)",
@@ -132,6 +130,10 @@ def t_FURRY(t):
 
 def t_FUR(t):
     r"\b(vair\W+in\W+pale|counter\W+vair|counter\W+ermine)\b"
+    return t
+
+def t_SEMYDELIS(t):
+    r"semy\W+de\W+l[iy]s"
     return t
 
 def t_PARTYPER(t):
