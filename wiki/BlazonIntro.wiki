@@ -63,7 +63,7 @@ gules_ (for ermine-style furs) or _Vairy or and sable_ (for vair-style).
 There are also some other variants of vair recognized, and other
 alterations you can do to the colors:
 
-|| _Or ermined gules_ || _Vairy or and sable_ || _Counter-vair_ || _Vair in pale_ || _Or fretty gules_ || _Or masoned guled_ ||
+|| _Or ermined gules_ || _Vairy or and sable_ || _Counter-vair_ || _Vair in pale_ || _Or fretty gules_ || _Or masoned gules_ ||
 || http://pyblazon.googlecode.com/svn/wiki/img/or_ermined_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/vairy_or_and_sable.png || http://pyblazon.googlecode.com/svn/wiki/img/counter-vair.png || http://pyblazon.googlecode.com/svn/wiki/img/vair_in_pale.png || http://pyblazon.googlecode.com/svn/wiki/img/or_fretty_gules.png || http://pyblazon.googlecode.com/svn/wiki/img/or_masoned_gules.png ||
 
 See how to combine these on the PartyPer page, or if you don't want to get
