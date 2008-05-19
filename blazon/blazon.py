@@ -984,6 +984,10 @@ class BendletSinister(Bendlet,BendSinister):
          res[i]=(-res[i][0],res[i][1])
       return res
 
+   @staticmethod
+   def patternSiblings(num):
+      return BendSinister.patternSiblings(num)
+
    def moveto(self,loc):
       Charge.moveto(self,loc)
    def shiftto(self,loc):
@@ -999,7 +1003,6 @@ class Baton(BendletSinister):
       BendletSinister.__init__(self,*args,**kwargs)
 
    def process(self):
-      sys.stderr.write("transform: %s\n"%self.transform)
       self.clipPath=SVGdraw.rect(-5,-Ordinary.FESSPTY+10,
                                  10,Ordinary.HEIGHT-30)
       if hasattr(self,"transform"):
