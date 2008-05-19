@@ -80,14 +80,14 @@ and masking it with the image.  So the image's own colors still have an
 effect; only where the image is white is the color you specify shown
 through unaltered.  Usually this is what you want, but just realize that is
 what's going on.  To indicate that an image charge should be shown with no
-change to its natural color, blazon its color as "proper", as in _Or a
-<`http://us.i1.yimg.com/us.yimg.com/i/ww/beta/y3.gif`> proper_.  Technically,
+change to its natural color, blazon its color as "proper", as in _Or a_
+<`http://us.i1.yimg.com/us.yimg.com/i/ww/beta/y3.gif`> _proper_.  Technically,
 you can get the same result by using _argent_, but that relies on some
 coincidences that might not always be there.
 
 To use an external image as a charge, enclose the URL with <> signs.
 
-|| _Ermine a <`http://us.i1.yimg.com/us.yimg.com/i/ww/beta/y3.gif`> proper_ || Azure six <`http://quality.mozilla.org/files/qmo_firefox_logo.png`> proper_ || Or two <`http://www.kli.org/pics/KLIlogo.gif`> per saltire gules and azure ||
+|| _Ermine a_ <`http://us.i1.yimg.com/us.yimg.com/i/ww/beta/y3.gif`> _proper_ || _Azure six_ <`http://quality.mozilla.org/files/qmo_firefox_logo.png`> _proper_ || _Or two_ <`http://www.kli.org/pics/KLIlogo.gif`> _per saltire gules and azure_ ||
 || http://pyblazon.googlecode.com/svn/wiki/img/ermine_a_Yahoo_proper.png || http://pyblazon.googlecode.com/svn/wiki/img/azure_6_FF_proper.png || http://pyblazon.googlecode.com/svn/wiki/img/or_2_KLI_per_saltire_gules_and_azure.png ||
 
 ==On to [ChargesOnCharges Charges on Charges and Ordinaries]==
