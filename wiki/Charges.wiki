@@ -41,3 +41,53 @@ See how it works?
 (Just a quick word about _mullets_: by default, a mullet is a five-pointed
 star.  But you can also say _mullet of six points_, or _mullet of seven
 points_ and so on, for any number from three through twelve.)
+
+----
+
+==Image Charges==
+
+You can use any image on the web (GIF, PNG, JPG, etc) as a charge and
+pyBlazon will do its level best.  The image will be scaled to the size a
+charge would be (so, smaller when there are many charges, larger when only
+one or two, etc), placed in position, and an attempt will be made to color
+it according to the treatment you specify.  Note that all these operations
+are fraught with potential problems and errors, so adjust your expectations
+accordingly.
+
+When it comes to scaling the pictures, remember that pyBlazon produces SVG
+files, "Scalable Vector Graphics."  As the name implies, these pictures are
+intended to be scaled up and down.  And because they specify the picture in
+terms of lines and curves and colors, and not in terms of an array of
+pixels, you can scale them as large as you want and they will remain sharp,
+and not get fuzzy like ordinary images do when you make them very large.
+But if you include an ordinary image as a charge, that image will be
+subject to normal fuzzing if it is scaled up big.  This might not be a
+problem if the source picture is big to start with, and/or if the size you
+show the shield is small, but you should be aware of it.
+
+Another thing to remember is that web images are rectangular, but most
+charges are not.  pyBlazon can't generally tell that you want only some of
+your picture shown, so you might wind up with backgrounds behind your
+images.  There is a way to avoid this, though.  You have to make sure the
+images you are including have their backgrounds *transparent*.  This can be
+done with GIF and PNG files, though JPG files cannot be made transparent.
+If a picture has transparent parts, those parts will be properly treated as
+"missing" and not colored in by pyBlazon when it colors the charge.
+
+Speaking of coloring the charge, this is done by coloring an area with the
+treatment you specify (color, fur, complex multicolor treatment, whatever)
+and masking it with the image.  So the image's own colors still have an
+effect; only where the image is white is the color you specify shown
+through unaltered.  Usually this is what you want, but just realize that is
+what's going on.  To indicate that an image charge should be shown with no
+change to its natural color, blazon its color as "proper", as in _Or a
+<!http://us.i1.yimg.com/us.yimg.com/i/ww/beta/y3.gif> proper_.  Technically,
+you can get the same result by using _argent_, but that relies on some
+coincidences that might not always be there.
+
+To use an external image as a charge, enclose the URL with <> signs.
+
+|| _Ermine a <!http://us.i1.yimg.com/us.yimg.com/i/ww/beta/y3.gif> proper_ || Azure six <!http://quality.mozilla.org/files/qmo_firefox_logo.png> proper_ || Or two <!http://www.kli.org/pics/KLIlogo.gif> per saltire gules and azure ||
+|| http://pyblazon.googlecode.com/svn/wiki/img/ermine_a_Yahoo_proper.png || http://pyblazon.googlecode.com/svn/wiki/img/azure_6_FF_proper.png || http://pyblazon.googlecode.com/svn/wiki/img/or_2_KLI_per_saltire_gules_and_azure.png ||
+
+==On to [ChargesOnCharges Charges on Charges and Ordinaries]==

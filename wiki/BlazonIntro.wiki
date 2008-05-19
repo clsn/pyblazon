@@ -68,8 +68,9 @@ alterations you can do to the colors:
 
 See how to combine these on the PartyPer page, or if you don't want to get
 more complicated backgrounds but want to see how to place shapes *on* the
-background, look at the [Ordinaries] page.
+background, look at the [Ordinaries] or [Charges] page.
 
 ==PartyPer -- for more complex treatments==
-==[Ordinaries] -- for putting shapes on the shield==
+==[Ordinaries] -- for putting big shapes across the shield==
+==[Charges] -- for putting individual shapes and objects on the shield==
 
