@@ -16,8 +16,8 @@ appropriate manner; it won't always get it right.
 
 You can place charges *on* ordinaries as well, or on other charges.  If there is a single charge (or ordinary) with other things on it, express it as in the examples:
 
-|| _Or on a roundel sable a mullet argent_ || _Or on a bend sable three fleurs de lis argent_ || _Or on an escutcheon sable three triangles argent in bend_ || _Or on a roundel sable three mullets argent 2 and 1_ ||
-|| http://pyblazon.googlecode.com/svn/wiki/img/or_on_a_roundel_sable_a_mullet_argent.png || http://pyblazon.googlecode.com/svn/wiki/img/or_on_a_bend_sable_three_fleurs_de_lis_argent.png || http://pyblazon.googlecode.com/svn/wiki/img/or_on_an_escutcheon_sable_three_triangles_argent_in_bend.png || http://pyblazon.googlecode.com/svn/wiki/img/or_on_a_roundel_sable_three_mullets_argent_2_and_1.png ||
+|| _Or on a roundel sable a mullet argent_ || _Or on a bend sable three fleurs de lis argent_ || _Or on an escutcheon sable three triangles argent in bend_ || _Or on a roundel sable three mullets argent 1 and 2_ ||
+|| http://pyblazon.googlecode.com/svn/wiki/img/or_on_a_roundel_sable_a_mullet_argent.png || http://pyblazon.googlecode.com/svn/wiki/img/or_on_a_bend_sable_three_fleurs_de_lis_argent.png || http://pyblazon.googlecode.com/svn/wiki/img/or_on_an_escutcheon_sable_three_triangles_argent_in_bend.png || http://pyblazon.googlecode.com/svn/wiki/img/or_on_a_roundel_sable_three_mullets_argent_1_and_2.png ||
 
 
 Several things to note here:
