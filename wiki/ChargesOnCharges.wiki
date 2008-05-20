@@ -22,25 +22,15 @@ You can place charges *on* ordinaries as well, or on other charges.  If there is
 
 Several things to note here:
 
-  * The smaller charges are in fact shrunken down a bit to fit.  Maybe not
-shrunken down quite enough, in some cases.
+  * The smaller charges are in fact shrunken down a bit to fit.  Maybe not shrunken down quite enough, in some cases.
 
-  * You can place a group of more than one charge on top of a charge or
-ordinary.
+  * You can place a group of more than one charge on top of a charge or ordinary.
 
-  * Different charges/ordinaries force charges placed onto them to be
-arranged in different ways, by default.  For example, note that the three
-fleurs-de-lis on the bend are arranged in a row, though usually groups of
-three are arranged two-and-one.
+  * Different charges/ordinaries force charges placed onto them to be arranged in different ways, by default.  For example, note that the three fleurs-de-lis on the bend are arranged in a row, though usually groups of three are arranged two-and-one.
 
-  * Ordinaries can also impose other changes on the charges placed on them.
-Note that the fleurs-de-lis on the bend are actually rotated so they are
-"bendwise".  This is normal procedure for things charged on a bend.  Most
-other ordinaries do not rotate their charges, though.
+  * Ordinaries can also impose other changes on the charges placed on them. Note that the fleurs-de-lis on the bend are actually rotated so they are "bendwise".  This is normal procedure for things charged on a bend.  Most other ordinaries do not rotate their charges, though.
 
-  * You can specify an arrangement for the smaller charges just as you
-could if they were on the field, using "in pale" or "one and two" and so
-forth.
+  * You can specify an arrangement for the smaller charges just as you could if they were on the field, using "in pale" or "one and two" and so forth.
 
 If you have more than one charge (or ordinary) with charges on them, you
 word it this way:
