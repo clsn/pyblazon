@@ -21,7 +21,11 @@ This introduction to blazonry will be focussing on what pyBlazon can do,
 and even within that it will not be exhaustive.  You'll have to learn more
 blazonry to explore more of the features of pyBlazon; I'm just giving you
 an idea so you can express some simple designs and understand some simple
-blazons.  All the examples shown have been rendered by pyBlazon.
+blazons.  The blazonry taught here is specifically what pyBlazon can
+understand, but it is also (except for a few obvious features) valid,
+ordinary blazonry, so the blazonry skills you learn from these pages _are_
+applicable to blazonry you might see and describe to other people. All the
+examples shown have been rendered by pyBlazon.
 
 =Tinctures and Treatments=
 

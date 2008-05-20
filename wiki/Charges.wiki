@@ -16,9 +16,10 @@ the syntax of the blazon (much).  Here are some typical charges:
 || http://pyblazon.googlecode.com/svn/wiki/img/or_a_roundel_azure.png || http://pyblazon.googlecode.com/svn/wiki/img/or_an_annulet_azure.png || http://pyblazon.googlecode.com/svn/wiki/img/or_a_lozenge_azure.png || http://pyblazon.googlecode.com/svn/wiki/img/or_a_billet_azure.png || http://pyblazon.googlecode.com/svn/wiki/img/or_a_crescent_azure.png ||
 
 Charges are blazoned like we saw with [Ordinaries].  The shields above were
-blazoned _Or a roundel azure_, and so forth.  The color follows the charge.
-And the charge can be colored in more complicated ways, as in the examples
-in PartyPer.
+blazoned _Or a roundel azure_, and so forth.  The color *follows* the
+charge (in general, adjectives in blazonry tend to *follow* the nouns, and
+not precede them as in normal English).  And the charge can be colored in
+more complicated ways, as in the examples in PartyPer.
 
 Charges are often found in groups of more than one charge (of the same kind):
 
