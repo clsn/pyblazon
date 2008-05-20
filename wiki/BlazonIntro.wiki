@@ -13,7 +13,7 @@ way.  The nature of "significant" of course relies on the rules of
 heraldry.
 
 Blazonry has been compared to a primitive programming language, or maybe a
-markup language like HTML or a drawing language like PostScript or SVG
+markup language like HTML or a drawing language like !PostScript or SVG
 would be closer.  And indeed, that is what this project is all about:
 translating blazonry (or a subset thereof) into SVG.
 
@@ -21,7 +21,7 @@ This introduction to blazonry will be focussing on what pyBlazon can do,
 and even within that it will not be exhaustive.  You'll have to learn more
 blazonry to explore more of the features of pyBlazon; I'm just giving you
 an idea so you can express some simple designs and understand some simple
-blazons.  All the examples shown will be rendered by pyBlazon.
+blazons.  All the examples shown have been rendered by pyBlazon.
 
 =Tinctures and Treatments=
 
