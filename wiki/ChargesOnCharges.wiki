@@ -1,3 +1,4 @@
+#summary Charges with ordinaries and charges/ordinaries on top of each other.
 =Combining Charges and Ordinaries=
 
 Shields often have both charges and ordinaries, though rarely more than one
@@ -45,3 +46,6 @@ roundel with a mullet and another with two lozenges, for example.  This is
 a limitation found in heraldry in general: you're not supposed to be doing
 that.  (There may be a way to get pyBlazon to do it, but that doesn't make
 it right).
+
+==Back to BlazonIntro==
+==Back to Wiki HomePage==
