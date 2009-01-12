@@ -45,8 +45,9 @@ class Treatment:                         # Metal or color.
         try:
             self.color=Treatment.lookup[color]
         except KeyError:
-            sys.stderr.write("Invalid tincture: %s\n"%color)
-            self.color="white"
+            sys.stderr.write("Warning: invalid tincture: %s\n"%color)
+            # So people can use '#bab1e5' if they want...
+            self.color=color
         if self.color == "proper":
             self.color="none"
 

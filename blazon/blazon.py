@@ -2149,7 +2149,7 @@ class Blazon:
       i=0
       for i in range(0,len(bits)):
          if i%2 == 0:
-            bits[i]=re.sub("[^a-z0-9() '-]+"," ",bits[i].lower())
+            bits[i]=re.sub("[^a-z0-9() '#-]+"," ",bits[i].lower())
          else:
             bits[i]='<'+bits[i]+'>'
       return ' '.join(bits)
