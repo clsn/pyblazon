@@ -101,7 +101,13 @@ def t_NAME(t):
 # ugly, I think; maybe there are better ways.
 
 def t_COLOR(t):
-    r"\b(bleu[ ]celeste|de[ ]poix|de[ ]larmes|de[ ]sang|d'or)\b"
+    r"\b(bleu[ ]celeste|de[ ]poix|de[ ]larmes|de[ ]sang|d'or|[#][a-f0-9]{6})\b"
+    return t
+
+# No idea why "|[#]" at the end of the previous rule doesn't work, but it doesn't
+def t_COLOR_b(t):
+    r"[#][0-9a-f]{6}"
+    t.type='COLOR'
     return t
 
 def t_BORDURE(t):
@@ -175,7 +181,7 @@ def t_TOKEN(t):
 
 def t_error(t):
     sys.stderr.write("illegal character: %s\n"%t.value[0])
-    t.skip(1)
+    t.lexer.skip(1)
 
 
 lookupdict={
