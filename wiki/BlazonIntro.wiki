@@ -48,6 +48,8 @@ understands:
 || _Bleu Celeste_ || _Tenne_ || _Sanguine_ || _Murrey_ || _Rose_ || _Copper_ ||
 || http://pyblazon.googlecode.com/svn/wiki/img/bleuC.png || http://pyblazon.googlecode.com/svn/wiki/img/tenne.png || http://pyblazon.googlecode.com/svn/wiki/img/sanguine.png || http://pyblazon.googlecode.com/svn/wiki/img/murrey.png || http://pyblazon.googlecode.com/svn/wiki/img/rose.png || http://pyblazon.googlecode.com/svn/wiki/img/copper.png ||
 
+*News:* as of pyBlazon release 307 (January 2009), you can also specify a color by using its “html” code, of the form *#xxxxxx* where each *x* is a hexadecimal digit, and the six digits specify the color with two digits each of <font color="red">red</font>, <font color="green">green</font>, and <font color="blue">blue</font> in that order.  So you can get a cyan cross on a magenta field with _#ff00ff a cross #00ffff_.
+
 There is a rule in heraldry that "metals" (_Or_ and _Argent_) should not
 touch other metals, and "tinctures" (the other colors) should not touch
 other tinctures; _i.e._, metals only touch tinctures and vice-versa.  But
@@ -77,4 +79,3 @@ background, look at the [Ordinaries] or [Charges] page.
 ==PartyPer -- for more complex treatments==
 ==[Ordinaries] -- for putting big shapes across the shield==
 ==[Charges] -- for putting individual shapes and objects on the shield==
-
