@@ -58,6 +58,10 @@ class Treatment:                         # Metal or color.
     def invert(self):
         pass
 
+    def modify(self, name, *args, **kwargs):
+        if name == "inverted":
+            self.invert()
+
     def orient(self,direction,*args,**kwargs):
         pass
 
