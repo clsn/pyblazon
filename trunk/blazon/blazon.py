@@ -2190,7 +2190,10 @@ class Blazon:
    def outside_element(data):
       """Handle URLs, either directly from blazon or from Chargelist file.
       The data may contain spaces, in which case it is *split* along those
-      spaces in order to allow extra information, like SVG data."""
+      spaces in order to allow extra information, like SVG data.
+
+      Apparently, system paths also work, though this is probably due
+      to the way SVG handles embedded images and should not be abused"""
       # OK, here's how the data should be handled:
       # 1. If it has no internal whitespace, it's a (raster) image URL.
       #    So all the <http://foo.com/image.png> charges work, etc.  In theory
@@ -2208,7 +2211,7 @@ class Blazon:
       pieces=re.split(r"\s+",data)
       if len(pieces) < 1:
          # Bweah!!  Shouldn't happen!  I dunno, complain.
-         raise "Empty charge data!!"
+         raise ArrangementError("Empty charge data!!")
       if len(pieces) == 1:
          # Image url
          return Image(pieces[0], 80, 80)
@@ -2217,7 +2220,7 @@ class Blazon:
          m=re.match(r'\S+\s+SVGpath\s+"([^"]*)"\s*([0-9.]+)?',data)
          if not m:
             # Match failed.  Error-handling is for wimps.
-            raise "Invalid charge data"
+            raise ArrangementError("Invalid charge data")
          f=m.group(2)
          if f == None:
             f="3.0"
@@ -2251,10 +2254,14 @@ class Blazon:
       return shield
 
 if __name__=="__main__":
-   cmdlineinput = " ".join(sys.argv[1:])
+   if len(sys.argv) < 1: # Read from stdin
+      cmdlineinput = re.sub(r"\s+"," ",
+                            sys.stdin.read())
+   else: # The standard way of operation
+      cmdlineinput = " ".join(sys.argv[1:])
    blazon = Blazon(cmdlineinput)
    # Old YAPPS parser:
    # return parse.parse('blazon', self.GetBlazon())
    # New YACC parser:
-   print plyyacc.yacc.parse(self.GetBlazon())
+   print plyyacc.yacc.parse(blazon)
    
