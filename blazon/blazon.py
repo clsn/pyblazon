@@ -1754,7 +1754,7 @@ class Triangle(Charge):
 class Billet(Charge):
    "rectangle"
    def process(self):
-      self.clipPath=SVGdraw.rect(-15,-25,30,50)
+      self.clipPath=SVGdraw.rect(-22,-35,44,70)
       self.clipPathElt.addElement(self.clipPath)
 
 class Annulet(Charge):
