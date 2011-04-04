@@ -56,7 +56,7 @@ word_REs={
     'FIMBRIATED':r"(fimbriated|voided)",
     'COUNTERCHARGED':r"countercha[rn]ged",
     'DIRECTION':r"(dexter|sinister)",
-    'NUMWORD':r"(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty|I|II|III|IV|as[ ]many)",
+    'NUMWORD':r"(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty|i|ii|iii|iv|as[ ]many)",
     'A':r'an?',
     'WORD':r'points',
     'OVERALL':r'overall',
@@ -175,7 +175,8 @@ def t_TOKEN(t):
                  "seven":7, "eight":8, "nine":9, "ten":10, "eleven":11,
                  "twelve":12, "thirteen":13, "fourteen":14, "fifteen":15,
                  "sixteen":16, "seventeen":17, "eighteen":18, "nineteen":19,
-                 "twenty":20,"I":1,"II":2,"III":3,"IV":4,"as many":-1}[t.value]
+                 "twenty":20,"I":1,"II":2,"III":3,"IV":4,
+                 "i":1,"ii":2,"iii":3,"iv":4,"as many":-1}[t.value]
     # print "returning: ",t
     return t
 
