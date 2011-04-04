@@ -349,8 +349,9 @@ def p_bordure(p):
 
 def p_chief(p):
     """chief : empty
-             | AND A CHIEF optlinetype opttreatment
-             | optand ON A CHIEF optlinetype opttreatment charges"""
+             | WITH A CHIEF optlinetype opttreatment
+             | WITH A CHIEF optlinetype opttreatment CHARGED WITH charges""" 
+    #| optand ON A CHIEF optlinetype opttreatment charges"""
     if len(p)<=2:
         p[0]=None
     elif len(p)==6:
@@ -361,14 +362,14 @@ def p_chief(p):
             # sys.stderr.write("Coloring a chief: (%s)\n"%p[5])
             p[0].tincture=p[5]
         p[0].lineType=p[4]
-    elif len(p)==8:
+    elif len(p)==9:
         p[0]=blazon.Chief()
-        if not p[6]:
+        if not p[5]:
             Globals.colorless.append(p[0])
         else:
-            p[0].tincture=p[6]
-        p[0].extendCharges(p[7])
-        p[0].lineType=p[5]
+            p[0].tincture=p[5]
+        p[0].extendCharges(p[8])
+        p[0].lineType=p[4]
     else:
         # Drop back ten and punt
         p[0]=None
