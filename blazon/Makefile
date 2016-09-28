@@ -14,3 +14,8 @@ lexitems.txt: plylex.py
 FILES=plylex.py plyyacc.py blazon.py treatment.py arrangement.py makexmlgrammar.py gen.py pathstuff.py data SVGdraw.py
 pyblazon.tar.gz: $(FILES)
 	tar czfv pyblazon.tar.gz $(FILES)
+
+.PHONY: clean
+
+clean:
+	rm -f *.pyc parser.out parsetab.py

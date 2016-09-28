@@ -331,6 +331,10 @@ def p_ordinary_5(p):
         p[0]=blazon.ExtCharge("question")
         # p[0]=blazon.Image(p[2], 80, 80)
 
+def p_ordinary_6(p):
+    "ordinary : optA TEXT"
+    p[0]=blazon.Text(p[2], 80, 80) # these magic 80 numbers...?
+
 def p_bordure(p):
     """bordure : empty
                | WITHIN A BORDURE optlinetype opttreatment

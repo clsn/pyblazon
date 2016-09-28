@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: latin-1 -*-
+# -*- coding: utf-8 -*-
 
 import ply.lex as lex
 import re
@@ -15,14 +15,14 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
         "PALL","WITHIN","BORDURE","BEZANTY","LP","RP","IN","DIRECTION",
         "URL","MULLET","NAME","ANNULO","GROUPS", "OVERALL",
-        "TOKEN",)
+        "TOKEN","TEXT",)
 
 t_ignore=" \n\t"
 
 word_RE_text={}
 word_REs={
     'BORDURE':r"(bordure|orle|tressure|double\W+tressure)",
-    'COLOR':r"((d')?or|argent|sable|azure|gules|purpure|vert|tenn�|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de[ ]larmes|de[ ]poix|de[ ]sang|d'huile|d'eau|proper)",
+    'COLOR':r"((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de[ ]larmes|de[ ]poix|de[ ]sang|d'huile|d'eau|proper)",
     'AND':r"(and|&|between)",
     'BEZANTY':r"(be[sz]anty|platey|pellety|hurty|tortoilly)",
     'GROUPS':r"groups",
@@ -56,7 +56,7 @@ word_REs={
     'FIMBRIATED':r"(fimbriated|voided)",
     'COUNTERCHARGED':r"countercha[rn]ged",
     'DIRECTION':r"(dexter|sinister)",
-    'NUMWORD':r"(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty|i|ii|iii|iv|as[ ]many)",
+    'NUMWORD':r"(one|two|three|four(teen)?|five|six(teen)?|seven(teen)?|eight(een)?|nine(teen)?|ten|eleven|twelve|thirteen|fifteen|twenty|I|II|III|IV|as[ ]many)",
     'A':r'an?',
     'WORD':r'points',
     'OVERALL':r'overall',
@@ -70,6 +70,11 @@ def t_NUM(t):
 def t_URL(t):
     r"<[^>]*>"
     t.value=t.value[1:-1].strip()
+    return t
+
+def t_TEXT(t):
+    r'"[^"]+"s?'
+    t.value=t.value[1:-1]
     return t
 
 def t_NAME(t):
@@ -119,7 +124,9 @@ def t_LINEY(t):
     return t
 
 def t_CHARGE(t):
-    r"\b(fleurs?\W+de\W+lis|cross(es)?\W+crosslets?|fir\W+twigs?|cross(es)?\W+(formy|pattee|pommee|bottony|humetty|flory)|lions?\W+(passant|rampant)|bars?(\W+gemelles?)?)\b"
+    r"\b(fleurs?\W+de\W+lis|cross(es)?\W+crosslets?|fir\W+twigs?|cross(es)?\W+(formy|pattee|pommee|bottony|humetty|flory)|lions?\W+(passant|rampant)|bars?(\W+gemelles?)?)\b|⚜"
+    # Note that ⚜ must be outside the \b delims (which is why it isn't in the word_REs),
+    # because it isn't a word char.
     return t
 
 def t_INVERTED(t):
@@ -152,7 +159,7 @@ def t_NUMWORD(t):
     return t
 
 def t_TOKEN(t):
-    r"\b[a-z'-]+\b"
+    r"\b[a-z'-]+\b|⚜"            # Kludge for FDL!
     # Massive function that seeks out just about all the reserved words
     found='TOKEN'
     foundlen=0
@@ -236,6 +243,7 @@ lookupdict={
     "canton": blazon.Canton,            # There can be no more than one canton.
     "gyron": blazon.Gyron,
     "fleurs?\\W+de\\W+l[iy]s": (lambda *a: blazon.ExtCharge("fleur")),
+    "⚜": (lambda *a: blazon.ExtCharge("fleur")),
     "goutes?": (lambda *a: blazon.ExtCharge("goute")),
     "cross(es)?.formy": (lambda *a: blazon.ExtCharge("formy")),
     "cross(es)?.pattee": (lambda *a: blazon.ExtCharge("formy")),

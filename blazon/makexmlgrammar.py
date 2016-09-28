@@ -26,10 +26,8 @@ import copy
 from xml.dom.minidom import parse, parseString, getDOMImplementation
 from blazon import Blazon
 
-# For bizarre reasons I don't fully understand, you can't import tokens
-# from plylex, but it's okay if you make fakeplylex.py a symlink to plylex.
-
-from fakeplylex import tokens,lookup
+import plyyacc                  # enables importing tokens from plylex
+from plylex import tokens,lookup
 
 impl=getDOMImplementation()
 doc=impl.createDocument(None,"shield",None)
@@ -81,6 +79,6 @@ def %(f)s(p):
 yacc.yacc(method="LALR")
 if __name__=="__main__":
     j=yacc.parse(Blazon.Normalize(" ".join(sys.argv[1:])))
-    print j.toprettyxml()
+    print(j.toprettyxml())
 """)
 make_xml_grammar()
