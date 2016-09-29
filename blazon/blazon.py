@@ -309,7 +309,7 @@ class TrueOrdinary:
 class Field(Ordinary,TrueOrdinary):
    "Class for the field as a whole.  It's an ordinary, of sorts."
    std_desc="""This is an SVG of a blazon, a heraldic description of a shield.  It was generated with pyBlazon, by Mark Shoulson and Arnt Richard Johansen"""
-   def __init__(self,tincture="argent",base=None):
+   def __init__(self,tincture="argent",base=None,outline=True):
       # Horrendously geeky trick to slip the blazon into the title element
       # even though it is set long after.  The brackets that result are
       # actually good, IMO.  I could get rid of them, but I am not going
@@ -353,7 +353,16 @@ class Field(Ordinary,TrueOrdinary):
       self.svg.addElement(SVGdraw.path(self.pdata,stroke="black",
                                        stroke_width=1,fill="none"))
       Ordinary.defs=[]                  # This is a hack.
+      self.outline=outline
       # self.maingroup.addElement(SVGdraw.circle(cx=0,cy=0,r=20,fill="red"))
+
+   def finalizeSVG(self):
+      self.clipPath=SVGdraw.path(self.pdata)
+      self.clipPathElt.addElement(self.clipPath)
+      if self.outline:
+         self.svg.addElement(SVGdraw.path(self.pdata,stroke="black",
+                                          stroke_width=1,fill="none"))
+      super().finalizeSVG()
 
    # A chief is different.  Adding one depresses the rest of the field.
    def addChief(self, chief):
@@ -372,6 +381,9 @@ class Field(Ordinary,TrueOrdinary):
 
    def setBase(self,base):
       self.base=base
+
+   def setOutline(self,outline):
+      self.outline=outline
       
    def __repr__(self):
       """Output the SVG of the whole thing."""
@@ -2176,11 +2188,12 @@ import plyyacc
 class Blazon:
    """A blazon is a heraldic definition. We would like to be as liberal
    as possible in what we accept."""
-   def __init__(self, blazon, base=None):
+   def __init__(self, blazon, base=None, outline=True):
       # Our parser is somewhat finicky, so we want to convert the raw,
       # user-provided text into something it can handle.
       self.base=base
       self.blazon=self.Normalize(blazon)
+      self.outline=outline
 
    @staticmethod
    def Normalize(blazon):
@@ -2306,6 +2319,7 @@ class Blazon:
       shield=plyyacc.yacc.parse(self.GetBlazon())
       if self.base:
          shield.setBase(self.base)
+      shield.setOutline(self.outline)
       shield.setBlazon(self.GetBlazon())
       return shield
 
