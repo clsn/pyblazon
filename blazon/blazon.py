@@ -2002,88 +2002,55 @@ class Symbol(Charge):
 # Check the 2lions.svg file!!  Both the mask AND the later <use> have to be
 # translated.
 
-class Simple(Charge):
-   "Parent class for Text and Image.  Things which can't do very much."
-   def invert(self):
-      if not hasattr(self,"endtransforms"):
-         self.endtransforms=""
-      self.endtransforms += " rotate(180)"
+class Text(Charge):
+   "Text (perhaps a single emoji) rendered as a charge."
 
-   def shiftto(self, *args):
-      self.moveto(*args)
-
-   def resize(self, *args):
-      self.scale(*args)
-
-   def do_fimbriation(self):
-      # Shyeah right.
-      pass
-
-class Text(Simple):
-   "Text (incl a single emoji) rendered as a charge."
+   uure=re.compile(r'\\N\{[A-Z0-9_ -]*\}|\\u[0-9a-fA-F]{4}|\\U[0-9a-fA-F]{8}')
 
    def __init__(self, text, width, height, *args, **kwargs):
       self.setup(*args)
       self.text=text
+      self.font=None
+      (pre, delim, post)=self.text.rpartition('@')
+      if pre:
+         self.text=pre
+         self.font=post
+      # Want to allow both direct utf-8 and escaped
+      #self.text=uure.sub(lambda m: bytes(m.group(0),'utf-8').decode('unicode-escape'), self.text)
+      # Is this simpler and good enough?  Also not py3-dependent.
+      self.text=eval('"""'+self.text+'"""')
       # self.width, self.height = width, height
       # Ignore height, compute from width?
       self.width=width
-      self.height=width/len(text)
+      self.height=width/len(self.text)
       if "transform" in kwargs:
          self.transform=kwargs["transform"]
 
+   # Wow, even fimbriation works!
    def process(self):
       # Placement by trial and error, needs fine-tuning
       # Can't get alignment-baseline="central" or "middle" to do anything,
       # baseline-shift="50%" doesn't work, dominant-baseline also doesn't help...
       # it isn't even really clear just how to shift in general.  Maybe we can
       # think of something.
-      self.ref=SVGdraw.text(x= 0,
-                            y= 0,
-                            text=self.text,
-                            font_size=self.height, # ??
-                            dy=self.height/4.0,
-                            text_anchor="middle")
+      self.clipPath=SVGdraw.text(x= 0,
+                                 y= 0,
+                                 text=self.text,
+                                 font_size=self.height, # ??
+                                 dy=self.height/4.0,
+                                 text_anchor="middle")
       # Can't do this in the constructor; won't translate _ to -.
       # self.ref.attributes["alignment-baseline"]="central"
+      self.clipPathElt.addElement(self.clipPath)
       if hasattr(self,"transform"):
          if "transform" not in self.ref.attributes:
-            self.ref.attributes["transform"]=""
-         self.ref.attributes["transform"]+=self.transform
-
-   def finalizeSVG(self):
-      self.process()
-      if hasattr(self, "endtransforms"):
-         if "transform" not in self.ref.attributes:
-            self.ref.attributes["transform"]=""
-         self.ref.attributes["transform"]+=self.endtransforms
-      try:
-         del(self.maingroup.attributes["mask"])
-      except KeyError:
-         pass
-      # Tincture handling is like for Images, but probably simpler.
-      if hasattr(self, 'tincture') and self.tincture and not \
-         (hasattr(self.tincture, 'color') and self.tincture.color=='none'):
-         self.mask=SVGdraw.SVGelement('mask',
-                                      attributes={'id': 'Mask%04d'%Ordinary.id})
-         Ordinary.id+=1
-         self.ref.attributes["fill"]="white"
-         self.mask.addElement(self.ref)
-         Ordinary.defs.append(self.mask)
-         self.baseRect=SVGdraw.rect(x=-Ordinary.FESSPTX,
-                                    y=-Ordinary.FESSPTY,
-                                    width=Ordinary.WIDTH,
-                                    height=Ordinary.HEIGHT)
-         self.baseRect.charge=self
-         self.baseRect=self.tincture.fill(self.baseRect)
-         self.baseRect.attributes['mask']='url(#%s)'%self.mask.attributes['id']
-         self.maingroup.addElement(self.baseRect)
-      else:                     # ?
-         self.maingroup.addElement(self.ref)
-      return self.maingroup
+            self.clipPath.attributes["transform"]=""
+         self.clipPath.attributes["transform"]+=self.transform
+      if self.font:
+         self.clipPathElt.attributes['font-family']=self.font
 
 # A class for raster (non-vector) images.  Eww.
-class Image(Simple):
+class Image(Charge):
    "External link to a non-vector image"
 
    def __init__(self, url, width, height, *args, **kwargs):
@@ -2104,6 +2071,21 @@ class Image(Simple):
          if "transform" not in self.ref.attributes:
             self.ref.attributes["transform"]=""
          self.ref.attributes["transform"]+=self.transform
+
+   def invert(self):
+      if not hasattr(self,"endtransforms"):
+         self.endtransforms=""
+      self.endtransforms += " rotate(180)"
+
+   def shiftto(self, *args):
+      self.moveto(*args)
+
+   def resize(self, *args):
+      self.scale(*args)
+
+   def do_fimbriation(self):
+      # Shyeah right.
+      pass
 
    def finalizeSVG(self):
       # Need a special version for Image, overriding the default.

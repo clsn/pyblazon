@@ -1,5 +1,5 @@
-#!/usr/bin/python
-# -*- coding: latin-1 -*-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Tinctures, furs, the main lines of division, and fields semy.
 """
@@ -29,7 +29,7 @@ class Treatment:                         # Metal or color.
              "vert" : "green",
              "d'huile" : "green",
              "purpure" : "purple",
-             "tenné" : "#cd5700",
+             "tennÃ©" : "#cd5700",
              "tenne" : "#cd5700",
              "tawny" : "#cd5700",
              "sanguine" : "#c00000",

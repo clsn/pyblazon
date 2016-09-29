@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import ply.lex as lex
@@ -73,7 +73,7 @@ def t_URL(t):
     return t
 
 def t_TEXT(t):
-    r'"[^"]+"s?'
+    r'"[^"]+"'
     t.value=t.value[1:-1]
     return t
 

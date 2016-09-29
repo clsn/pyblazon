@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 """Use this file for invocation from the command line.
 
 Example:
