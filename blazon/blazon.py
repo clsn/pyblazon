@@ -348,10 +348,6 @@ class Field(Ordinary,TrueOrdinary):
       self.mask.attributes["id"]="Mask%04s"%Ordinary.id
       Ordinary.id+=1
       self.maingroup.attributes["mask"]="url(#%s)"%self.mask.attributes["id"]
-      self.clipPath=SVGdraw.path(self.pdata)
-      self.clipPathElt.addElement(self.clipPath)
-      self.svg.addElement(SVGdraw.path(self.pdata,stroke="black",
-                                       stroke_width=1,fill="none"))
       Ordinary.defs=[]                  # This is a hack.
       self.outline=outline
       # self.maingroup.addElement(SVGdraw.circle(cx=0,cy=0,r=20,fill="red"))
@@ -359,6 +355,11 @@ class Field(Ordinary,TrueOrdinary):
    def finalizeSVG(self):
       self.clipPath=SVGdraw.path(self.pdata)
       self.clipPathElt.addElement(self.clipPath)
+      try:
+         if self.tincture.color=="none":
+            self.outline=False
+      except AttributeError:
+         pass
       if self.outline:
          self.svg.addElement(SVGdraw.path(self.pdata,stroke="black",
                                           stroke_width=1,fill="none"))
@@ -1421,7 +1422,25 @@ class ChargeGroup:            # Kind of an invisible ordinary
                        (-12,10),(12,10),
                        (0,30)]
                       ]
-   
+
+   defaultarrangements=[0, ByNumbers([1]), ByNumbers([2]),
+                        ByNumbers([2,1]), ByNumbers([2,2]),
+                        ByNumbers([2,1,2]), ByNumbers([3,2,1]),
+                        ByNumbers([3,3,1]), # 7
+                        ByNumbers([4, 4]),  # 8
+                        ByNumbers([3, 3, 3]), # 9
+                        ByNumbers([4,3,2,1]), # 10
+                        ByNumbers([4,3,4]),   # 11
+                        ByNumbers([4,4,4]),   # 12
+                        ByNumbers([1,4,3,4,1]),   # 13
+                        ByNumbers([5,4,5]),   # 14
+                        ByNumbers([5,4,3,2,1]), # 15, in pile
+                        ByNumbers([4,4,4,4]),   # 16
+                        ByNumbers([5,4,4,4]),   # 17
+                        ByNumbers([5,4,4,5]),   # 18
+                        ByNumbers([5,5,4,3,2]), # 19
+                        ByNumbers([6,5,4,3,2]), # 20
+   ]
    
    def arrange(self):
       # This can only work for a relatively small number, say up to 3
@@ -1473,8 +1492,9 @@ class ChargeGroup:            # Kind of an invisible ordinary
                pass
       if not placements:
          try:
-            placements=ChargeGroup.defaultplacements[num]
-         except AttributeError:
+            # placements=ChargeGroup.defaultplacements[num]
+            placements=self.defaultarrangements[num].pattern(num)
+         except IndexError:
             pass
       if not placements:
          raise ArrangementError("Too many objects")
@@ -2030,7 +2050,10 @@ class Text(Charge):
       # Want to allow both direct utf-8 and escaped
       #self.text=uure.sub(lambda m: bytes(m.group(0),'utf-8').decode('unicode-escape'), self.text)
       # Is this simpler and good enough?  Also not py3-dependent.
+      # Not really secure, but if you abuse it, you have yourself to blame.
       self.text=eval('"""'+self.text+'"""')
+      # Wow, even fimbriation works!  But usually needs it a bit narrower.
+      self.fimbriation_width=2
       # self.width, self.height = width, height
       # Ignore height, compute from width?
       self.width=width
@@ -2038,7 +2061,6 @@ class Text(Charge):
       if "transform" in kwargs:
          self.transform=kwargs["transform"]
 
-   # Wow, even fimbriation works!
    def process(self):
       # Placement by trial and error, needs fine-tuning
       # Can't get alignment-baseline="central" or "middle" to do anything,
@@ -2059,7 +2081,10 @@ class Text(Charge):
             self.clipPath.attributes["transform"]=""
          self.clipPath.attributes["transform"]+=self.transform
       if self.font:
-         self.clipPathElt.attributes['font-family']=self.font
+         if self.font.startswith("style="):
+            self.clipPath.attributes['style']=self.font.partition('=')[2]
+         else:
+            self.clipPathElt.attributes['font-family']=self.font
 
 # A class for raster (non-vector) images.  Eww.
 class Image(Charge):

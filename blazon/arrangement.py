@@ -17,31 +17,31 @@ class Arrangement:
    # These are the default placements.  Subclasses will override, right?
    
    placements=[[1],[1,(0,0)],    # 0 charges, 1 charge ...
-                      [.5, (-22,0),(22,0)],            # 2
-                      [.5, (-25,-25),(25,-25),(0,20)], # 3
-                      # and so on
-                      [.4, (-22,-22),(22,-22),(-22,22),(22,22)], 
-                      # 5 -> in saltire:
-                      [.35, (-21,-21),(21,-21),(0,0),(-21,21),(21,21)],
-                      # 6 -> in pile:
-                      [.3, (-26,-26),(0,-26),(26,-26),(-13,0),(13,0),(0,26)],
-                      # 7 -> three three and one
-                      [.3, (-26,-26),(0,-26),(26,-26),
-                       (-26,0),(0,0),(26,0),
-                       (0,26)],
-                      # 8 -> four and four
-                      [.2, (-30,-10),(-10,-10),(10,-10),(30,-10),
-                       (-30,10),(-10,10),(10,10),(30,10)],
-                      # 9 -> three three and three
-                      [.3, (-26,-26),(0,-26),(26,-26),
-                       (-26,0),(0,0),(26,0),
-                       (-26,26),(0,26),(26,26)],
-                      # 10 -> in pile
-                      [.3, (-36,-30),(-12,-30),(12,-30),(36,-30),
-                       (-24,-10),(0,-10),(24,-10),
-                       (-12,10),(12,10),
-                       (0,30)]
-                      ]
+               [.5, (-22,0),(22,0)],            # 2
+               [.5, (-25,-25),(25,-25),(0,20)], # 3
+               # and so on
+               [.4, (-22,-22),(22,-22),(-22,22),(22,22)],
+               # 5 -> in saltire:
+               [.35, (-21,-21),(21,-21),(0,0),(-21,21),(21,21)],
+               # 6 -> in pile:
+               [.3, (-26,-26),(0,-26),(26,-26),(-13,0),(13,0),(0,26)],
+               # 7 -> three three and one
+               [.3, (-26,-26),(0,-26),(26,-26),
+                (-26,0),(0,0),(26,0),
+                (0,26)],
+               # 8 -> four and four
+               [.2, (-30,-10),(-10,-10),(10,-10),(30,-10),
+                (-30,10),(-10,10),(10,10),(30,10)],
+               # 9 -> three three and three
+               [.3, (-26,-26),(0,-26),(26,-26),
+                (-26,0),(0,0),(26,0),
+                (-26,26),(0,26),(26,26)],
+               # 10 -> in pile
+               [.3, (-36,-30),(-12,-30),(12,-30),(36,-30),
+                (-24,-10),(0,-10),(24,-10),
+                (-12,10),(12,10),
+                (0,30)],
+   ]
 
    def pattern(self,num):               # This is it?
       if len(self.__class__.patterns) - 1 >= num:
@@ -127,7 +127,7 @@ class InCross(Arrangement):
       # leave the center blank:
       if num==4:
          return InFesse.patterns[2]+InPale.patterns[2][1:]
-      half=num/2+1                      # center blank.
+      half=num//2+1                      # center blank.
       rv=InFesse.patterns[half]+InPale.patterns[half][1:]
       # Remove all (<=2) the (0,0) elements, and put one back if needed.
       try:
@@ -246,15 +246,22 @@ class ByNumbers(Arrangement):
          raise blazon.ArrangementError("Whoa!  Number of elements is %d, but rows for %d given.\n"% (num,sum(self.rows)))
       # Determine the scale by the larger of: the number of rows, and
       # the largest number of elements in a row.
+      # (hrm, too big for larger squares (16,25,&c). perhaps detect after
+      # arranging by rechecking if the extreme values+scaled size are too
+      # far *diagonally* from origin?)
       index=max(len(self.rows),max(self.rows))
-      scale=[1, 1, .4, .3, .25, .2, .2, .2, .15, .12, .12, .1, .1, .1][index]
+      scale=[1, 1, .5, .3, .25, .2, .2, .2, .15, .12, .12, .1, .1, .1][index]
       # Assemble the return value...
       rv=[scale]
       totalrows=len(self.rows)
       for i in range(0,totalrows):
          row=self.rows[i]
-         y=(-(totalrows-1)/2.0+i)*blazon.Ordinary.HEIGHT*.8*scale
+         # Use WIDTH in both directions, keep the aspect ratio square.
+         ## Scale x & y by ratio of len(rows)/max(rows), for things like [2,1,2]
+         ## Maybe only stretch horiz but not vert?
+         ratio=len(self.rows)/max(self.rows)
+         y=(-(totalrows-1)/2.0+i)*blazon.Ordinary.WIDTH*.8*scale #*max(1,1/ratio)
          for j in range(0,row):
-            x=((row-1)/2.0-j)*blazon.Ordinary.WIDTH*.8*scale
+            x=((row-1)/2.0-j)*blazon.Ordinary.WIDTH*.8*scale*max(1,ratio)
             rv.append((x,y))
       return rv

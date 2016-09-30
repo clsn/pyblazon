@@ -22,7 +22,7 @@ t_ignore=" \n\t"
 word_RE_text={}
 word_REs={
     'BORDURE':r"(bordure|orle|tressure|double\W+tressure)",
-    'COLOR':r"((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de[ ]larmes|de[ ]poix|de[ ]sang|d'huile|d'eau|proper)",
+    'COLOR':r"((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de[ ]larmes|de[ ]poix|de[ ]sang|d'huile|d'eau|proper|fieldless)",
     'AND':r"(and|&|between)",
     'BEZANTY':r"(be[sz]anty|platey|pellety|hurty|tortoilly)",
     'GROUPS':r"groups",
@@ -163,7 +163,7 @@ def t_TOKEN(t):
     # Massive function that seeks out just about all the reserved words
     found='TOKEN'
     foundlen=0
-    for kwd in word_REs.keys():
+    for kwd in word_REs:
         rexp=word_REs[kwd]
         mtch=rexp.match(t.value)
         # FAILS, for tokens with spaces in them.  Finding the longest one
@@ -343,7 +343,7 @@ lookupdict={
 def lookup(key):
     # sys.stderr.write("Looking up: (%s)\n"%key)
     key=key.lower()
-    for k in lookupdict.keys():
+    for k in lookupdict:
         m=k.match(key)
         if m:
             return lookupdict[k]
@@ -360,12 +360,12 @@ def show_grammar(all=dir()):
         else:
             print(f, ":\t", obj.__doc__)
     # Most of the tokens are now in word_REs...
-    for k in word_RE_text.keys():
+    for k in word_RE_text:
         print(k, ":\t", word_RE_text[k])
 
 
 # Compile all the REs.
-for kwd in word_REs.keys():
+for kwd in word_REs:
     rexp=word_REs[kwd]
     # Save the text for the show_grammar function, otherwise it can't
     # print them out.
@@ -373,7 +373,7 @@ for kwd in word_REs.keys():
     word_REs[kwd]=re.compile(r'\b'+rexp+r'\b')
 # Compile the lookupdict too
 newdict={}
-for kwd in lookupdict.keys():
+for kwd in lookupdict:
     # has to match at the end also.
     newdict[re.compile(kwd+'$')]=lookupdict[kwd]
 lookupdict=newdict

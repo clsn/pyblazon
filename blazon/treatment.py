@@ -38,6 +38,7 @@ class Treatment:                         # Metal or color.
              "rose" : "#fba0e3",
              "copper" : "#b87333",
              "proper" : "proper",       # Not none, to keep things out of the colorless array
+             "fieldless" : "proper",    # syntactic sugar for fields.
              "none" : "none"
              }
    
@@ -622,8 +623,6 @@ class PerSaltire(PerCross):
        return blazon.Saltire.patternSiblings(num)        
 
 
-# start with default: Gyronny of eight.
-# *boggle*... all this time and we still don't support gyronny of anything else?
 class Gyronny(Paly):
     def assemble(self):
         # Yes, everything with HEIGHT, so I'm working in a square.
