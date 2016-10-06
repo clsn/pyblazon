@@ -104,7 +104,7 @@ def p_fulltreatment_4(p):
     check=lookup(p[1]+p[2])
     try:
         test=issubclass(check,treatment.Treatment)
-    except:
+    except TypeError:
         test=False
     if test:
         p[0]=check(0,p[3],p[5])
@@ -283,19 +283,27 @@ def p_mullet(p):
     p[0]=lookup(p[1])(n)
 
 def p_charge_1(p):
-    "charge : optA ordinary optinverted optlinetype opttreatment optfimbriation"
+    "charge : optA ordinary optinverted optlinetype opttreatment optfimbriation optendorsed opttreatment"
     res=p[2]
     for f in p[3]:
         f(res)
     res.lineType=p[4]
+    p[5], p[8] = (p[5] or p[8]), (p[8] or p[5])
     if not p[5]:
         if not res.tincture or not hasattr(res.tincture,"color") or not res.tincture.color or res.tincture.color == "none":
             Globals.colorless.append(res)
             res.tincture=None
     else:
         res.tincture=p[5]
+    if p[7]:
+        res.modify(p[7],p[8])
     p[6](res)
     p[0]=res
+
+def p_optendorsed(p):
+    """optendorsed : ENDORSED
+                   | empty"""
+    p[0]=p[1]
 
 def p_charge_2(p):
     "charge : ON A charge optA grouporcharge"
@@ -380,10 +388,10 @@ def p_chief(p):
 
 def p_optarrange(p):
     """optarrange : IN optdir ORDINARY optinverted
-                  | IN optdir PALL optinverted
+                  | IN empty PALL optinverted
                   | IN optdir CHIEF
-                  | IN optdir BORDURE
-                  | IN optdir ANNULO
+                  | IN empty BORDURE
+                  | IN empty ANNULO
                   | empty"""
     if not p[1]:
         p[0]=None
@@ -451,10 +459,14 @@ def p_optfimbriation(p):
         p[0]=lambda x:x
     else:
         col=p[2]
+        fillin(col)
+        extrafillin(col)
         if p[1]=="voided":
             p[0]=lambda x:x.void(col)
-        else:
+        elif p[1]=="fimbriated":
             p[0]=lambda x:x.fimbriate(col)
+        else:
+            p[0]=lambda x:x.modify(p[1])(col)
 
 def p_optand(p):
     """optand : AND

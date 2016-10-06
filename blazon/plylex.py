@@ -14,7 +14,7 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "PARTYPER","FIMBRIATED","QUARTERLY","AND","OF","A","WS","EACH",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
         "PALL","WITHIN","BORDURE","BEZANTY","LP","RP","IN","DIRECTION",
-        "URL","MULLET","NAME","ANNULO","GROUPS", "OVERALL",
+        "URL","MULLET","NAME","ANNULO","GROUPS", "OVERALL", "ENDORSED",
         "TOKEN","TEXT",)
 
 t_ignore=" \n\t"
@@ -43,7 +43,8 @@ word_REs={
     'QUARTERLY':r"quarterly",
     'CHARGE':r"(roundels?|annulets?|lozenges?|fleurs?.de.l[iy]s|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross(es)?\W+crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?\W+(passant|rampant)|pallets?|fir\W+twigs?|fusils?|mascles?|triangles?|canton|gyron|(in|de)?crescents?|escutcheons?|shakeforks?|escallops?|fountains?|areas?)",
     'MULLET':r"mullets?",
-    'INVERTED':r"(inverted|bendwise(\W+sinister)?|reversed|contourny|fesswise|palewise|endorsed|cotised)",
+    'INVERTED':r"(inverted|bendwise(\W+sinister)?|reversed|contourny|fesswise|palewise)",
+    'ENDORSED':r"(endorsed|cotised)",
     'ORDINARY':r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(\W+gemelles?)?|fret|flaunches|batons?|gore)",
     'PALL':r"pall",
     'CHIEF':r"chief",

@@ -15,7 +15,10 @@ FILES=plylex.py plyyacc.py blazon.py treatment.py arrangement.py makexmlgrammar.
 pyblazon.tar.gz: $(FILES)
 	tar czfv pyblazon.tar.gz $(FILES)
 
-.PHONY: clean
+.PHONY: clean veryclean
 
 clean:
 	rm -f *.pyc parser.out parsetab.py
+
+veryclean: clean
+	rm -f grammar.txt xmlgrammar.py lexitems.txt

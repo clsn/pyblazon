@@ -54,9 +54,11 @@ class Ordinary:
    def __init__(self,*args,**kwargs):
       self.setup(*args,**kwargs)
 
-   def setup(self,tincture="none",linetype="plain"):
+   def setup(self,tincture="none",linetype="plain",*args,**kwargs):
       "setup(tincture, linetype) -- set up the basic info for the ordinary"
       self.done=False
+      self.args=args
+      self.kwargs=kwargs
       if type(tincture)==str:
          self.tincture=Treatment(tincture)
       else:
@@ -760,6 +762,31 @@ class Pall(Ordinary,TrueOrdinary):
       except IndexError:
          return None
 
+class Endorsing(Ordinary,TrueOrdinary):
+   "Really just a modification of a Pale, but it behaves like another ordinary (or pair of them"
+
+   # Essentially the same thing on bends, which are just tilted Pales.  Not so hot
+   # with funky lines of partition on bends though.
+
+   # According to WP, an "endorse" is actually an ordinary in its own right, half
+   # the width of a pallet.
+   def process(self):
+      p=partLine()
+      p.lineType=self.lineType
+      try:
+         l,r = self.kwargs['leftparam'], self.kwargs['rightparam']
+      except KeyError:
+         l,r = -14, 12
+      p.rect(l, -2*Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
+      p.rect(r, -2*Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
+      self.clipPath=SVGdraw.path(p)
+      self.clipPathElt.addElement(self.clipPath)
+      # sys.stderr.write(str(self.kwargs)+"\n")
+      try:
+         self.clipPath.attributes['transform']=self.kwargs['transform']
+      except KeyError:
+         pass
+
 class Pale(Ordinary,TrueOrdinary):
    "Pale ordinary: vertical stripe"
    def process(self):
@@ -769,14 +796,9 @@ class Pale(Ordinary,TrueOrdinary):
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
 
-   def endorsed(self):
-      # Try it really simply; this will probably run into trouble sooner or
-      # later.
-      p=partLine()
-      p.lineType=self.lineType
-      p.rect(-14,-Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
-      p.rect(12, -Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
-      self.clipPathElt.addElement(SVGdraw.path(p))
+   def endorsed(self, *args, **kwargs):
+      end=Endorsing(*args, linetype=self.lineType, **kwargs)
+      self.parent.addCharge(end)
 
    @staticmethod
    def patternSiblings(num):
@@ -828,12 +850,13 @@ class Pallet(Pale,Charge):
       except IndexError:
          return None
 
-   def endorsed(self):
-      p=partLine()
-      p.lineType=self.lineType
-      p.rect(-9,-Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
-      p.rect(7, -Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
-      self.clipPathElt.addElement(SVGdraw.path(p))
+   def endorsed(self,*args,**kwargs):
+      try:
+         trns=self.maingroup.attributes['transform']
+      except KeyError:
+         trns=None
+      end=Endorsing(*args, linetype=self.lineType, leftparam=-9, rightparam=7, transform=trns, **kwargs)
+      self.parent.addCharge(end)
 
    def moveto(self,loc):
       Charge.moveto(self,loc)
@@ -865,17 +888,10 @@ class Bend(Ordinary,TrueOrdinary):
       self.clipPathElt.addElement(p)
       # Hrm.  But now the outer clipping path (?) is clipping the end of
       # the bend??
-      #
 
-   def cotised(self):
-      p=partLine()
-      p.lineType=self.lineType
-      p.rect(-14, -Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
-      p.rect(12, -Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
-      p=SVGdraw.path(p)
-      # Wonder why this isn't on the clipPathElt instead??
-      p.attributes["transform"]=self.clipPath.attributes["transform"]
-      self.clipPathElt.addElement(p)
+   def cotised(self,*args,**kwargs):
+      cot=Endorsing(*args,linetype=self.lineType,transform=self.transform,**kwargs)
+      self.parent.addCharge(cot)
                
    @staticmethod
    def patternSiblings(num):
@@ -922,7 +938,7 @@ class Bendlet(Bend,Charge):
    def patternWithOthers(num):
       patterns=[[1],[1,(0,0)],
                 [1,(7,-7),(-7,7)],
-                [1,(-10,10),(0,0),(10,-10)],
+                [1,(-15,15),(0,0),(15,-15)],
                 [1,(-21,21),(-7,7),(7,-7),(21,-21)],
                 [1,(-24,24),(-12,12),(0,0),(12,-12),(24,-24)]
                 ]
@@ -931,15 +947,14 @@ class Bendlet(Bend,Charge):
       except IndexError:
          return None
 
-   def cotised(self):
-      p=partLine()
-      p.lineType=self.lineType
-      p.rect(-9, -Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
-      p.rect(7, -Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
-      p=SVGdraw.path(p)
-      # Wonder why this isn't on the clipPathElt instead??
-      p.attributes["transform"]=self.clipPath.attributes["transform"]
-      self.clipPathElt.addElement(p)
+   def cotised(self, *args, **kwargs):
+      trns=self.transform
+      try:
+         trns=self.maingroup.attributes['transform']+' '+trns
+      except KeyError:
+         pass
+      end=Endorsing(*args, linetype=self.lineType, leftparam=-9, rightparam=7, transform=trns, **kwargs)
+      self.parent.addCharge(end)
 
    def moveto(self,loc):
       Charge.moveto(self,loc)
@@ -1220,7 +1235,9 @@ class Chevron(Ordinary,TrueOrdinary):
    def resize(self,x,y=None):
       # Does this need to be different from scale?
       self.scale(x,y)
-           
+
+   # Yaknow, Chevrons (and chevronels) can be cotised.  Just sayin.
+   # And for that matter Palls and crosses and everyone else...
 
 class Chevronel(Chevron):
    "Diminutive of Chevron"

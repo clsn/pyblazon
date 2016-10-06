@@ -102,7 +102,7 @@ class partLine:
 
     # Table of linetype, wavelength, and amplitude (for now)
     lineInfo={
-        "indented": (2,1),
+        "indented": (4,2),
         "dancetty": (8,5),
         "rayonny": (2,6),
         "wavy": (8,5),
