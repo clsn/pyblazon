@@ -765,13 +765,15 @@ class Pall(Ordinary,TrueOrdinary):
 class Endorsing(Ordinary,TrueOrdinary):
    "Really just a modification of a Pale, but it behaves like another ordinary (or pair of them"
 
-   # Essentially the same thing on bends, which are just tilted Pales.  Not so hot
-   # with funky lines of partition on bends though.
+   # Essentially the same thing on bends, which are just tilted Pales.
 
-   # According to WP, an "endorse" is actually an ordinary in its own right, half
-   # the width of a pallet.
+   # According to WP, an "endorse" is actually an ordinary in its own
+   # right, half the width of a pallet.
    def process(self):
       p=partLine()
+      # Perhaps only carry over the lineType where it would word,
+      # viz. dancetty and wavy (and nothing else?) otherwise leave
+      # plain... but then need wider clearance?
       p.lineType=self.lineType
       try:
          l,r = self.kwargs['leftparam'], self.kwargs['rightparam']
@@ -792,7 +794,7 @@ class Pale(Ordinary,TrueOrdinary):
    def process(self):
       p=partLine()
       p.lineType=self.lineType
-      p.rect(-10,-Ordinary.HEIGHT,20,Ordinary.HEIGHT*3)
+      p.rect(-10,-2*Ordinary.HEIGHT,20,Ordinary.HEIGHT*3)
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
 
@@ -827,12 +829,51 @@ class Pale(Ordinary,TrueOrdinary):
       except IndexError:
          return None
 
+class CanadianPale(Pale):
+   def process(self):
+      p=partLine()
+      p.lineType=self.lineType
+      p.rect(-Ordinary.WIDTH/4.0, -Ordinary.HEIGHT, Ordinary.WIDTH/2.0, Ordinary.HEIGHT*3)
+      self.clipPath=SVGdraw.path(p)
+      self.clipPathElt.addElement(self.clipPath)
+
+   @staticmethod
+   def patternSiblings(num):
+      patterns=[[.25],[.25,(-35,-10)],
+                [.25,(-35,-10),(35,-10)],
+                [.25,(-35,-36),(-35,16),(35,-10)], # ???
+                [.25,(-35,-36),(-35,16),(35,-36),(35,16)],
+                [.25,(-35,-36),(-35,16),(35,-36),(35,16),(-35,-10)],
+                [.25,(-35,-36),(-35,16),(35,-36),(35,16),(-35,-10),(35,-10)]
+                ]
+      try:
+         return patterns[num]
+      except IndexError:
+         return None
+      
+   @staticmethod
+   def patternContents(num):
+      patterns=[[.5],[.5,(0,0)],
+                [.5,(0,-30),(0,30)],
+                [.5,(0,-30),(0,30),(0,0)],
+                [.5,(0,-36),(0,12),(0,-12),(0,36)],
+                [.5,(0,-40),(0,-20),(0,0),(0,20),(0,40)]
+                ]
+      try:
+         return patterns[num]
+      except IndexError:
+         return None
+
+   def endorsed(self, *args, **kwargs):
+      end=Endorsing(*args, linetype=self.lineType, leftparam=-Ordinary.WIDTH/4.0-4, rightparam=Ordinary.WIDTH/4.0+2, **kwargs)
+      self.parent.addCharge(end)
+      
 class Pallet(Pale,Charge):
    "Pallet ordinary: a diminutive of Pale"
    # Or would this be better done as Paly of an odd number?
    def process(self):
       p=partLine(linetype=self.lineType)
-      p.rect(-5,-Ordinary.HEIGHT,10,Ordinary.HEIGHT*3)
+      p.rect(-5,-2*Ordinary.HEIGHT,10,Ordinary.HEIGHT*3)
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
       
@@ -881,7 +922,7 @@ class Bend(Ordinary,TrueOrdinary):
       # rotated.  May need to reconsider this.
       r=partLine()
       r.lineType=self.lineType
-      r.rect(-10,-Ordinary.HEIGHT,20,Ordinary.HEIGHT*3)
+      r.rect(-10,-2*Ordinary.HEIGHT,20,Ordinary.HEIGHT*3)
       p=SVGdraw.path(r)
       p.attributes["transform"]=self.transform
       self.clipPath=p
@@ -928,7 +969,7 @@ class Bendlet(Bend,Charge):
    def process(self):
       r=partLine()
       r.lineType=self.lineType
-      r.rect(-5,-Ordinary.HEIGHT,10,Ordinary.HEIGHT*3)
+      r.rect(-5,-2*Ordinary.HEIGHT,10,Ordinary.HEIGHT*3)
       p=SVGdraw.path(r)
       p.attributes["transform"]=self.transform
       self.clipPath=p

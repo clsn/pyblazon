@@ -45,7 +45,7 @@ word_REs={
     'MULLET':r"mullets?",
     'INVERTED':r"(inverted|bendwise(\W+sinister)?|reversed|contourny|fesswise|palewise)",
     'ENDORSED':r"(endorsed|cotised)",
-    'ORDINARY':r"(fesse?|pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(\W+gemelles?)?|fret|flaunches|batons?|gore)",
+    'ORDINARY':r"(fesse?|(canadian\W+)?pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(\W+gemelles?)?|fret|flaunches|batons?|gore)",
     'PALL':r"pall",
     'CHIEF':r"chief",
     'ON':r"on",
@@ -135,7 +135,7 @@ def t_INVERTED(t):
     return t
 
 def t_ORDINARY(t):
-    r"\b(bend(lets?)?\W+sinister)\b"
+    r"\b(bend(lets?)?\W+sinister|canadian\W+pale)\b"
     return t
 
 def t_FURRY(t):
@@ -197,6 +197,7 @@ lookupdict={
     "vair": treatment.Vair,
     "counter.vairy?": treatment.CounterVair,
     "fesse?": blazon.Fesse,
+    "canadian\\W+pale" : blazon.CanadianPale,
     "pale" : blazon.Pale,
     "pallets?" : blazon.Pallet,
     "cross": blazon.Cross,
