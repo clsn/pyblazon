@@ -477,10 +477,10 @@ def p_error(p):
     pass
 
 def show_grammar(all=dir()):
-    all=filter((lambda x: x[0:2] == 'p_'), all)
+    all=list(filter((lambda x: x[0:2] == 'p_'), all))
     all.sort()
     for f in all:
-        print getattr(sys.modules[__name__],f).__doc__
+        print(getattr(sys.modules[__name__],f).__doc__)
 
 yacc.yacc(method="LALR")
 
@@ -491,5 +491,5 @@ if __name__=="__main__":
 #        print sh
 #        line=sys.stdin.readline()
    sh=yacc.parse(" ".join(sys.argv[1:]))
-   print sh
+   print(sh)
     

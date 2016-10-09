@@ -1,22 +1,22 @@
 #!/usr/bin/python
 import subprocess
-import Tkinter
+import tkinter
 import sys
 import os
 
-class Application(Tkinter.Frame):
+class Application(tkinter.Frame):
     def __init__(self, master=None):
-        Tkinter.Frame.__init__(self, master)
+        tkinter.Frame.__init__(self, master)
         self.pack()
         self.createWidgets()
     def createWidgets(self):
-        self.GO = Tkinter.Button(self)
+        self.GO = tkinter.Button(self)
         self.GO["text"] = "Render blazon"
         self.GO["command"] = self.DisplayShield
         self.GO.pack({"side":"left","anchor":"se"})
 
-        self.Curblazon = Tkinter.StringVar()
-        self.BlazonEntry = Tkinter.Entry()
+        self.Curblazon = tkinter.StringVar()
+        self.BlazonEntry = tkinter.Entry()
         self.BlazonEntry["textvariable"] = self.Curblazon
         self.BlazonEntry.bind('<Key-Return>', self.OnEnter)
         self.BlazonEntry.pack({"side":"bottom","anchor":"sw"})
@@ -41,11 +41,11 @@ class Application(Tkinter.Frame):
                                stdout=subprocess.PIPE,cwd=cwpath)
         rsvg = subprocess.Popen(["/usr/bin/rsvg-view", "--stdin"],
                                 stdin=gen.stdout,cwd=cwpath)
-        print gen.pid, rsvg.pid >> sys.stderr # Debugging
+        print(gen.pid, rsvg.pid >> sys.stderr) # Debugging
     def OnEnter(self, event):
         self.DisplayShield()
 
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     app = Application(master=root)
     app.mainloop()

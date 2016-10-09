@@ -342,18 +342,18 @@ def lookup(key):
     return key
 
 def show_grammar(all=dir()):
-    all=filter((lambda x: x[0:2] == 't_'), all)
+    all=list(filter((lambda x: x[0:2] == 't_'), all))
     all.sort()
-    print all
+    print(all)
     for f in all:
         obj=getattr(sys.modules[__name__],f)
         if type(obj)==str:
-            print f, ":\t", obj
+            print(f, ":\t", obj)
         else:
-            print f, ":\t", obj.__doc__
+            print(f, ":\t", obj.__doc__)
     # Most of the tokens are now in word_REs...
     for k in word_RE_text.keys():
-        print k, ":\t", word_RE_text[k]
+        print(k, ":\t", word_RE_text[k])
 
 
 # Compile all the REs.
@@ -379,5 +379,5 @@ if __name__ == "__main__":
         while 1:
             tok=lex.token()
             if not tok: break
-            print tok
+            print(tok)
         line=sys.stdin.readline()

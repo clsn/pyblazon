@@ -5,6 +5,7 @@ import blazon
 
 import math
 import sys
+import collections
 
 class Arrangement:
    """
@@ -46,12 +47,11 @@ class Arrangement:
       if len(self.__class__.patterns) - 1 >= num:
          return self.__class__.patterns[num]
       else: # Can't arrange that many charges.
-         raise blazon.ArrangementError, \
-               "Don't know how to arrange " + \
-               str(num) + " charges " + self.__class__.__name__
+         raise blazon.ArrangementError("Don't know how to arrange " + \
+               str(num) + " charges " + self.__class__.__name__)
 
    def __init__(self,*args,**kwargs):
-      if kwargs.has_key('action') and callable(kwargs['action']):
+      if 'action' in kwargs and isinstance(kwargs['action'], collections.Callable):
          kwargs['action'](self)
 
    def invert(self):
@@ -122,7 +122,7 @@ class InCross(Arrangement):
       # If the number is not congruent to zero or one modulo four,
       # we can't do anything anyway.
       if num%4 > 1:
-         raise blazon.ArrangementError, "Can't arrange %d things in cross"%num
+         raise blazon.ArrangementError("Can't arrange %d things in cross"%num)
       # When num is 4, we can get away with this.  Otherwise we have to
       # leave the center blank:
       if num==4:
@@ -240,10 +240,10 @@ class ByNumbers(Arrangement):
    def pattern(self,num):
       # Barf if not set right
       if not self.rows:
-         raise blazon.ArrangementError, "Tried to arrange something by numbers, but number of rows is not specified."
+         raise blazon.ArrangementError("Tried to arrange something by numbers, but number of rows is not specified.")
       # num should equal the sum of the elements of the rows list.
-      if sum(self.rows) <> num:
-         raise blazon.ArrangementError, "Whoa!  Number of elements is %d, but rows for %d given.\n"% (num,sum(self.rows))
+      if sum(self.rows) != num:
+         raise blazon.ArrangementError("Whoa!  Number of elements is %d, but rows for %d given.\n"% (num,sum(self.rows)))
       # Determine the scale by the larger of: the number of rows, and
       # the largest number of elements in a row.
       index=max(len(self.rows),max(self.rows))

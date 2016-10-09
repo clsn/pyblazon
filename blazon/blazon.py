@@ -137,7 +137,7 @@ class Ordinary:
       charge.parent=self
       self.charges.append(charge)
       # This'll be useful down the road.
-      if not charge.maingroup.attributes.has_key("transform"):
+      if "transform" not in charge.maingroup.attributes:
          charge.maingroup.attributes["transform"]=""
 
    def extendCharges(self,charges):
@@ -216,7 +216,7 @@ class Ordinary:
          self.clipPath.attributes["id"]="ClipPath%04d"%Ordinary.id
          Ordinary.id+=1
          if hasattr(self,"clipTransforms"):
-            if not self.clipPath.attributes.has_key("transform"):
+            if "transform" not in self.clipPath.attributes:
                self.clipPath.attributes["transform"]=""
             self.clipPath.attributes["transform"] += self.clipTransforms
       self.baseRect=self.tincture.fill(self.baseRect)
@@ -239,7 +239,7 @@ class Ordinary:
       # self.done=True
       # add any last-minute transforms
       if hasattr(self,"endtransforms"):
-         if not self.clipPathElt.attributes.has_key("transform"):
+         if "transform" not in self.clipPathElt.attributes:
             self.clipPathElt.attributes["transform"]=""
          self.clipPathElt.attributes["transform"]+=self.endtransforms
       return self.svg
@@ -375,7 +375,7 @@ class Field(Ordinary,TrueOrdinary):
       
    def __repr__(self):
       """Output the SVG of the whole thing."""
-      if not self.maingroup.attributes.has_key("transform"):
+      if "transform" not in self.maingroup.attributes:
          self.maingroup.attributes["transform"]=""
       if hasattr(self,"bordure"):       # Add the bordure before the chief!
          self.maingroup.attributes["transform"]+=" scale(.85)"
@@ -417,7 +417,7 @@ class Charge(Ordinary):
    def moveto(self,*args):
       "charge.moveto((x,y)) -- translate the charge to coords (x,y).  Note it's a tuple!"
       # Remember, args[0] is a tuple!
-      if not self.maingroup.attributes.has_key("transform"):
+      if "transform" not in self.maingroup.attributes:
          self.maingroup.attributes["transform"]=""
       self.maingroup.attributes["transform"]+=" translate(%.4f,%.4f)" % args[0]
          
@@ -425,7 +425,7 @@ class Charge(Ordinary):
    # the outline but not the innards/tincture.
    def shiftto(self,*args):
       "charge.shiftto((x,y)) -- like moveto, but slides the outline and not the tincture.  This matters for things like countercharging."
-      if not self.clipPathElt.attributes.has_key("transform"):
+      if "transform" not in self.clipPathElt.attributes:
          self.clipPathElt.attributes["transform"]=""
       self.clipPathElt.attributes["transform"]+=" translate(%.4f,%.4f)"%args[0]
 
@@ -433,7 +433,7 @@ class Charge(Ordinary):
       "charge.scale(x,[y]) -- scale the charge."
       if not y:                        # I can't scale by 0 anyway.
          y=x
-      if not self.maingroup.attributes.has_key("transform"):
+      if "transform" not in self.maingroup.attributes:
          self.maingroup.attributes["transform"]=""
       self.maingroup.attributes["transform"] += " scale(%.2f,%.2f)"%(x,y)
 
@@ -442,7 +442,7 @@ class Charge(Ordinary):
       "Same as scale, but only the outline, as with shiftto."
       if not y:
          y=x
-      if not self.clipPathElt.attributes.has_key("transform"):
+      if "transform" not in self.clipPathElt.attributes:
          self.clipPathElt.attributes["transform"]=""
       self.clipPathElt.attributes["transform"] += " scale(%.2f,%.2f)"%(x,y)
 
@@ -508,7 +508,7 @@ class Charge(Ordinary):
          
 
    def rotate(self, degrees):
-      if not self.clipPathElt.attributes.has_key("transform"):
+      if "transform" not in self.clipPathElt.attributes:
          self.clipPathElt.attributes["transform"]=""
       self.clipPathElt.attributes["transform"] += " rotate(%d)"%degrees
               
@@ -1023,7 +1023,7 @@ class Chief(Ordinary,TrueOrdinary):
       # move it.
       # Shift fancy-lined chiefs more, so as not to reveal the edge of the
       # shrunken field beneath.
-      if p.lineType and p.lineType <> "plain":
+      if p.lineType and p.lineType != "plain":
          p.rect(-Ordinary.WIDTH, -Ordinary.HEIGHT,
                 Ordinary.WIDTH*3, Ordinary.HEIGHT+13.5)
          self.maingroup.attributes["transform"]="translate(0,%f)"%(-Ordinary.FESSPTY+13.5)
@@ -1057,7 +1057,7 @@ class Bordure(Ordinary,TrueOrdinary):
    "Bordure ordinary.  Also an unusual one; might have to squish the field smaller.  Lines of partition tricky with bordure..."
    # Doing lines of partition is going to be hard with this one.
    def process(self):
-      if self.lineType and self.lineType <> "plain":
+      if self.lineType and self.lineType != "plain":
           pdata=partLine()
           pdata.lineType=self.lineType
           pdata.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
@@ -1187,12 +1187,12 @@ class Chevron(Ordinary,TrueOrdinary):
       return res
 
    def moveto(self,*args):
-      if not self.maingroup.attributes.has_key("transform"):
+      if "transform" not in self.maingroup.attributes:
          self.maingroup.attributes["transform"]=""
       self.maingroup.attributes["transform"]+=" translate(%.4f,%.4f)" % args[0]
          
    def shiftto(self,*args):
-      if not self.clipPathElt.attributes.has_key("transform"):
+      if "transform" not in self.clipPathElt.attributes:
          self.clipPathElt.attributes["transform"]=""
       self.clipPathElt.attributes["transform"]+=" translate(%.4f,%.4f)"%args[0]
 
@@ -1272,7 +1272,7 @@ class Pile(Charge,TrueOrdinary):
 
    def resize(self,x,y=None):
       # I don't really care about y anyway.
-      if not self.clipPathElt.attributes.has_key("transform"):
+      if "transform" not in self.clipPathElt.attributes:
          self.clipPathElt.attributes["transform"]=""
       self.clipPathElt.attributes["transform"]+=" scale(%.4f,1)"%x
        
@@ -1465,7 +1465,7 @@ class ChargeGroup:            # Kind of an invisible ordinary
          except AttributeError:
             pass
       if not placements:
-         raise "Too many objects"
+         raise ArrangementError("Too many objects")
       # Let's see.  If there's ANOTHER chargegroup here, we need to, um...
       # I guess... scale down?
       # This is crude.
@@ -1649,11 +1649,11 @@ class Canton(Ordinary,TrueOrdinary):
       self.clipPathElt.addElement(self.clipPath)
       # Is the fimbriation right, though?  And does anyone fimbriate cantons?
       # We can always move the upper left corner a little offscreen.
-      if not self.maingroup.attributes.has_key("transform"):
+      if "transform" not in self.maingroup.attributes:
          self.maingroup.attributes["transform"]=""
       scale=0.4
       self.maingroup.attributes["transform"]+=" translate(%f,%f) "%(-Ordinary.FESSPTX+wid*scale/2.0, -Ordinary.FESSPTY+hit*scale/2.0)
-      if not self.clipPathElt.attributes.has_key("transform"):
+      if "transform" not in self.clipPathElt.attributes:
          self.clipPathElt.attributes["transform"]=""
       self.clipPathElt.attributes["transform"]+=" scale(%f)"%scale
 
@@ -1829,11 +1829,11 @@ class ExtCharge(Charge):
        if self.getBaseURL():
           u.attributes["xml:base"]=self.getBaseURL()
        if hasattr(self,"transform") and self.transform:
-          if not u.attributes.has_key("transform"):
+          if "transform" not in u.attributes:
              u.attributes["transform"]=""
           u.attributes["transform"]+=" "+self.transform
        if hasattr(self,"inverted") and self.inverted:
-          if not u.attributes.has_key("transform"):
+          if "transform" not in u.attributes:
              u.attributes["transform"]=""
           u.attributes["transform"]=" rotate(180)"+ u.attributes["transform"]
        self.use=u
@@ -1934,7 +1934,7 @@ class Symbol(Charge):
          self.clipPath.attributes["id"]="ClipPath%04d"%Ordinary.id
          Ordinary.id+=1
          if hasattr(self,"clipTransforms"):
-            if not self.clipPath.attributes.has_key("transform"):
+            if "transform" not in self.clipPath.attributes:
                self.clipPath.attributes["transform"]=""
             self.clipPath.attributes["transform"] += self.clipTransforms
       if hasattr(self,"fimbriation"):
@@ -1945,7 +1945,7 @@ class Symbol(Charge):
       self.maingroup.attributes["mask"]="url(#%s)"%self.mask.attributes["id"]
       # Last-minute transforms
       if hasattr(self,"endtransforms"):
-         if not self.use.attributes.has_key("transform"):
+         if "transform" not in self.use.attributes:
             self.use.attributes["transform"]=""
          self.use.attributes["transform"]+=self.endtransforms
       #newgroup=SVGdraw.group()
@@ -1981,7 +1981,7 @@ class Symbol(Charge):
          pass
       # Gotta put in the last-minute transforms again; they got overwritten.
       if hasattr(self,"endtransforms"):
-         if not last.attributes.has_key("transform"):
+         if "transform" not in last.attributes:
             last.attributes["transform"]=""
          last.attributes["transform"]+=self.endtransforms
       self.svg.addElement(last)
@@ -1991,7 +1991,7 @@ class Symbol(Charge):
    def resize(self,x,y=None):
       if not y:
          y=x
-      if not self.maingroup.attributes.has_key("transform"):
+      if "transform" not in self.maingroup.attributes:
          self.maingroup.attributes['transform']=""
       self.maingroup.attributes['transform']+=" scale(%.3f,%.3f)"%(x,y)
 
@@ -2011,7 +2011,7 @@ class Image(Charge):
       self.setup(*args)
       self.url=url
       (self.width,self.height)=(width, height)
-      if kwargs.has_key("transform"):
+      if "transform" in kwargs:
          self.transform=kwargs["transform"]
 
    def process(self):
@@ -2022,7 +2022,7 @@ class Image(Charge):
       if self.getBaseURL():
          self.ref.attributes["xml:base"]=self.getBaseURL()
       if hasattr(self,"transform"):
-         if not self.ref.attributes.has_key("transform"):
+         if "transform" not in self.ref.attributes:
             self.ref.attributes["transform"]=""
          self.ref.attributes["transform"]+=self.transform
 
@@ -2047,7 +2047,7 @@ class Image(Charge):
       # Last-minute transforms:
       if hasattr(self,"endtransforms"):
          # The transform goes on the ref, right?
-         if not self.ref.attributes.has_key("transform"):
+         if "transform" not in self.ref.attributes:
             self.ref.attributes["transform"]=""
          self.ref.attributes["transform"]+=self.endtransforms
       # Images don't have clipPaths, so we won't output one
@@ -2230,7 +2230,7 @@ class Blazon:
          # long-form image.
          m=re.match(r'\S+\s+IMAGE\s+((\w+\s*=\s*"[^"]*"\s*)*)', data)
          if not m:
-            raise "Invalid charge data"
+            raise ArrangementError("Invalid charge data")
          atts=re.findall(r'\s*(\w*)\s*=\s*"([^"]*)"',m.group(1))
          kw={}
          kw["width"]=80
@@ -2263,5 +2263,5 @@ if __name__=="__main__":
    # Old YAPPS parser:
    # return parse.parse('blazon', self.GetBlazon())
    # New YACC parser:
-   print plyyacc.yacc.parse(blazon)
+   print(plyyacc.yacc.parse(blazon))
    

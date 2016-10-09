@@ -18,4 +18,4 @@ if __name__ == '__main__':
             base=v
     cmdlineinput = " ".join(argv)
     curblazon = blazon.Blazon(cmdlineinput,base=base)
-    print curblazon.GetShield()
+    print(curblazon.GetShield())

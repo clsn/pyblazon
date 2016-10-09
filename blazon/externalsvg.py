@@ -19,4 +19,4 @@ class ExternalSVG(SVGdraw.SVGelement):
 if __name__ == '__main__':
     import sys
     foo = ExternalSVG("data/Fleur.svg")
-    print foo.toXml(0, sys.stdout)
+    print(foo.toXml(0, sys.stdout))

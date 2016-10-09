@@ -6,7 +6,7 @@ def make_xml_grammar(all=dir(plyyacc)):
     # OUTPUT another Python program that recreates this one's grammar, by
     # copying the function names and __doc__ strings.  The functions just
     # build an XML doc of the parse tree.
-    all=filter((lambda x: x[0:2] == 'p_'), all)
+    all=list(filter((lambda x: x[0:2] == 'p_'), all))
     # Dammit, I have to get the order the same!!!
     # some conflicts are resolved by PLY based on ordering in the source
     source=open("plyyacc.py","r")
@@ -19,7 +19,7 @@ def make_xml_grammar(all=dir(plyyacc)):
             all.remove(name)
             reorder.append(name)
     all=reorder
-    print """
+    print("""
 import sys
 import ply.yacc as yacc
 import copy
@@ -37,7 +37,7 @@ docelt=doc.documentElement
 
 start="blazon"
 
-"""
+""")
     for f in all:
         indent=0
         d=getattr(plyyacc,f).__doc__
@@ -47,15 +47,15 @@ start="blazon"
         if nt:
             nt=nt.strip()
         if nt=="empty":
-            print '''
+            print('''
 def p_empty(p):
     "empty : "
     p[0]=None   # doc.createElement('empty')
 
 
-'''
+''')
             continue
-        print '''
+        print('''
 def %(f)s(p):
     """%(d)s"""
     rv=doc.createElement('%(nt)s')
@@ -75,12 +75,12 @@ def %(f)s(p):
     else:
         p[0]=None
 
-''' % {'f':f, 'd':d, 'nt':nt}
+''' % {'f':f, 'd':d, 'nt':nt})
 
-    print """
+    print("""
 yacc.yacc(method="LALR")
 if __name__=="__main__":
     j=yacc.parse(Blazon.Normalize(" ".join(sys.argv[1:])))
     print j.toprettyxml()
-"""
+""")
 make_xml_grammar()

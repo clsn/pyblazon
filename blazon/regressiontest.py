@@ -15,9 +15,9 @@ class FesseStuff(unittest.TestCase):
     def setUp(self):
         self.fesse = blazon.Fesse()
     def testPatternSiblings(self):
-        self.assert_(self.fesse.patternSiblings(1) is not None)
+        self.assertTrue(self.fesse.patternSiblings(1) is not None)
     def testPatternContents(self):
-        self.assert_(self.fesse.patternContents(1) is not None)
+        self.assertTrue(self.fesse.patternContents(1) is not None)
 #SpecificBugTraps.addTest(FesseStuff)
 
 
@@ -128,9 +128,9 @@ class PerPaleTestCase(unittest.TestCase):
         shield.tincture = blazon.PerPale(color1="vert", color2="sable")
         # Maybe it's silly to test for number of pieces, since it's used
         # only internally
-        self.assert_(shield.tincture.pieces is 2)
-        self.assert_(HasOnlyTheColors(shield, ["green", "black"]))
-        self.assert_(repr(shield) is not None)
+        self.assertTrue(shield.tincture.pieces is 2)
+        self.assertTrue(HasOnlyTheColors(shield, ["green", "black"]))
+        self.assertTrue(repr(shield) is not None)
 #SVGDrawingTests.addTest(PerPaleTestCase)
 
 class PerFessTestCase(unittest.TestCase):
@@ -138,42 +138,42 @@ class PerFessTestCase(unittest.TestCase):
         shield = blazon.Field()
         shield.tincture = blazon.PerPale(color1="argent", color2="gules")
         # Ditto
-        self.assert_(shield.tincture.pieces is 2)
-        self.assert_(HasOnlyTheColors(shield, ["white", "red"]))
-        self.assert_(repr(shield) is not None)
+        self.assertTrue(shield.tincture.pieces is 2)
+        self.assertTrue(HasOnlyTheColors(shield, ["white", "red"]))
+        self.assertTrue(repr(shield) is not None)
 #SVGDrawingTests.addTest(PerFessTestCase)
         
 class QuarteredTestCase(unittest.TestCase):
     def testQuartered(self):
         shield = blazon.Field()
         shield.tincture = blazon.PerCross(color1="vert", color2="sable")
-        self.assert_(HasOnlyTheColors(shield, ["green", "black"]))
-        self.assert_(repr(shield) is not None)
+        self.assertTrue(HasOnlyTheColors(shield, ["green", "black"]))
+        self.assertTrue(repr(shield) is not None)
 #SVGDrawingTests.addTest(QuarteredTestCase)
 
 class PerSaltireTestCase(unittest.TestCase):
     def testPerSaltire(self):
         shield = blazon.Field()
         shield.tincture = blazon.PerSaltire(color1="azure", color2="argent")
-        self.assert_(HasOnlyTheColors(shield, ["blue", "white"]))
-        self.assert_(repr(shield) is not None)
+        self.assertTrue(HasOnlyTheColors(shield, ["blue", "white"]))
+        self.assertTrue(repr(shield) is not None)
 #SVGDrawingTests.addTest(PerSaltireTestCase)
 
 class TiercedInPairleTestCase(unittest.TestCase):
     def testTiercedInPairle(self):
         shield = blazon.Field()
         shield.tincture = blazon.PerPall(color1="vert", color2="azure", color3="gules")
-        self.assert_(HasOnlyTheColors(shield, ["green", "blue", "red"]))
-        self.assert_(repr(shield) is not None)
+        self.assertTrue(HasOnlyTheColors(shield, ["green", "blue", "red"]))
+        self.assertTrue(repr(shield) is not None)
 #SVGDrawingTests.addTest(TiercedInPairleTestCase)
 
 class GyronnyTestCase(unittest.TestCase):
     def testGyronny(self):
         shield = blazon.Field()
         shield.tincture = blazon.Gyronny(color1="purpure", color2="argent")
-        self.assert_(HasOnlyTheColors(shield, ["purple", "white"]))
-        self.assert_(shield.tincture.pieces is 8)
-        self.assert_(repr(shield) is not None)
+        self.assertTrue(HasOnlyTheColors(shield, ["purple", "white"]))
+        self.assertTrue(shield.tincture.pieces is 8)
+        self.assertTrue(repr(shield) is not None)
 #SVGDrawingTests.addTest(GyronnyTestCase)
 
 # Various LINEYs...
@@ -182,18 +182,18 @@ class PalyTestCase(unittest.TestCase):
     def testPaly(self):
         shield = blazon.Field()
         shield.tincture = blazon.Paly(color1="sable", color2="or")
-        self.assert_(HasOnlyTheColors(shield, ["black", "yellow"]))
-        self.assert_(shield.tincture.pieces is 8)
-        self.assert_(repr(shield) is not None)
+        self.assertTrue(HasOnlyTheColors(shield, ["black", "yellow"]))
+        self.assertTrue(shield.tincture.pieces is 8)
+        self.assertTrue(repr(shield) is not None)
 #SVGDrawingTests.addTest(PalyTestCase)
 
 class PilyTestCase(unittest.TestCase):
     def testPily(self):
         shield = blazon.Field()
         shield.tincture = blazon.Pily(color1="or", color2="purpure")
-        self.assert_(HasOnlyTheColors(shield, ["yellow", "purple"]))
-        self.assert_(shield.tincture.pieces is 8)
-        self.assert_(repr(shield) is not None)
+        self.assertTrue(HasOnlyTheColors(shield, ["yellow", "purple"]))
+        self.assertTrue(shield.tincture.pieces is 8)
+        self.assertTrue(repr(shield) is not None)
 #SVGDrawingTests.addTest(PilyTestCase)
 
 
@@ -202,11 +202,11 @@ class ChevronnyTestCase(unittest.TestCase):
         shield = blazon.Field()
         # Not according to the Rule of Tincture, but who cares?
         shield.tincture = blazon.Chevronny(color1="azure", color2="vert")
-        self.assert_(HasOnlyTheColors(shield, ["blue", "green"]))
+        self.assertTrue(HasOnlyTheColors(shield, ["blue", "green"]))
         # Chevronny has 8 pieces like everything else, but is not
         # used in a very sensible way.
-        self.assert_(shield.tincture.pieces is 8)
-        self.assert_(repr(shield) is not None)
+        self.assertTrue(shield.tincture.pieces is 8)
+        self.assertTrue(repr(shield) is not None)
 #SVGDrawingTests.addTest(ChevronnyTestCase)
 
 
@@ -242,7 +242,7 @@ class CorrectBlazonPreprocessing(unittest.TestCase):
         test = blazon.Blazon("This, is, also, a test.")
         # Whatever the text normalizer done, it should not allow
         # punctuation to attach to a word.
-        self.assert_(re.match("[a-z][\,\.]", test.GetBlazon()) is None)
+        self.assertTrue(re.match("[a-z][\,\.]", test.GetBlazon()) is None)
 
 #BlazonryTests.addTest(CorrectBlazonPreprocessing)
 
@@ -259,10 +259,10 @@ class CanParseBlazonry(unittest.TestCase):
         for line in testblazons:
             line = line.strip()
             try:
-                self.assert_(ParsesOK(line), "This does not parse: " + line)
+                self.assertTrue(ParsesOK(line), "This does not parse: " + line)
             except AttributeError:
-                print "Could not parse good blazon:"
-                print line # Output offending blazon
+                print("Could not parse good blazon:")
+                print(line) # Output offending blazon
                 raise      # Re-raise
 #BlazonryTests.addTest(CanParseBlazonry)
 
@@ -333,7 +333,7 @@ class ValidateSVGofBlazons(unittest.TestCase):
                     SVGisValid = self.ValidateXML(repr(shield))
                 except SystemExit:
                     SVGisValid = False
-                self.assert_(SVGisValid, "Invalid SVG for blazon: " + line)
+                self.assertTrue(SVGisValid, "Invalid SVG for blazon: " + line)
     def ValidateXML(self, XML):
         # self.parser = xmlval.XMLValidator()
         self.parser = xmlproc.XMLProcessor()
@@ -424,7 +424,7 @@ class CompImages(unittest.TestCase):
             testedshield = Image.open(TESTEDIMGFN)
             goldstandard = Image.open(IMGDIR + gsfn)
             discrepancy = CompImage(testedshield, goldstandard)
-            self.assert_(discrepancy < MAX_DISCREPANCY, \
+            self.assertTrue(discrepancy < MAX_DISCREPANCY, \
                          "Detected difference of " + \
                          repr(int(discrepancy * 100)) + "%. " + \
                          "This looks different than before:\n" + \
