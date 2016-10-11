@@ -1491,13 +1491,13 @@ class ChargeGroup:            # Kind of an invisible ordinary
                         ByNumbers([4, 4]),  # 8
                         ByNumbers([3, 3, 3]), # 9
                         ByNumbers([4,3,2,1]), # 10
-                        ByNumbers([4,3,4]),   # 11
-                        ByNumbers([4,4,4]),   # 12
+                        ByNumbers([3,2,3,2,1]),   # 11
+                        ByNumbers([4,3,4,1]),   # 12
                         ByNumbers([1,4,3,4,1]),   # 13
-                        ByNumbers([5,4,5]),   # 14
+                        ByNumbers([2,3,4,3,2]),   # 14
                         ByNumbers([5,4,3,2,1]), # 15, in pile
-                        ByNumbers([4,4,4,4]),   # 16
-                        ByNumbers([5,4,4,4]),   # 17
+                        ByNumbers([4,5,4,3]),   # 16
+                        ByNumbers([3,4,3,4,3]),   # 17
                         ByNumbers([5,4,4,5]),   # 18
                         ByNumbers([5,5,4,3,2]), # 19
                         ByNumbers([6,5,4,3,2]), # 20
