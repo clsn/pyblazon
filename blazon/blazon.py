@@ -1255,6 +1255,9 @@ class Chevron(Ordinary,TrueOrdinary):
          return None
       return res
 
+   def enhanced(self,*args):
+      self.moveto((0, -22))
+
    def moveto(self,*args):
       if "transform" not in self.maingroup.attributes:
          self.maingroup.attributes["transform"]=""

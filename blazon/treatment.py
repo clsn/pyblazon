@@ -62,6 +62,11 @@ class Treatment:                         # Metal or color.
     def modify(self, name, *args, **kwargs):
         if name == "inverted":
             self.invert()
+        else:
+            try:
+                getattr(self,name)(*args,**kwargs)
+            except AttributeError:
+                pass            # or let the error go?
 
     def orient(self,direction,*args,**kwargs):
         pass
@@ -676,18 +681,28 @@ class PerChevron(Paly):
         p.move(-blazon.Ordinary.FESSPTX,35)
         p.makeline(0,-5,1)
         p.makeline(blazon.Ordinary.FESSPTX,35,shift=-1)
-        p.relvline(blazon.Ordinary.FESSPTY)
+        p.relvline(blazon.Ordinary.HEIGHT)
         p.relhline(-blazon.Ordinary.WIDTH)
         p.closepath()
         self.path=SVGdraw.path(p)
+        trns=""
+        try:
+            trns+=" "+self.transform
+        except AttributeError:
+            pass
         if self.inverted:
-            self.path.attributes["transform"]="rotate(180)"
+            trns+=" rotate(180)"
+        if trns:
+            self.path.attributes['transform']=trns
 
     def invert(self):
         self.inverted=True
         # ALSO!  Have to reverse the orders of the colors, so the correct
         # one remains on top.
         self.colors=(self.colors[1], self.colors[0])
+
+    def enhanced(self):
+        self.transform="translate(0,-30)"
 
        
 class Chevronny(Paly):
