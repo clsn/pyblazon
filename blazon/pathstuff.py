@@ -112,7 +112,8 @@ class partLine:
         "urdy": (6,6),
         "raguly": (6,3),
         "engrailed": (10,5),
-        "invected": (10,5)
+        "invected": (10,5),
+        "potenty": (2,6),
         }
     def makeline(self,x,y,align=0,shift=1,*args,**kwargs):
         """draw a line using whatever linetype is called for"""        
@@ -271,6 +272,18 @@ class partLine:
                     uptoY+=delY
                     direction*= -1
                 self.path.append(" L%.4f,%.4f"%(x,y))
+            elif self.lineType == 'potenty':
+                # self.path.append(" l %f %f "%(shiftX/2,shiftY/2))
+                for i in range(1, int(leng/wavelength)):
+                    self.path.append("l%f,%f %f,%f %f,%f %f,%f "%
+                                     (direction*shiftX/3, direction*shiftY/3,
+                                      -delX*1, -delY*1,
+                                      direction*shiftX/3, direction*shiftY/3,
+                                      delX*3, delY*3,))
+                    uptoX+=delX
+                    uptoY+=delY
+                    direction*=-1
+                self.path.append(" L%f,%f"%(x,y))
             else:                       # Just pretend it's plain.
                 self.line(x,y)
             self.update(x,y)

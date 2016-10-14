@@ -5,6 +5,7 @@ import math
 import sys
 import copy
 import re
+import ast
 
 from pathstuff import partLine
 from treatment import *
@@ -771,14 +772,19 @@ class Endorsing(Ordinary,TrueOrdinary):
    # right, half the width of a pallet.
    def process(self):
       p=partLine()
-      # Perhaps only carry over the lineType where it would word,
-      # viz. dancetty and wavy (and nothing else?) otherwise leave
-      # plain... but then need wider clearance?
-      p.lineType=self.lineType
       try:
          l,r = self.kwargs['leftparam'], self.kwargs['rightparam']
       except KeyError:
          l,r = -14, 12
+      # Only carry over the lineType where it would work, viz. dancetty and
+      # wavy (and nothing else?) otherwise leave plain... but then need
+      # wider clearance...
+      if self.lineType in ['wavy', 'dancetty']:
+         p.lineType=self.lineType
+      else:
+         p.lineType='plain'
+         l -= 3
+         r += 3
       p.rect(l, -2*Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
       p.rect(r, -2*Ordinary.HEIGHT, 2, Ordinary.HEIGHT*3)
       self.clipPath=SVGdraw.path(p)
@@ -1850,6 +1856,12 @@ class Billet(Charge):
       self.clipPath=SVGdraw.rect(-22,-35,44,70)
       self.clipPathElt.addElement(self.clipPath)
 
+class Square(Charge):
+   "Square"
+   def process(self):
+      self.clipPath=SVGdraw.rect(-30,-30,60,60)
+      self.clipPathElt.addElement(self.clipPath)
+
 class Annulet(Charge):
    "empty ring"
    def process(self):
@@ -2111,8 +2123,9 @@ class Text(Charge):
       # Want to allow both direct utf-8 and escaped
       #self.text=uure.sub(lambda m: bytes(m.group(0),'utf-8').decode('unicode-escape'), self.text)
       # Is this simpler and good enough?  Also not py3-dependent.
-      # Not really secure, but if you abuse it, you have yourself to blame.
-      self.text=eval('"""'+self.text+'"""')
+      # python2 had a string-escape encoding but python3 doesn't.
+      # This is reasonably safe as it will error out if you try code-injection.
+      self.text=ast.literal_eval('"""'+self.text+'"""')
       # Wow, even fimbriation works!  But usually needs it a bit narrower.
       self.fimbriation_width=2
       # self.width, self.height = width, height
