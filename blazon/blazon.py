@@ -522,6 +522,11 @@ class Charge(Ordinary):
       if andThen:
          self.orient(andThen, absolute=absolute)
          
+   def reduced(self):
+      self.scale(0.75)
+
+   def enlarged(self):
+      self.scale(1.3333333)
 
    def rotate(self, degrees):
       if "transform" not in self.clipPathElt.attributes:
@@ -1011,6 +1016,9 @@ class Bendlet(Bend,Charge):
       Charge.scale(x,y)
    def resize(self,x,y=None):
       Charge.resize(self,x,y)
+
+   def enhanced(self):
+      self.moveto((0,-27))
 
 class BendSinister(Bend):
    "Reversed bend: slants from upper right to lower left"
