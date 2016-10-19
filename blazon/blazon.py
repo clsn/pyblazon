@@ -53,12 +53,22 @@ class Ordinary:
    ImageFilters=False                   # Have we done the filters for images?
 
    def __init__(self,*args,**kwargs):
+      self.svg=SVGdraw.group()
+      # (x=-Ordinary.FESSPTX,
+      #                      y=-Ordinary.FESSPTY,
+      #                      width=Ordinary.WIDTH,
+      #                      height=Ordinary.HEIGHT,
+      #                      viewBox=(-Ordinary.FESSPTX,
+      #                               -Ordinary.FESSPTY,
+      #                               Ordinary.WIDTH,
+      #                               Ordinary.HEIGHT))
       self.setup(*args,**kwargs)
 
    def setup(self,tincture="none",linetype="plain",*args,**kwargs):
       "setup(tincture, linetype) -- set up the basic info for the ordinary"
       self.done=False
       self.args=args
+      self.field=None
       self.kwargs=kwargs
       if type(tincture)==str:
          self.tincture=Treatment(tincture)
@@ -67,15 +77,8 @@ class Ordinary:
       self.lineType=linetype
       self.charges=[]
       self.fimbriation_width=4          # default
-      if not hasattr(self,"svg"):
-         self.svg=SVGdraw.svg(x=-Ordinary.FESSPTX,
-                              y=-Ordinary.FESSPTY,
-                              width=Ordinary.WIDTH,
-                              height=Ordinary.HEIGHT,
-                              viewBox=(-Ordinary.FESSPTX,
-                                       -Ordinary.FESSPTY,
-                                       Ordinary.WIDTH,
-                                       Ordinary.HEIGHT))
+      if not hasattr(self,'svg'):
+         self.svg=SVGdraw.group()
       # OK, can't set the id of the mask here; mustn't do that
       # in setup because if this charge gets copied then there'll be
       # multiple elements with the same ID, and that's a no-no.  But
@@ -86,7 +89,6 @@ class Ordinary:
       # masks can't have transforms, etc.  So it is now a group inside the mask.
       self.clipPathElt=SVGdraw.group(attributes={'fill':'white'})
       self.mask.addElement(self.clipPathElt)
-      self.svg.attributes["xmlns:xlink"]="http://www.w3.org/1999/xlink"
       self.maingroup=SVGdraw.group()
       self.baseRect=SVGdraw.rect(x=-Ordinary.FESSPTX*1.5,
                                  y=-Ordinary.FESSPTY*1.5,
@@ -94,7 +96,6 @@ class Ordinary:
                                  height=Ordinary.HEIGHT*2)
       # Not the best solution...
       self.baseRect.charge=self
-
       self.inverted = False
 
    def fimbriate(self,color):
@@ -116,6 +117,13 @@ class Ordinary:
       else:
          return False
 
+   def be_added(self, parent):
+      self.parent=parent
+      self.field=parent.field
+      # This'll be useful down the road.
+      if "transform" not in self.maingroup.attributes:
+         self.maingroup.attributes["transform"]=""
+   
    # Is this too brittle a way to do it?
    def do_fimbriation(self):
       "actually do the fimbriation.  Called during process()"
@@ -137,11 +145,8 @@ class Ordinary:
 
    def addCharge(self,charge):
       "ord.addCharge(charge) -- place a charge on the ordinary/charge"
-      charge.parent=self
+      charge.be_added(self)
       self.charges.append(charge)
-      # This'll be useful down the road.
-      if "transform" not in charge.maingroup.attributes:
-         charge.maingroup.attributes["transform"]=""
 
    def extendCharges(self,charges):
       "ord.extendCharges(chargearray) -- place a bunch of charges on the ordinary"
@@ -329,6 +334,7 @@ class Field(Ordinary,TrueOrdinary):
       #        self.svg.attributes["transform"]="scale(1,-1)"
       self.svg.addElement(SVGdraw.title(self.blazon))
       self.svg.addElement(SVGdraw.description(self.__class__.std_desc))
+      self.svg.attributes["xmlns:xlink"]="http://www.w3.org/1999/xlink"
       self.pdata=SVGdraw.pathdata()
       self.pdata.move(-Ordinary.FESSPTX,-Ordinary.FESSPTY)
       self.pdata.vline(Ordinary.HEIGHT/3-Ordinary.FESSPTY)
@@ -354,6 +360,7 @@ class Field(Ordinary,TrueOrdinary):
       Ordinary.defs=[]                  # This is a hack.
       self.outline=outline
       # self.maingroup.addElement(SVGdraw.circle(cx=0,cy=0,r=20,fill="red"))
+      self.field=self
 
    def finalizeSVG(self):
       self.clipPath=SVGdraw.path(self.pdata)
@@ -1425,18 +1432,11 @@ class Label(Ordinary,TrueOrdinary):
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
 
-class ChargeGroup:            # Kind of an invisible ordinary
+class ChargeGroup(Ordinary):    # Kind of an invisible ordinary
    "A group of charges, for arranging purposes.  Acts a little like an invisible ordinary in that it imposes a pattern on the charges."
    def __init__(self,num=None,charge=None):
       self.charges=[]
-      self.svg=SVGdraw.svg(x=-Ordinary.FESSPTX,
-                           y=-Ordinary.FESSPTY,
-                           width=Ordinary.WIDTH,
-                           height=Ordinary.HEIGHT,
-                           viewBox=(-Ordinary.FESSPTX,
-                                    -Ordinary.FESSPTY,
-                                    Ordinary.WIDTH,
-                                    Ordinary.HEIGHT))
+      self.svg=SVGdraw.group()
       self.maingroup=SVGdraw.group()
       self.svg.addElement(self.maingroup)
       if num and charge:
@@ -1632,14 +1632,7 @@ class Orle(ChargeGroup,TrueOrdinary):
 
    def __init__(self):
       self.charges=[]
-      self.svg=SVGdraw.svg(x=-Ordinary.FESSPTX,
-                           y=-Ordinary.FESSPTY,
-                           width=Ordinary.WIDTH,
-                           height=Ordinary.HEIGHT,
-                           viewBox=(-Ordinary.FESSPTX,
-                                    -Ordinary.FESSPTY,
-                                    Ordinary.WIDTH,
-                                    Ordinary.HEIGHT))
+      self.svg=SVGdraw.group()
       # First, add a bordure in the color of the field.  Somehow.
       self.bord=Bordure()               # How to set its color??
       self.maingroup=SVGdraw.group()

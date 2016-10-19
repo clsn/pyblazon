@@ -104,7 +104,7 @@ def p_fulltreatment_4(p):
     check=lookup(p[1]+p[2])
     try:
         test=issubclass(check,treatment.Treatment)
-    except TypeError:
+    except TypeError:           # if check isn't a class
         test=False
     if test:
         p[0]=check(0,p[3],p[5])
