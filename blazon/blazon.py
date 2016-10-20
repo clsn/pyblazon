@@ -88,10 +88,10 @@ class Ordinary:
       self.mask.addElement(self.clipPathElt)
       self.svg.attributes["xmlns:xlink"]="http://www.w3.org/1999/xlink"
       self.maingroup=SVGdraw.group()
-      self.baseRect=SVGdraw.rect(x=-Ordinary.FESSPTX,
-                                 y=-Ordinary.FESSPTY,
-                                 width=Ordinary.WIDTH,
-                                 height=Ordinary.HEIGHT)
+      self.baseRect=SVGdraw.rect(x=-Ordinary.FESSPTX*1.5,
+                                 y=-Ordinary.FESSPTY*1.5,
+                                 width=Ordinary.WIDTH*2,
+                                 height=Ordinary.HEIGHT*2)
       # Not the best solution...
       self.baseRect.charge=self
 
@@ -786,7 +786,7 @@ class Endorsing(Ordinary,TrueOrdinary):
       # wider clearance...
       if self.lineType in ['wavy', 'dancetty']:
          p.lineType=self.lineType
-      else:
+      elif self.lineType is not None and self.lineType != 'plain':
          p.lineType='plain'
          l -= 3
          r += 3
@@ -1005,7 +1005,7 @@ class Bendlet(Bend,Charge):
          trns=self.maingroup.attributes['transform']+' '+trns
       except KeyError:
          pass
-      end=Endorsing(*args, linetype=self.lineType, leftparam=-9, rightparam=7, transform=trns, **kwargs)
+      end=Endorsing(*args, linetype=self.lineType, leftparam=-8, rightparam=6, transform=trns, **kwargs)
       self.parent.addCharge(end)
 
    def moveto(self,loc):
