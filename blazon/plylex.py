@@ -50,9 +50,9 @@ word_REs={
     'CHIEF':r"chief",
     'ON':r"on",
     'LINETYPE':r"(plain|indented|dancetty|embattled|invected|engrailed|wavy|rayonny|dovetailed|raguly|nebuly|urdy|champaine|potenty)",
-    'FURRY':r"(vairy\W+in\W+pale|vairy|counter\W+vairy)",
+    'FURRY':r"(vairy(\W+in\W+pale|\W+en\+pointe|W+in\W+point)?|counter\W+vairy)",
     'ALTERED':r"(fretty|ermined|masoned|estencelly)",
-    'FUR':r"(vair.in.pale|vair|counter\W+vair|ermines?|erminois|pean|counter\W+ermine)",
+    'FUR':r"(vair(\W+in\W+pale|\W+en\W+pointe|\W+in\W+point)?|counter\W+vair|ermines?|erminois|pean|counter\W+ermine)",
     'PARTYPER':r"(party\W+per|per)",
     'FIMBRIATED':r"(fimbriated|voided)",
     'COUNTERCHARGED':r"countercha[rn]ged",
@@ -139,11 +139,11 @@ def t_ORDINARY(t):
     return t
 
 def t_FURRY(t):
-    r"\b(vairy\W+in\W+pale|counter\W+vairy)\b"
+    r"\b(vairy(\W+in\W+pale|\W+in\W+point|\W+en\W+pointe)?|counter\W+vairy)\b"
     return t
 
 def t_FUR(t):
-    r"\b(vair\W+in\W+pale|counter\W+vair|counter\W+ermine)\b"
+    r"\b(vair(\W+in\W+pale|\W+in\W+point|\W+en\W+pointe)?|counter\W+vair|counter\W+ermine)\b"
     return t
 
 def t_SEMYDELIS(t):
@@ -195,6 +195,7 @@ def t_error(t):
 
 lookupdict={
     "vair": treatment.Vair,
+    "vairy?\W+(en\W+pointe|in\W+point)": treatment.VairEnPointe,
     "counter.vairy?": treatment.CounterVair,
     "fesse?": blazon.Fesse,
     "canadian\\W+pale" : blazon.CanadianPale,

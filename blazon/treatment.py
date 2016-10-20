@@ -143,6 +143,28 @@ class CounterVair(VairInPale):
       blazon.Ordinary.defs.append(pattern)
       return elt
 
+class VairEnPointe(VairInPale):
+    def fill(self, elt):
+      VIPpattern=self.VairPattern()
+      blazon.Ordinary.defs.append(VIPpattern)
+      pattern=SVGdraw.SVGelement('pattern',attributes=
+                                 {"width":"16", "height":"16",
+                                  "patternUnits":"userSpaceOnUse",
+                                  "patternContentUnits":"userSpaceOnUse",
+                                  "id":"vair%04d"%blazon.Ordinary.id})
+      self.color="vair%04d"%blazon.Ordinary.id
+      blazon.Ordinary.id+=1
+      # Does not look quite perfect, as rendered.
+      pattern.addElement(SVGdraw.rect(x="0", y="0", width="16", height="8",
+                                      fill="url(#%s)"%VIPpattern.attributes["id"]))
+      pattern.addElement(SVGdraw.rect(x="0", y="8", width="20", height="8",
+                                      fill="url(#%s)"%VIPpattern.attributes["id"],
+                                      transform="rotate(180 8,12) translate(-4,0)"))
+      blazon.Ordinary.defs.append(pattern)
+      elt.attributes["fill"]="url(#%s)"%pattern.attributes["id"]
+      return elt
+
+
 class Ermine(Fur):
    def __init__(self,color1="argent",color2="sable"):
       try:
