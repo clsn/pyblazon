@@ -882,25 +882,24 @@ class CanadianPale(Pale):
 class Pallet(Pale,Charge):
    "Pallet ordinary: a diminutive of Pale"
    # Or would this be better done as Paly of an odd number?
+   palletwidth=10
    def process(self):
       p=partLine(linetype=self.lineType)
-      p.rect(-5,-2*Ordinary.HEIGHT,10,Ordinary.HEIGHT*3)
+      p.rect(-self.palletwidth/2,
+             -2*Ordinary.HEIGHT,self.palletwidth,Ordinary.HEIGHT*3)
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
       
    def patternWithOthers(self,num):
-      patterns=[[1],[1,(0,0)],
-                [1,(-10,0),(10,0)],     
-                [1,(-20,0),(0,0),(20,0)], # They should be wide-spaced.
-                [1,(-30,0),(-10,0),(10,0),(30,0)],
-                [1,(-30,0),(-15,0),(0,0),(15,0),(30,0)],
-                [1,(-35,0),(-21,0),(-7,0),(7,0),(21,0),(35,0)],
-                [1,(-45,0),(-30,0),(-15,0),(0,0),(15,0),(30,0),(45,0)]
-                ]
-      try:
-         return patterns[num]
-      except IndexError:
-         return None
+      rv=[1]
+      # Space them evenly. Alter widths so negative space is equal too?
+      # That would be paly of odd number!
+      spacing=(Ordinary.WIDTH-num*self.palletwidth)/(num+1)
+      where=-Ordinary.FESSPTX+spacing+self.palletwidth/2
+      for i in range(num):
+         rv.append((where, 0))
+         where += spacing+self.palletwidth
+      return rv
 
    def endorsed(self,*args,**kwargs):
       try:
