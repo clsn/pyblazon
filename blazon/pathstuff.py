@@ -125,6 +125,9 @@ class partLine:
         if not hasattr(self,"lineType") or not self.lineType or self.lineType == "plain":
             self.line(x,y)
         else:
+            # Normalize special-case:
+            if self.lineType=="counter-embattled":
+                self.lineType="embattled"
             # Calculate the direct line and offset vector here.
             angle=math.atan2(y-self.curY,x-self.curX)
             leng=math.sqrt((x-self.curX)**2+(y-self.curY)**2)
@@ -181,7 +184,7 @@ class partLine:
                     self.path.append(" T%d,%d"%(x,y))
                 else:
                     self.path.append(" L"+str(x)+","+str(y))
-            elif self.lineType == "embattled":
+            elif self.lineType in ["embattled"]:
                 # I'm going to assume equal up/down lengths
                 for i in range(1,int(leng/wavelength)+1):
                     self.path.append(" L"+str(uptoX+shiftX*direction)+

@@ -49,7 +49,7 @@ word_REs={
     'PALL':r"pall",
     'CHIEF':r"chief",
     'ON':r"on",
-    'LINETYPE':r"(plain|indented|dancetty|embattled|invected|engrailed|wavy|rayonny|dovetailed|raguly|nebuly|urdy|champaine|potenty)",
+    'LINETYPE':r"(plain|indented|dancetty|(counter-)?embattled|invected|engrailed|wavy|rayonny|dovetailed|raguly|nebuly|urdy|champaine|potenty)",
     'FURRY':r"(vairy(\W+in\W+pale|\W+en\+pointe|W+in\W+point)?|counter\W+vairy)",
     'ALTERED':r"(fretty|ermined|masoned|estencelly)",
     'FUR':r"(vair(\W+in\W+pale|\W+en\W+pointe|\W+in\W+point)?|counter\W+vair|ermines?|erminois|pean|counter\W+ermine)",

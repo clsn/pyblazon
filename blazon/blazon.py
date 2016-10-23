@@ -602,10 +602,18 @@ class Fesse(Ordinary,TrueOrdinary):
       p=partLine(-Ordinary.WIDTH, -20)
       # Fesse is unusual: when "embattled", only the *top* line is
       # crenelated, unless it is blazoned "embattled counter-embattled"
-      # FIXME:
-      # Currently, "embattled" renders it "embattled counter-embattled".
+      # Hm.  For now, we'll allow/require "counter-embattled" by itself
+      # for that.
       p.lineType=self.lineType
-      p.rect(-Ordinary.WIDTH,-20,Ordinary.WIDTH*3,40)
+      if self.lineType == "embattled":
+         p.move(-Ordinary.WIDTH,-20)
+         p.makelinerel(Ordinary.WIDTH*3,0)
+         p.relline(0,40)
+         p.relline(-Ordinary.WIDTH*3,0)
+         p.relline(0,-40)
+         p.closepath()
+      else:
+         p.rect(-Ordinary.WIDTH,-20,Ordinary.WIDTH*3,40)
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
 
@@ -1209,14 +1217,20 @@ class Chevron(Ordinary,TrueOrdinary):
       self.chevronwidth=25
        
    def drawme(self,width):
+      # Chevrons are like fesses: when just "embattled" the bottom lines
+      # remain plain.
       p=partLine()
       p.lineType=self.lineType
       p.move(-Ordinary.FESSPTX,20)
       p.makeline(0,-20,align=1,shift=-1)
       p.makeline(Ordinary.FESSPTX,20)
       p.relvline(width)
-      p.makeline(0,width-20,align=1)
-      p.makeline(-Ordinary.FESSPTX,20+width,shift=-1)
+      if self.lineType=="embattled":
+         p.line(0,width-20)
+         p.line(-Ordinary.FESSPTX,20+width)
+      else:
+         p.makeline(0,width-20,align=1)
+         p.makeline(-Ordinary.FESSPTX,20+width,shift=-1)
       p.closepath
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
