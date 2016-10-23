@@ -273,8 +273,14 @@ class partLine:
                     direction*= -1
                 self.path.append(" L%.4f,%.4f"%(x,y))
             elif self.lineType == 'potenty':
-                # self.path.append(" l %f %f "%(shiftX/2,shiftY/2))
-                for i in range(1, int(leng/wavelength)):
+                direction = -1  # potenty is special...
+                # Shift to keep the midpoint on the line...
+                self.path.append(" l %f %f "%(-direction*shiftX/2,
+                                              -direction*shiftY/2))
+                uptoX += -direction*shiftX/2
+                uptoY += -direction*shiftY/2
+                # Wavelength means something slightly different,
+                for i in range(0, int(leng/wavelength/2)):
                     self.path.append("l%f,%f %f,%f %f,%f %f,%f "%
                                      (direction*shiftX/3, direction*shiftY/3,
                                       -delX*1, -delY*1,
@@ -300,10 +306,3 @@ class partLine:
         self.makelinerel(-width,0,1,-1)
         self.makelinerel(0,-height,1,-1)
         self.closepath()
-
-class Drawfunctions:
-    # How to do this?  Each linetype has its unique wavelength and
-    # amplitude, and its unique stuff-that-happens-inside-the-for-loop.
-    # Sounds like closure to me.  But may be easier to implement in other
-    # ways.
-    pass
