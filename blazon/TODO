@@ -25,7 +25,7 @@ Fairly important:
 - possible to specify each quarter in a quartered shield individually
 - thin black lines between everything (or at least the option of having it)
 - Implemented special case with "a fesse embattled", and also implement
-  counter-embattled
+  counter-embattled (DONE, sorta)
 - Compony (I have my doubts about this one --mes)
 
 

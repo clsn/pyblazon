@@ -269,7 +269,7 @@ lookupdict={
                                                  postprocessing=(lambda x: x.rotate(90)))),
     "escallops?": (lambda *a: blazon.ExtCharge("escallop")),
     "billett?y": blazon.Billet,
-    "crusilly": (lambda *a: blazon.ExtCharge("humetty")),
+    "crusilly": (lambda *a: blazon.ExtCharge("crosscrosslet")),
     "mulletty": (lambda *a: blazon.ExtCharge("mullet")),
     "bordure": blazon.Bordure,
     "orle": blazon.Orle,
