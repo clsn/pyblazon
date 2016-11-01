@@ -275,7 +275,12 @@ def p_ordinary_2(p):
 def p_mullet(p):
     """mullet : MULLET
               | MULLET OF amount WORD"""
-    n=5
+    if p[1].startswith('mullet'):
+        n=5
+    elif p[1]=='label':
+        n=3
+    else:
+        n=3                     # ????
     try:
         n=p[3]
     except IndexError:
@@ -346,7 +351,11 @@ def p_ordinary_6(p):
 def p_bordure(p):
     """bordure : empty
                | WITHIN A BORDURE optlinetype opttreatment
-               | WITHIN A BORDURE optlinetype opttreatment CHARGED WITH charges"""
+               | empty A BORDURE optlinetype opttreatment
+               | WITHIN A BORDURE optlinetype opttreatment CHARGED WITH charges
+               | empty A BORDURE optlinetype opttreatment CHARGED WITH charges
+
+    """
     if len(p)<=2:
         p[0]=None
     else:

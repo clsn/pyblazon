@@ -23,7 +23,7 @@ word_RE_text={}
 word_REs={
     'BORDURE':r"(bordure|orle|tressure|double\W+tressure)",
     'COLOR':r"((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de[ ]larmes|de[ ]poix|de[ ]sang|d'huile|d'eau|proper|fieldless)",
-    'AND':r"(and|&|between)",
+    'AND':r"(and|&|between|cantonned\W+by)",
     'BEZANTY':r"(be[sz]anty|platey|pellety|hurty|tortoilly)",
     'GROUPS':r"groups",
     'OF':r"of",
@@ -42,10 +42,10 @@ word_REs={
     'LINEY':r"(paly|barry|bendy(\W+sinister)?|g[iy]ronny|checky|lozengy|pily|chevronny(\W+inverted)?)",
     'QUARTERLY':r"quarterly",
     'CHARGE':r"(roundels?|annulets?|lozenges?|fleurs?.de.l[iy]s|cross(es)?.(formy|pattee|pommee|bottony|humetty|flory)|cross(es)?\W+crosslets?|billets?|goutes?|be[zs]ants?|plates?|ogress(es)?|pellets?|gunstones?|torteaux?|hurts?|golpes?|pome(i?s)?|lions?\W+(passant|rampant)|pallets?|fir\W+twigs?|fusils?|mascles?|triangles?|canton|gyron|(in|de)?crescents?|escutcheons?|shakeforks?|escallops?|fountains?|squares?|areas?)",
-    'MULLET':r"mullets?",
+    'MULLET':r"(mullets?|label)",
     'INVERTED':r"(inverted|bendwise(\W+sinister)?|reversed|contourny|fesswise|palewise|enhanced|reduced|enlarged)",
     'ENDORSED':r"(endorsed|cotised)",
-    'ORDINARY':r"(fesse?|(canadian\W+)?pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|label|bars?(\W+gemelles?)?|fret|flaunches|batons?|gore)",
+    'ORDINARY':r"(fesse?|(canadian\W+)?pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|bars?(\W+gemelles?)?|fret|flaunches|batons?|gore)",
     'PALL':r"pall",
     'CHIEF':r"chief",
     'ON':r"on",
@@ -118,6 +118,11 @@ def t_COLOR_b(t):
 
 def t_BORDURE(t):
     r"\b(double\W+tressure)\b"
+    return t
+
+# "cantonned by" is really just "and" for crosses and saltires (at this point)
+def t_AND(t):
+    r"\b(cantonned\W+by)\b"
     return t
 
 def t_LINEY(t):

@@ -1,13 +1,13 @@
 all: xmlgrammar.py grammar.txt lexitems.txt
 
 xmlgrammar.py: plyyacc.py plylex.py makexmlgrammar.py
-	python ./makexmlgrammar.py > xmlgrammar.py
+	python3 ./makexmlgrammar.py > xmlgrammar.py
 
 grammar.txt: plyyacc.py
-	python -c 'import plyyacc; plyyacc.show_grammar()' > grammar.txt
+	python3 -c 'import plyyacc; plyyacc.show_grammar()' > grammar.txt
 
 lexitems.txt: plylex.py
-	python -c 'import plyyacc; import plylex; plylex.show_grammar()' > lexitems.txt
+	python3 -c 'import plyyacc; import plylex; plylex.show_grammar()' > lexitems.txt
 
 # Sometimes (not often) I wish I knew my way around Makefiles better.
 # This isn't yet a proper, complete distribution.

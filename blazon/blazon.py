@@ -1418,16 +1418,16 @@ class Label(Ordinary,TrueOrdinary):
 
    def process(self):
       p=SVGdraw.pathdata()              # Labels don't get lines of partition.
-      p.move(-Ordinary.FESSPTX,-25)
-      p.relhline(Ordinary.WIDTH)
+      p.move(Ordinary.FESSPTX,-25)
+      p.relhline(-Ordinary.WIDTH)
       p.relvline(4)
-      p.relhline(-2)                    # There's a reason for this.
+      p.relhline(2)
       for i in range(0,self.points):
-         p.relhline((-Ordinary.WIDTH+self.points*4)/(self.points+2.0)-4)
+         p.relhline((Ordinary.WIDTH)/(self.points+1)-4)
          p.relvline(10)
-         p.relhline(-4)
+         p.relhline(4)
          p.relvline(-10)
-      p.hline(-Ordinary.FESSPTX)
+      p.hline(Ordinary.FESSPTX)
       p.closepath()
       self.clipPath=SVGdraw.path(p)
       self.clipPathElt.addElement(self.clipPath)
