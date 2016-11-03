@@ -41,6 +41,10 @@ start='blazon'
 #    p[0]=shield
 #    return shield
 
+def p_empty(p):
+    "empty : "
+    pass
+
 def p_blazon_2(p):
     "blazon : fulltreatment optcharges bordure chief"
 #    sys.stderr.write("top: %s %s %s %s\n"%
@@ -288,12 +292,15 @@ def p_mullet(p):
     p[0]=lookup(p[1])(n)
 
 def p_charge_1(p):
-    "charge : optA ordinary optinverted optlinetype opttreatment optfimbriation optendorsed opttreatment"
+    "charge : optA ordinary optinverted optlinetype opttreatment optfimbriation optendorsed"
     res=p[2]
     for f in p[3]:
         f(res)
     res.lineType=p[4]
-    p[5], p[8] = (p[5] or p[8]), (p[8] or p[5])
+    try:
+        p[5], p[7][1] = (p[5] or p[7][1]), (p[7][1] or p[5])
+    except TypeError:
+        pass
     if not p[5]:
         if not res.tincture or not hasattr(res.tincture,"color") or not res.tincture.color or res.tincture.color == "none":
             Globals.colorless.append(res)
@@ -301,14 +308,17 @@ def p_charge_1(p):
     else:
         res.tincture=p[5]
     if p[7]:
-        res.modify(p[7],p[8])
+        res.modify(*p[7])
     p[6](res)
     p[0]=res
 
 def p_optendorsed(p):
-    """optendorsed : ENDORSED
+    """optendorsed : ENDORSED opttreatment
                    | empty"""
-    p[0]=p[1]
+    try:
+        p[0]=p[1], p[2]
+    except IndexError:
+        pass
 
 def p_charge_2(p):
     "charge : ON A charge optA grouporcharge"
@@ -492,14 +502,10 @@ def p_optA(p):
             | empty"""
     pass
 
-def p_empty(p):
-    "empty : "
-    pass
-
 def p_error(p):
     ""
     sys.stderr.write("Something unexpected: %s\n"%p)
-    pass
+    raise Exception("Parse Error")
 
 def show_grammar(all=dir()):
     all=list(filter((lambda x: x[0:2] == 'p_'), all))
