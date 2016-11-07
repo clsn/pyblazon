@@ -5,6 +5,7 @@ import sys
 import ply.yacc as yacc
 import treatment
 import copy
+import functools
 
 from plylex import tokens,lookup
 from arrangement import ByNumbers
@@ -34,7 +35,7 @@ def extrafillin(col):
 start='blazon'
 
 #def p_blazon_1(p):
-#    'blazon : fulltreatment'
+#    'blazon : multitreatment'
 #    shield=blazon.Field()
 #    shield.tincture=p[1]
 #    Globals.shield=shield
@@ -46,17 +47,18 @@ def p_empty(p):
     pass
 
 def p_blazon_2(p):
-    "blazon : fulltreatment optcharges bordure chief"
+    "blazon : multitreatment optcharges"
 #    sys.stderr.write("top: %s %s %s %s\n"%
 #                     tuple(map(str,p[1:])))
     shield=blazon.Field()
     shield.tincture=p[1]
     if p[2]:
         shield.extendCharges(p[2])
-    if p[3]:
-        shield.addBordure(p[3])
-    if p[4]:
-        shield.addChief(p[4])
+        # justcharges=[i for i in p[2] if not isinstance(i,blazon.Bordure)]
+        # shield.extendCharges(justcharges)
+        # bord=[i for i in p[2] if isinstance(i,blazon.Bordure)]
+        # if bord:
+        #     shield.addBordure(bord[0])
     p[0]=shield
     Globals.shield=shield
     return shield
@@ -66,20 +68,26 @@ def p_optcharges(p):
                   | empty"""
     p[0]=p[1]
 
-def p_fulltreatment_1(p):
-    "fulltreatment : treatment"
+def p_multitreatment_1(p):
+    "multitreatment : treatment"
     p[0]=p[1]
     fillin(p[0])
-    
-def p_fulltreatment_2(p):
-    "fulltreatment : PARTYPER ORDINARY optinverted optlinetype fulltreatment AND fulltreatment"
-    p[0]=lookup("per "+p[2])(p[5],p[7],linetype=p[4])
-    for f in p[3]:
-        f(p[0])
-    fillin(p[0])
 
-def p_fulltreatment_2_1(p):
-    "fulltreatment : PARTYPER PALL optinverted optlinetype fulltreatment fulltreatment AND fulltreatment"
+def p_division_1(p):
+    "division : PARTYPER ORDINARY optinverted optlinetype"
+    p[0]=functools.partial(lookup("per "+p[2]),linetype=p[4])
+    # INVERTED is lost!!!!!!!!
+
+def p_division_2(p):
+    "division : QUARTERLY optinverted optlinetype"
+    p[0]=functools.partial(lookup(p[1]), linetype=p[4])
+    
+def p_multitreatment_2(p):
+    "multitreatment : division multitreatment AND multitreatment"
+    p[0]=p[1](p[2],p[4])
+
+def p_multitreatment_2_1(p):
+    "multitreatment : PARTYPER PALL optinverted optlinetype multitreatment multitreatment AND multitreatment"
     p[0]=lookup("per "+p[2])(p[5],p[6],p[8],linetype=p[4])
     for f in p[3]:
         f(p[0])
@@ -93,27 +101,19 @@ def p_treatment_1(p):
     extrafillin(p[0])
 
 def p_treatment_1_b(p):
-    "treatment : LP fulltreatment RP"
+    "treatment : LP multitreatment RP"
     # for debugging and creating really weird treatments
     p[0]=p[2]
 
-def p_fulltreatment_3(p):
-    "fulltreatment : LINEY optlinetype optamt treatment AND treatment"
-    p[0]=lookup(p[1])(p[3],p[4],p[6],linetype=p[2])
-    fillin(p[0])
+def p_lineyness_1(p):
+    "lineyness : LINEY optlinetype optamt"
+    p[0]=functools.partial(lookup(p[1]),p[3],linetype=p[2])
 
-def p_fulltreatment_4(p):
-    "fulltreatment : LINEY LINEY treatment AND treatment"
-    # special case for barrypily:
-    check=lookup(p[1]+p[2])
-    try:
-        test=issubclass(check,treatment.Treatment)
-    except TypeError:           # if check isn't a class
-        test=False
-    if test:
-        p[0]=check(0,p[3],p[5])
-    else:
-        p[0]=lookup(p[1])(0,lookup(p[2])(0,p[3],p[5]),lookup(p[2])(0,p[5],p[3]))
+## LINEY LINEY NOT SUPPORTED
+
+def p_multitreatment_3(p):
+    "multitreatment : lineyness treatment AND treatment"
+    p[0]=p[1](p[2],p[4])
     fillin(p[0])
 
 def p_treatment_4(p):
@@ -122,18 +122,18 @@ def p_treatment_4(p):
     p[0]=lookup(p[1])()
     fillin(p[0])
 
-def p_treatment_5(p):
+def p_multitreatment_5(p):
     "treatment : FURRY treatment AND treatment"
     p[0]=lookup(p[1])(p[2],p[4])
     fillin(p[0])
 
-def p_treatment_6(p):
+def p_multitreatment_6(p):
     "treatment : treatment ALTERED treatment"
     p[0]=lookup(p[2])(p[1],p[3])
     fillin(p[0])
 
-def p_treatment_7(p):
-    "treatment : QUARTERLY fulltreatment AND fulltreatment"
+def p_multitreatment_7(p):
+    "treatment : QUARTERLY multitreatment AND multitreatment"
     p[0]=lookup(p[1])(p[2],p[4])
     fillin(p[0])
 
@@ -147,9 +147,9 @@ def p_treatment_8(p):
     fillin(p[0])
 
 def p_treatment_9(p):
-    """treatment : COLOR SEMY OF charge
+    """treatment : COLOR SEMY OF fullcharge
                  | COLOR SEMYDELIS opttreatment
-                 | COLOR SEMY OF GROUPS OF group
+                 | COLOR SEMY OF GROUPS OF fullcharge
                  | COLOR BEZANTY"""
     # The second is actually syntactically like ALTERED
     if len(p)==5:
@@ -170,12 +170,12 @@ def p_treatment_9(p):
         Globals.extracolorless.append(f)
 
 def p_treatment_9a(p):
-    "treatment : COLOR SEMY OF charge CHARGED WITH grouporcharge"
+    "treatment : COLOR SEMY OF fullcharge CHARGED WITH fullcharge"
     p[4].addCharge(p[7])
     p[0]=treatment.Semy(treatment.Treatment(p[1]),p[4])
     
 def p_opttreatment(p):
-    """opttreatment : fulltreatment
+    """opttreatment : multitreatment
                     | empty"""
     p[0]=p[1]
 
@@ -185,10 +185,10 @@ def p_optlinetype(p):
     p[0]=p[1]
 
 def p_charges(p):
-    """charges : grouporcharge
-               | charges optand optoverall grouporcharge"""
-    if len(p)==2:
-        p[0]=[p[1]]
+    """charges : optand fullcharge
+               | charges optand optoverall fullcharge"""
+    if len(p)==3:
+        p[0]=[p[2]]
     else:
         # OK, let's try to work out this business of "consolidating"
         # charges into chargegroups.  Charges conjoined with "and" can join
@@ -199,32 +199,27 @@ def p_charges(p):
         # We need to be able to consolidate in order to make things like
         # {azure a bend argent between a fusil and a roundel or}
         lastgroup=p[1][-1]
-        if not p[2] == "between" and \
-                 not isinstance(lastgroup.charges[0], blazon.TrueOrdinary) and \
-                 not isinstance(p[4].charges[0], blazon.TrueOrdinary):
-            lastgroup.charges.extend(p[4].charges)
-            p[0]=p[1]
-            # Works, but then we have two chargegroups that don't know how
-            # to interact.
+        if isinstance(lastgroup, blazon.ChargeGroup):
+            lastthing=lastgroup.charges[0]
+            thegroup=lastgroup
         else:
-            p[0]=p[1]+[p[4]]
+            lastthing=lastgroup
+            thegroup=blazon.ChargeGroup()
+            thegroup.charges=[lastgroup]
+        if not p[2] == "between" and \
+           not isinstance(lastthing, blazon.TrueOrdinary) and \
+           not isinstance(p[4], blazon.TrueOrdinary):
+            thegroup.charges.append(p[4])
+            p[1][-1]=thegroup
+            p[0]=p[1]
+        else:
+            p[0]=p[1] + [p[4]]
         if p[3]:
             p[4].setOverall()
 
-def p_grouporcharge_a(p):
-    """grouporcharge : group"""
-    p[0]=p[1]
-
-def p_grouporcharge_b(p):
-    """grouporcharge : charge optarrange"""
-    p[0]=blazon.ChargeGroup(1,p[1])
-    if not p[1].tincture:
-        Globals.colorless.append(p[0].charges[0])
-    p[0].arrangement=p[2]
-
-def p_group_1(p):
-    """group : amount charge optarrange opttreatment optfimbriation optrows
-             | amount charge optarrange opttreatment optfimbriation optrows EACH CHARGED WITH charges"""
+def p_fullcharge_3(p):
+    """fullcharge : amount fullcharge optarrange opttreatment optfimbriation optrows
+             | amount fullcharge optarrange opttreatment optfimbriation optrows EACH CHARGED WITH charges"""
     # I don't have to worry about handling the opttreatment.  That's just in
     # case the treatment was omitted in the charge before the arrangement,
     # and the "missing color" code will handle it.  Right?
@@ -243,8 +238,8 @@ def p_group_1(p):
     # but that's okay.  If you specify both, one wins, but GIGO after all.
     p[5](p[0])
 
-def p_group_1a(p):
-    "group : amount GROUPS optarrange optrows OF charges"
+def p_fullcharge_1a(p):
+    "fullcharge : amount GROUPS optarrange optrows OF charges"
     # The same as above, just taking it to mean "areas proper each charged with"
     area=blazon.BigRect()
     area.tincture=blazon.Treatment("proper")
@@ -257,23 +252,20 @@ def p_group_1a(p):
     p[0]=res
     
 
-def p_group_2(p):
-    """group : LP charges RP"""
-    p[0]=blazon.ChargeGroup()
-    p[0].fromarray(p[2])
-
-def p_ordinary(p):
-    """ordinary : ORDINARY
+def p_basecharge(p):
+    """basecharge : ORDINARY
                 | PALL
                 | CHARGE
+                | BORDURE
                 | CHIEF """
-    p[0]=lookup(p[1])()
+    p[0]=lookup(p[1])
 
 # mullets have to be a special case, because the "of X points" interferes
 # with "of the second"
 
-def p_ordinary_2(p):
-    "ordinary : mullet"
+def p_basecharge_2(p):
+    """basecharge : mullet"""
+    ### | basecharge TOKEN""" # to eat extraneous tokens!
     p[0]=p[1]
 
 def p_mullet(p):
@@ -289,27 +281,42 @@ def p_mullet(p):
         n=p[3]
     except IndexError:
         pass
-    p[0]=lookup(p[1])(n)
+    p[0]=functools.partial(lookup(p[1]),n)
 
-def p_charge_1(p):
-    "charge : optA ordinary optinverted optlinetype opttreatment optfimbriation optendorsed"
-    res=p[2]
-    for f in p[3]:
-        f(res)
-    res.lineType=p[4]
+def p_midcharge(p):
+    "midcharge : basecharge mods optlinetype"
+    if p[3]:
+        res=functools.partial(p[1], linetype=p[3])
+    else:
+        res=functools.partial(p[1])
+    for m in p[2]:
+        res=lambda *x, **kw: m(res(*x, **kw))
+    p[0]=res
+
+def p_mods(p):
+    """mods : INVERTED mods
+            | empty"""
+    if not p[1]:
+        p[0]=[]
+    else:
+        p[0]=[p[1]]+p[2]
+
+def p_fullcharge_1(p):
+    "fullcharge : optA midcharge opttreatment optfimbriation optendorsed"
+    res=p[2]()
     try:
-        p[5], p[7][1] = (p[5] or p[7][1]), (p[7][1] or p[5])
+        p[3], p[5][1] = (p[3] or p[5][1]), (p[5][1] or p[3])
     except TypeError:
         pass
-    if not p[5]:
+    if not p[3]:
         if not res.tincture or not hasattr(res.tincture,"color") or not res.tincture.color or res.tincture.color == "none":
             Globals.colorless.append(res)
             res.tincture=None
     else:
-        res.tincture=p[5]
-    if p[7]:
-        res.modify(*p[7])
-    p[6](res)
+        res.tincture=p[3]
+    if p[5]:
+        res.modify(*p[5])
+    p[4](res)
     p[0]=res
 
 def p_optendorsed(p):
@@ -320,23 +327,36 @@ def p_optendorsed(p):
     except IndexError:
         pass
 
-def p_charge_2(p):
-    "charge : ON A charge optA grouporcharge"
-    p[3].addCharge(p[5])
-    p[0]=p[3]
+def p_fullcharge_2(p):
+    "fullcharge : ON A fullcharge fullcharge"
+    res=p[3]
+    res.addCharge(p[4])
+    p[0]=res
 
-def p_ordinary_3(p):
-    "ordinary : optA URL"
+def p_fullcharge_4(p):
+    "fullcharge : optA fullcharge CHARGED WITH charges"
+    res=p[2]
+    res.extendCharges(p[5])
+    p[0]=res
+        
+def p_fullcharge_5(p):
+    "fullcharge : LP charges RP"
+    p[0]=blazon.ChargeGroup()
+    p[0].fromarray(p[2])
+
+def p_basecharge_3(p):
+    "basecharge : URL"
     p[0]=blazon.Blazon.outside_element(p[2])
 
-def p_ordinary_4(p):
-    "ordinary : optA NAME"
+def p_basecharge_4(p):
+    "basecharge : NAME"
     try:
         p[0]=blazon.Blazon.outside_element(blazon.Blazon.lookupcharge(p[2]))
     except KeyError:
         # Punt.
         p[0]=blazon.Image(p[2], 80, 80)
 
+## PERHAPS DISALLOW OR ABSORB INTO PREVIOUS?
 def p_tokenlist(p):
     """tokenlist : TOKEN
                  | TOKEN tokenlist"""
@@ -345,17 +365,17 @@ def p_tokenlist(p):
     else:
         p[0]=p[1]+" "+p[2]
 
-def p_ordinary_5(p):
-    "ordinary : optA tokenlist"
+def p_basecharge_5(p):
+    "basecharge : tokenlist"
     # How about we treat these as a form of (name)?
     try:
-        p[0]=blazon.Blazon.outside_element(blazon.Blazon.lookupcharge(p[2]))
+        p[0]=blazon.Blazon.outside_element(blazon.Blazon.lookupcharge(p[1]))
     except KeyError:
-        p[0]=blazon.ExtCharge("question")
+        p[0]=lambda *x:blazon.ExtCharge("question")
         # p[0]=blazon.Image(p[2], 80, 80)
 
-def p_ordinary_6(p):
-    "ordinary : optA TEXT"
+def p_basecharge_6(p):
+    "basecharge : TEXT"
     p[0]=blazon.Text(p[2], 80, 80) # these magic 80 numbers...?
 
 def p_bordure(p):
