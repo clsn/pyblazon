@@ -73,7 +73,6 @@ def p_optcharges(p):
 def p_multitreatment_1(p):
     "multitreatment : treatment"
     p[0]=p[1]
-    fillin(p[0])
 
 def p_division_1(p):
     "division : PARTYPER ORDINARY mods optlinetype"
@@ -103,7 +102,6 @@ def p_multitreatment_2_1(p):
     p[0]=lookup("per "+p[2])(p[5],p[6],p[8],linetype=p[4])
     for f in p[3]:
         f(p[0])
-    fillin(p[0])
 
 def p_treatment_1(p):
     "treatment : COLOR"
@@ -137,28 +135,23 @@ def p_lineyness_2(p):
 def p_multitreatment_3(p):
     "multitreatment : lineyness treatment AND treatment"
     p[0]=p[1](p[2],p[4])
-    fillin(p[0])
 
 def p_treatment_4(p):
     """treatment : FUR
                  | COUNTERCHARGED"""
     p[0]=lookup(p[1])()
-    fillin(p[0])
 
 def p_multitreatment_5(p):
     "treatment : FURRY treatment AND treatment"
     p[0]=lookup(p[1])(p[2],p[4])
-    fillin(p[0])
 
 def p_multitreatment_6(p):
     "treatment : treatment ALTERED treatment"
     p[0]=lookup(p[2])(p[1],p[3])
-    fillin(p[0])
 
 def p_multitreatment_7(p):
     "treatment : QUARTERLY multitreatment AND multitreatment"
     p[0]=lookup(p[1])(p[2],p[4])
-    fillin(p[0])
 
 def p_treatment_8(p):
     "treatment : OF THE CARDINAL"
@@ -188,7 +181,6 @@ def p_treatment_9(p):
         p[0]=treatment.Semy(treatment.Treatment(p[1]),gp)
     else:                               # len(p)==3
         p[0]=treatment.Semy(treatment.Treatment(p[1]),lookup(p[2])())
-    fillin(p[0])
     if len(p)==4 and not f.tincture:
         Globals.extracolorless.append(f)
 
@@ -240,8 +232,8 @@ def p_charges(p):
         if p[3]:
             p[4].setOverall()
 
-def p_fullcharge_3(p):
-    """fullcharge : amount fullcharge optarrange opttreatment optfimbriation optrows
+def p_grpcharge_3(p):
+    """grpcharge : amount fullcharge optarrange opttreatment optfimbriation optrows
              | amount fullcharge optarrange opttreatment optfimbriation optrows EACH CHARGED WITH charges"""
     # I don't have to worry about handling the opttreatment.  That's just in
     # case the treatment was omitted in the charge before the arrangement,
@@ -261,8 +253,8 @@ def p_fullcharge_3(p):
     # but that's okay.  If you specify both, one wins, but GIGO after all.
     p[5](p[0])
 
-def p_fullcharge_1a(p):
-    "fullcharge : amount GROUPS optarrange optrows OF charges"
+def p_grpcharge_1a(p):
+    "grpcharge : amount GROUPS optarrange optrows OF charges"
     # The same as above, just taking it to mean "areas proper each charged with"
     area=blazon.BigRect()
     area.tincture=blazon.Treatment("proper")
@@ -331,23 +323,31 @@ def p_mods(p):
     else:
         p[0]=[p[1]]+p[2]
 
-def p_fullcharge_1(p):
-    "fullcharge : optA midcharge opttreatment optfimbriation optendorsed"
-    res=p[2]()
+def p_almostfullcharge_1(p):
+    "almostfullcharge : midcharge opttreatment optfimbriation optendorsed"
+    res=p[1]()
     try:
-        p[3], p[5][1] = (p[3] or p[5][1]), (p[5][1] or p[3])
+        p[2], p[4][1] = (p[2] or p[4][1]), (p[4][1] or p[2])
     except TypeError:
         pass
-    if not p[3]:
+    if not p[2]:
         if not res.tincture or not hasattr(res.tincture,"color") or not res.tincture.color or res.tincture.color == "none":
             Globals.colorless.append(res)
             res.tincture=None
     else:
-        res.tincture=p[3]
-    if p[5]:
-        res.modify(*p[5])
-    p[4](res)
+        res.tincture=p[2]
+    if p[4]:
+        res.modify(*p[4])
+    p[3](res)
     p[0]=res
+
+def p_fullcharge_1(p):
+    "fullcharge : optA almostfullcharge"
+    p[0]=p[2]
+
+def p_fullcharge_1a(p):
+    "fullcharge : grpcharge"
+    p[0]=p[1]
 
 def p_optendorsed(p):
     """optendorsed : ENDORSED opttreatment
@@ -358,15 +358,19 @@ def p_optendorsed(p):
         pass
 
 def p_fullcharge_2(p):
-    "fullcharge : ON A fullcharge fullcharge"
+    """fullcharge : ON A almostfullcharge A almostfullcharge
+                  | ON A almostfullcharge grpcharge"""
     res=p[3]
-    res.addCharge(p[4])
+    if len(p)==6:
+        res.addCharge(p[5])
+    else:
+        res.addCharge(p[4])
     p[0]=res
 
-def p_fullcharge_4(p):
-    "fullcharge : optA fullcharge CHARGED WITH charges"
-    res=p[2]
-    res.extendCharges(p[5])
+def p_almostfullcharge_4(p):
+    "almostfullcharge : fullcharge CHARGED WITH charges"
+    res=p[1]
+    res.extendCharges(p[4])
     p[0]=res
         
 def p_fullcharge_5(p):
