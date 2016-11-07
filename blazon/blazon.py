@@ -354,7 +354,7 @@ class Field(Ordinary,TrueOrdinary):
       # The Field can't be duplicated, so it's safe to set its mask id now.
       # Besides, if we don't then it blows up when it tries to copy it
       # if there's a chief
-      self.mask.attributes["id"]="Mask%04s"%Ordinary.id
+      self.mask.attributes["id"]="Mask%04d"%Ordinary.id
       Ordinary.id+=1
       self.maingroup.attributes["mask"]="url(#%s)"%self.mask.attributes["id"]
       Ordinary.defs=[]                  # This is a hack.

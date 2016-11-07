@@ -53,12 +53,14 @@ def p_blazon_2(p):
     shield=blazon.Field()
     shield.tincture=p[1]
     if p[2]:
-        shield.extendCharges(p[2])
-        # justcharges=[i for i in p[2] if not isinstance(i,blazon.Bordure)]
-        # shield.extendCharges(justcharges)
-        # bord=[i for i in p[2] if isinstance(i,blazon.Bordure)]
-        # if bord:
-        #     shield.addBordure(bord[0])
+        # shield.extendCharges(p[2])
+        ## The following should also be done for Chiefs, doesn't quite work yet
+        justcharges=[i for i in p[2]
+                     if not isinstance(i,blazon.Bordure)]
+        shield.extendCharges(justcharges)
+        bord=[i for i in p[2] if isinstance(i,blazon.Bordure)]
+        if bord:
+            shield.addBordure(bord[0])
     p[0]=shield
     Globals.shield=shield
     return shield
@@ -74,9 +76,19 @@ def p_multitreatment_1(p):
     fillin(p[0])
 
 def p_division_1(p):
-    "division : PARTYPER ORDINARY optinverted optlinetype"
-    p[0]=functools.partial(lookup("per "+p[2]),linetype=p[4])
-    # INVERTED is lost!!!!!!!!
+    "division : PARTYPER ORDINARY mods optlinetype"
+    z=functools.partial(lookup("per "+p[2]),linetype=p[4])
+    if p[3]:
+        m=p[3]
+        def rv(*ar, **kw):
+            v=z(*ar,**kw)
+            for i in m:
+                sys.stderr.write("%s\n"%i)
+                v.modify(i)
+            return v
+        p[0]=rv
+    else:
+        p[0]=z
 
 def p_division_2(p):
     "division : QUARTERLY optinverted optlinetype"
@@ -109,7 +121,18 @@ def p_lineyness_1(p):
     "lineyness : LINEY optlinetype optamt"
     p[0]=functools.partial(lookup(p[1]),p[3],linetype=p[2])
 
-## LINEY LINEY NOT SUPPORTED
+def p_lineyness_2(p):
+    "lineyness : LINEY LINEY optamt"
+    # LINEY LINEY can't have linetype.
+    check=lookup(p[1]+p[2])
+    if callable(check) and issubclass(check, treatment.Treatment):
+        p[0]=functools.partial(check,0)
+    else:
+        c1, c2=p[1],p[2]
+        def rv(x, y, *args, **kwargs):
+            return lookup(c1)(0,lookup(c2)(0,x,y,*args,**kwargs),
+                              lookup(c2)(0,y,x,*args,**kwargs))
+        p[0]=rv
 
 def p_multitreatment_3(p):
     "multitreatment : lineyness treatment AND treatment"
@@ -289,9 +312,16 @@ def p_midcharge(p):
         res=functools.partial(p[1], linetype=p[3])
     else:
         res=functools.partial(p[1])
-    for m in p[2]:
-        res=lambda *x, **kw: m(res(*x, **kw))
-    p[0]=res
+    if p[2]:
+        mods=p[2]
+        def rv(*args, **kw):
+            z=res(*args, **kw)
+            for m in mods:
+                z.modify(m)
+            return z
+        p[0]=rv
+    else:
+        p[0]=res
 
 def p_mods(p):
     """mods : INVERTED mods
@@ -346,15 +376,16 @@ def p_fullcharge_5(p):
 
 def p_basecharge_3(p):
     "basecharge : URL"
-    p[0]=blazon.Blazon.outside_element(p[2])
+    url=p[1]
+    p[0]=lambda *x:blazon.Blazon.outside_element(url)
 
 def p_basecharge_4(p):
     "basecharge : NAME"
     try:
-        p[0]=blazon.Blazon.outside_element(blazon.Blazon.lookupcharge(p[2]))
+        p[0]=blazon.Blazon.outside_element(blazon.Blazon.lookupcharge(p[1]))
     except KeyError:
         # Punt.
-        p[0]=blazon.Image(p[2], 80, 80)
+        p[0]=blazon.Image(p[1], 80, 80)
 
 ## PERHAPS DISALLOW OR ABSORB INTO PREVIOUS?
 def p_tokenlist(p):
@@ -376,7 +407,8 @@ def p_basecharge_5(p):
 
 def p_basecharge_6(p):
     "basecharge : TEXT"
-    p[0]=blazon.Text(p[2], 80, 80) # these magic 80 numbers...?
+    txt=p[1]
+    p[0]=lambda *x: blazon.Text(txt, 80, 80) # these magic 80 numbers...?
 
 def p_bordure(p):
     """bordure : empty
