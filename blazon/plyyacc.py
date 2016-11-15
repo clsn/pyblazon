@@ -200,10 +200,20 @@ def p_optlinetype(p):
     p[0]=p[1]
 
 def p_charges(p):
-    """charges : optand fullcharge
-               | charges optand optoverall fullcharge"""
-    if len(p)==3:
-        p[0]=[p[2]]
+    """charges : optand optplacement fullcharge
+               | charges optand optplacement optoverall fullcharge"""
+    if len(p)==4:
+        if p[2]:
+            # ???
+            if isinstance(p[3], blazon.ChargeGroup):
+                p[3].arrangement=p[2]
+                gp=p[3]
+            else:
+                gp=blazon.ChargeGroup(1,p[3])
+                gp.arrangement=p[2]
+        else:
+            gp=p[3]
+        p[0]=[gp]
     else:
         # OK, let's try to work out this business of "consolidating"
         # charges into chargegroups.  Charges conjoined with "and" can join
@@ -214,23 +224,41 @@ def p_charges(p):
         # We need to be able to consolidate in order to make things like
         # {azure a bend argent between a fusil and a roundel or}
         lastgroup=p[1][-1]
-        if isinstance(lastgroup, blazon.ChargeGroup):
-            lastthing=lastgroup.charges[0]
-            thegroup=lastgroup
+
+        # Always make it a ChargeGroup if it isn't?
+        # ... unless it's a TrueOrdinary?
+        if p[3] or (not isinstance(p[5], blazon.ChargeGroup)
+                    and not isinstance(p[5], blazon.TrueOrdinary)):
+            newthing=blazon.ChargeGroup(1, p[5])
+            if p[3]:
+                newthing.arrangement=p[3]
         else:
-            lastthing=lastgroup
-            thegroup=blazon.ChargeGroup()
-            thegroup.charges=[lastgroup]
-        if not p[2] == "between" and \
-           not isinstance(lastthing, blazon.TrueOrdinary) and \
-           not isinstance(p[4], blazon.TrueOrdinary):
-            thegroup.charges.append(p[4])
-            p[1][-1]=thegroup
-            p[0]=p[1]
-        else:
-            p[0]=p[1] + [p[4]]
-        if p[3]:
-            p[4].setOverall()
+            newthing=p[5]
+        p[0]=p[1] + [newthing]
+        ########
+        # if isinstance(lastgroup, blazon.ChargeGroup) and not p[3]:
+        #     lastthing=lastgroup.charges[0]
+        #     thegroup=lastgroup
+        # else:
+        #     lastthing=lastgroup
+        #     thegroup=blazon.ChargeGroup()
+        #     if p[3]:
+        #         thegroup.arrangement=p[3]
+        #         thegroup.charges=[p[5]]
+        #     else:
+        #         thegroup.charges=[lastthing]
+        # if not p[2] == "between" and \
+        #    not isinstance(lastthing, blazon.TrueOrdinary) and \
+        #    not isinstance(p[5], blazon.TrueOrdinary):
+        #     thegroup.charges.append(p[5])
+        #     p[1][-1]=thegroup
+        #     p[0]=p[1]
+        # else:
+        #     p[0]=p[1] + [p[5]]
+        # if p[3]:
+        #     p[0]=p[1] + [p[5]]
+        # if p[3]:
+        #     p[5].setOverall()
 
 def p_grpcharge_3(p):
     """grpcharge : amount fullcharge optarrange opttreatment optfimbriation optrows
@@ -272,15 +300,16 @@ def p_basecharge(p):
                 | PALL
                 | CHARGE
                 | BORDURE
-                | CHIEF """
+                | CHIEF
+                | BASE"""
     p[0]=lookup(p[1])
 
 # mullets have to be a special case, because the "of X points" interferes
 # with "of the second"
 
 def p_basecharge_2(p):
-    """basecharge : mullet"""
-    ### | basecharge TOKEN""" # to eat extraneous tokens!
+    """basecharge : mullet
+                  | basecharge TOKEN""" # to eat extraneous tokens!
     p[0]=p[1]
 
 def p_mullet(p):
@@ -343,7 +372,14 @@ def p_almostfullcharge_1(p):
 
 def p_fullcharge_1(p):
     "fullcharge : optA almostfullcharge"
-    p[0]=p[2]
+    if isinstance(p[2],blazon.TrueOrdinary):
+        p[0]=p[2]
+    else:
+        ## Sigh, this busts simple things like a fess between 6 lozenges.
+        ## This should be doable.
+        # gp=blazon.ChargeGroup(1, p[2])
+        # p[0]=gp
+        p[0]=p[2]
 
 def p_fullcharge_1a(p):
     "fullcharge : grpcharge"
@@ -357,15 +393,28 @@ def p_optendorsed(p):
     except IndexError:
         pass
 
+# def p_fullcharge_2(p):
+#     """fullcharge : ON A almostfullcharge A almostfullcharge
+#                   | ON A almostfullcharge grpcharge"""
+#     res=p[3]
+#     if len(p)==6:
+#         gp=blazon.ChargeGroup(1,p[5])
+#         res.addCharge(gp)
+#         #res.addCharge(p[5])
+#     else:
+#         res.addCharge(p[4])
+#     p[0]=res
+
 def p_fullcharge_2(p):
-    """fullcharge : ON A almostfullcharge A almostfullcharge
-                  | ON A almostfullcharge grpcharge"""
-    res=p[3]
-    if len(p)==6:
-        res.addCharge(p[5])
+    """fullcharge : ON A almostfullcharge charges"""
+    if not (len(p[4])==1 and isinstance(p[4][0], blazon.ChargeGroup)):
+        res=blazon.ChargeGroup()
+        res.extendCharges(p[4])
+        res=[res]
     else:
-        res.addCharge(p[4])
-    p[0]=res
+        res=p[4]
+    p[3].extendCharges(res)
+    p[0]=p[3]
 
 def p_almostfullcharge_4(p):
     "almostfullcharge : fullcharge CHARGED WITH charges"
@@ -461,10 +510,22 @@ def p_chief(p):
         # Drop back ten and punt
         p[0]=None
 
+def p_optplacement(p):
+    """optplacement : IN optdir CHIEF
+                    | IN optdir BASE
+                    | empty"""
+    if not p[1]:
+        p[0]=None
+    else:
+        if not p[2]:
+            side=""
+        else:
+            side=p[2]
+        p[0]=lookup("in "+side+p[3])()
+
 def p_optarrange(p):
     """optarrange : IN optdir ORDINARY optinverted
                   | IN empty PALL optinverted
-                  | IN optdir CHIEF
                   | IN empty BORDURE
                   | IN empty ANNULO
                   | empty"""

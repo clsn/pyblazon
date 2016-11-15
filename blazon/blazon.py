@@ -1436,11 +1436,14 @@ class ChargeGroup(Ordinary):    # Kind of an invisible ordinary
    "A group of charges, for arranging purposes.  Acts a little like an invisible ordinary in that it imposes a pattern on the charges."
    def __init__(self,num=None,charge=None):
       self.charges=[]
+      self.field=None
+      self.tincture=None
       self.svg=SVGdraw.group()
       self.maingroup=SVGdraw.group()
       self.svg.addElement(self.maingroup)
       if num and charge:
          self.numcharges(num,charge)
+      # run self.setup()?
 
    def setOverall(self):
       self.overall=True

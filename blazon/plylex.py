@@ -15,7 +15,7 @@ tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "CHARGED","WITH","THE","CARDINAL","SEMY","SEMYDELIS","WORD",
         "PALL","WITHIN","BORDURE","BEZANTY","LP","RP","IN","DIRECTION",
         "URL","MULLET","NAME","ANNULO","GROUPS", "OVERALL", "ENDORSED",
-        "TOKEN","TEXT",)
+        "TOKEN","TEXT","BASE",)
 
 t_ignore=" \n\t"
 
@@ -23,7 +23,7 @@ word_RE_text={}
 word_REs={
     'BORDURE':r"(bordure|orle|tressure|double\W+tressure)",
     'COLOR':r"((d')?or|argent|sable|azure|gules|purpure|vert|tenné|tenne|tawny|sanguine|murrey|bleu[ ]celeste|rose|copper|de[ ]larmes|de[ ]poix|de[ ]sang|d'huile|d'eau|proper|fieldless)",
-    'AND':r"(and|&|between|cantonned\W+by)",
+    'AND':r"(and|&|between|cantonned\W+by|within)",
     'BEZANTY':r"(be[sz]anty|platey|pellety|hurty|tortoilly)",
     'GROUPS':r"groups",
     'OF':r"of",
@@ -37,7 +37,7 @@ word_REs={
     'RP':r"(}|rp)",                 # rightparen
     'ANNULO':r"annulo",
     'SEMYDELIS':r"(billett?y|go?utty|crusilly|mulletty)",
-    'WITHIN':r"within",
+    # 'WITHIN':r"within",
     'CARDINAL':r"(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|field|last)",
     'LINEY':r"(paly|barry|bendy(\W+sinister)?|g[iy]ronny|checky|lozengy|pily|chevronny(\W+inverted)?)",
     'QUARTERLY':r"quarterly",
@@ -45,9 +45,10 @@ word_REs={
     'MULLET':r"(mullets?|label)",
     'INVERTED':r"(inverted|bendwise(\W+sinister)?|reversed|contourny|fesswise|palewise|enhanced|reduced|enlarged)",
     'ENDORSED':r"(endorsed|cotised)",
-    'ORDINARY':r"(fesse?|(canadian\W+)?pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|base|bars?(\W+gemelles?)?|fret|flaunches|batons?|gore)",
+    'ORDINARY':r"(fesse?|(canadian\W+)?pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|bars?(\W+gemelles?)?|fret|flaunches|batons?|gore)",
     'PALL':r"pall",
     'CHIEF':r"chief",
+    'BASE':r'base',
     'ON':r"on",
     'LINETYPE':r"(plain|indented|dancetty|(counter-)?embattled|invected|engrailed|wavy|rayonny|dovetailed|raguly|nebuly|urdy|champaine|potenty)",
     'FURRY':r"(vairy(\W+in\W+pale|\W+en\+pointe|W+in\W+point)?|counter\W+vairy)",
@@ -110,7 +111,8 @@ def t_COLOR(t):
     r"\b(bleu[ ]celeste|de[ ]poix|de[ ]larmes|de[ ]sang|d'or|[#][a-f0-9]{6})\b"
     return t
 
-# No idea why "|[#]" at the end of the previous rule doesn't work, but it doesn't
+# "|[#]" at the end of the previous rule doesn't work because of the \b:
+# the hash-sign isn't a word-character.
 def t_COLOR_b(t):
     r"[#][0-9a-f]{6}"
     t.type='COLOR'
