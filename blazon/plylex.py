@@ -8,6 +8,7 @@ import sys
 import treatment
 import arrangement
 import copy
+import functools
 
 tokens=("COLOR","ORDINARY","CHARGE","LINEY","CHIEF","ON","COUNTERCHARGED",
         "LINETYPE","FUR","FURRY","NUM","NUMWORD","INVERTED","ALTERED",
@@ -45,7 +46,7 @@ word_REs={
     'MULLET':r"(mullets?|label)",
     'INVERTED':r"(inverted|bendwise(\W+sinister)?|reversed|contourny|fesswise|palewise|enhanced|reduced|enlarged)",
     'ENDORSED':r"(endorsed|cotised)",
-    'ORDINARY':r"(fesse?|(canadian\W+)?pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|bars?(\W+gemelles?)?|fret|flaunches|batons?|gore)",
+    'ORDINARY':r"(fesse?|(canadian\W+)?pale|cross|saltire|bend(lets?)?[ ]sinister|bend(lets?)?|piles?|chevron(el)?s?|bars?(\W+gemelles?)?|fret|flaunches|batons?|dances?|gore)",
     'PALL':r"pall",
     'CHIEF':r"chief",
     'BASE':r'base',
@@ -205,6 +206,8 @@ lookupdict={
     "vairy?\W+(en\W+pointe|in\W+point)": treatment.VairEnPointe,
     "counter.vairy?": treatment.CounterVair,
     "fesse?": blazon.Fesse,
+    # A dance is bar or a fess? Looks better as a bar I think.
+    "dances?": functools.partial(blazon.Bar, linetype="dancetty"),
     "canadian\\W+pale" : blazon.CanadianPale,
     "pale" : blazon.Pale,
     "pallets?" : blazon.Pallet,

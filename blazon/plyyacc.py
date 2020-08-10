@@ -146,7 +146,8 @@ def p_multitreatment_5(p):
     p[0]=lookup(p[1])(p[2],p[4])
 
 def p_multitreatment_6(p):
-    "treatment : treatment ALTERED treatment"
+    "treatment : COLOR ALTERED treatment"
+    # "treatment : treatment ALTERED treatment"
     p[0]=lookup(p[2])(p[1],p[3])
 
 def p_multitreatment_7(p):
@@ -163,9 +164,9 @@ def p_treatment_8(p):
     fillin(p[0])
 
 def p_treatment_9(p):
-    """treatment : COLOR SEMY OF fullcharge
+    """treatment : COLOR SEMY OF almostfullcharge
                  | COLOR SEMYDELIS opttreatment
-                 | COLOR SEMY OF GROUPS OF fullcharge
+                 | COLOR SEMY OF GROUPS OF grpcharge
                  | COLOR BEZANTY"""
     # The second is actually syntactically like ALTERED
     if len(p)==5:
@@ -185,10 +186,11 @@ def p_treatment_9(p):
         Globals.extracolorless.append(f)
 
 def p_treatment_9a(p):
-    "treatment : COLOR SEMY OF fullcharge CHARGED WITH fullcharge"
+    """treatment : COLOR SEMY OF almostfullcharge CHARGED WITH almostfullcharge
+               | COLOR SEMY OF almostfullcharge CHARGED WITH grpcharge"""
     p[4].addCharge(p[7])
     p[0]=treatment.Semy(treatment.Treatment(p[1]),p[4])
-    
+
 def p_opttreatment(p):
     """opttreatment : multitreatment
                     | empty"""
@@ -199,9 +201,14 @@ def p_optlinetype(p):
                    | empty"""
     p[0]=p[1]
 
+def p_grouporcharge(p):
+    """grouporcharge : grpcharge
+                 | fullcharge"""
+    p[0]=p[1]
+
 def p_charges(p):
-    """charges : optand optplacement fullcharge
-               | charges optand optplacement optoverall fullcharge"""
+    """charges : optand optplacement grouporcharge
+               | charges optand optplacement optoverall grouporcharge"""
     if len(p)==4:
         if p[2]:
             # ???
@@ -261,8 +268,8 @@ def p_charges(p):
         #     p[5].setOverall()
 
 def p_grpcharge_3(p):
-    """grpcharge : amount fullcharge optarrange opttreatment optfimbriation optrows
-             | amount fullcharge optarrange opttreatment optfimbriation optrows EACH CHARGED WITH charges"""
+    """grpcharge : amount almostfullcharge optarrange opttreatment optfimbriation optrows
+             | amount almostfullcharge optarrange opttreatment optfimbriation optrows EACH CHARGED WITH charges"""
     # I don't have to worry about handling the opttreatment.  That's just in
     # case the treatment was omitted in the charge before the arrangement,
     # and the "missing color" code will handle it.  Right?
@@ -310,6 +317,8 @@ def p_basecharge(p):
 def p_basecharge_2(p):
     """basecharge : mullet
                   | basecharge TOKEN""" # to eat extraneous tokens!
+    # That's for things like "a cross moline" so it turns into just a cross.
+    # It's really only for debugging though!!
     p[0]=p[1]
 
 def p_mullet(p):
@@ -344,6 +353,7 @@ def p_midcharge(p):
     else:
         p[0]=res
 
+# Multiple INVERTEDs, for "inverted enhanced" or "palewise contourny"
 def p_mods(p):
     """mods : INVERTED mods
             | empty"""
@@ -360,7 +370,8 @@ def p_almostfullcharge_1(p):
     except TypeError:
         pass
     if not p[2]:
-        if not res.tincture or not hasattr(res.tincture,"color") or not res.tincture.color or res.tincture.color == "none":
+        if (not res.tincture or not hasattr(res.tincture,"color") or
+            not res.tincture.color or res.tincture.color == "none"):
             Globals.colorless.append(res)
             res.tincture=None
     else:
@@ -381,9 +392,9 @@ def p_fullcharge_1(p):
         # p[0]=gp
         p[0]=p[2]
 
-def p_fullcharge_1a(p):
-    "fullcharge : grpcharge"
-    p[0]=p[1]
+#def p_fullcharge_1a(p):
+#    "fullcharge : grpcharge"
+#    p[0]=p[1]
 
 def p_optendorsed(p):
     """optendorsed : ENDORSED opttreatment
@@ -421,7 +432,7 @@ def p_almostfullcharge_4(p):
     res=p[1]
     res.extendCharges(p[4])
     p[0]=res
-        
+
 def p_fullcharge_5(p):
     "fullcharge : LP charges RP"
     p[0]=blazon.ChargeGroup()
@@ -486,7 +497,7 @@ def p_bordure(p):
 def p_chief(p):
     """chief : empty
              | WITH A CHIEF optlinetype opttreatment
-             | WITH A CHIEF optlinetype opttreatment CHARGED WITH charges""" 
+             | WITH A CHIEF optlinetype opttreatment CHARGED WITH charges"""
     #| optand ON A CHIEF optlinetype opttreatment charges"""
     if len(p)<=2:
         p[0]=None
@@ -524,24 +535,19 @@ def p_optplacement(p):
         p[0]=lookup("in "+side+p[3])()
 
 def p_optarrange(p):
-    """optarrange : IN optdir ORDINARY optinverted
-                  | IN empty PALL optinverted
-                  | IN empty BORDURE
-                  | IN empty ANNULO
+    """optarrange : IN ORDINARY optinverted
+                  | IN PALL optinverted
+                  | IN BORDURE
+                  | IN ANNULO
                   | empty"""
     if not p[1]:
         p[0]=None
     else:
-        if not p[2]:
-            side=""
-        else:
-            side=p[2]
-        if len(p)>4:
-            # WRONG!!!
-            act=p[4]
+        if len(p)>3:
+            act=p[3]
         else:
             act=None
-        p[0]=lookup("in "+side+p[3])(action=act)
+        p[0]=lookup("in "+p[2])(action=act)
 
 def p_optdir(p):
     """optdir : DIRECTION
@@ -560,7 +566,7 @@ def p_rows(p):
         p[0]=[p[1]] + p[2]                # Just concatenate
     else:
         p[0]=[p[1], p[3]]
-    
+
 def p_amount(p):
     """amount : NUM
               | NUMWORD"""
@@ -578,16 +584,15 @@ def p_optamt(p):
     else:
         p[0]=8
 
-# Have to allow for multiple INVERTEDs, for "palewise contourny" etc.
 def p_optinverted(p):
-    """optinverted : INVERTED optinverted
+    """optinverted : INVERTED
                    | empty"""
     if not p[1]:
         p[0]=[(lambda x:x)]
     else:
         s=p[1]
-        p[0]=[(lambda x:x.modify(s))] + p[2]
-        
+        p[0]=(lambda x:x.modify(s))
+
 def p_optfimbriation(p):
     """optfimbriation : FIMBRIATED COLOR
                       | empty"""
@@ -640,4 +645,3 @@ if __name__=="__main__":
 #        line=sys.stdin.readline()
    sh=yacc.parse(" ".join(sys.argv[1:]))
    print(sh)
-    

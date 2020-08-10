@@ -60,6 +60,10 @@ class Arrangement:
       else:
          self.inverted=True
 
+   def modify(self,name,*args,**kwargs):
+      if name =="inverted":
+         self.invert()
+
 class InPale(Arrangement):
    # Doesn't need to scale quite as much as the patternContents of Pale.
    patterns=[[1],[1,(0,0)],
