@@ -24,6 +24,6 @@
 # Most of these will come from http://fr.wikipedia.org/wiki/Projet:Blasons/Meubles
 swords?:			data/Sword.png
 trefoils? slipped:	data/trefoil-filled.png
-griff[io]n:		http://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/H%C3%A9raldique_meuble_Griffon.svg/286px-H%C3%A9raldique_meuble_Griffon.svg.png
+griff[io]n:		https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/H%C3%A9raldique_meuble_Griffon.svg/286px-H%C3%A9raldique_meuble_Griffon.svg.png
 hearts?:	data/Charges.svg#heart	SVGpath "scale(0.3) translate(-335.235,-519.18)" 10
 svggriff[io]n:	data/Griffon.svg IMAGE transform="scale(0.25)" width="287" height="321"

@@ -2405,7 +2405,7 @@ class Blazon:
          raise ArrangementError("Empty charge data!!")
       if len(pieces) == 1:
          # Image url
-         return Image(pieces[0], 80, 80)
+         return lambda *x:Image(pieces[0], 80, 80)
       if pieces[1] == "SVGpath":
          # SVG path ('ExtCharge') behavior.
          m=re.match(r'\S+\s+SVGpath\s+"([^"]*)"\s*([0-9.]+)?',data)
@@ -2415,8 +2415,8 @@ class Blazon:
          f=m.group(2)
          if f == None:
             f="3.0"
-         return ExtCharge(pieces[0], transform=" "+m.group(1),
-                          fimbriation_width=float(f))
+         return lambda *x:ExtCharge(pieces[0], transform=" "+m.group(1),
+                                    fimbriation_width=float(f))
       elif pieces[1] == "IMAGE":
          # long-form image.
          m=re.match(r'\S+\s+IMAGE\s+((\w+\s*=\s*"[^"]*"\s*)*)', data)
@@ -2430,9 +2430,9 @@ class Blazon:
             kw[t[0]]=t[1]
          kw["width"]=float(kw["width"]) # Transform back into numbers.
          kw["height"]=float(kw["height"])
-         return Image(pieces[0], **kw)
+         return lambda *x:Image(pieces[0], **kw)
       # Otherwise... hell if I know.
-      return Image(data,80,80)
+      return lambda *x: Image(data,80,80)
 
 
    def GetShield(self):

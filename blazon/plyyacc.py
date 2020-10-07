@@ -477,7 +477,7 @@ def p_fullcharge_5(p):
 def p_basecharge_3(p):
     "basecharge : URL"
     url=p[1]
-    p[0]=lambda *x:blazon.Blazon.outside_element(url)
+    p[0]=blazon.Blazon.outside_element(url)
 
 def p_basecharge_4(p):
     "basecharge : NAME"
