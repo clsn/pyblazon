@@ -101,10 +101,34 @@ def p_division_1_0(p):
     lines[key] = p[4]
     p[0] = functools.partial(lookup(p[1]), **lines)
 
+def p_division_1_1(p):
+    """division : PARTYPER ORDINARY mods AND PARTYPER ORDINARY mods"""
+    # Kind of a special case, to handle "per pale and per chevron"
+    # What about "per pale indented and per chevron"?
+    # or "per pale and per chevron indented"?
+    # or "per pale wavy and per chevron indented"?
+    # (or for that matter, "per pale wavy and per fess indented",
+    # as an alternative to/improvement on  "quarterly per pale
+    # indented" above?)
+    # At least let's handle "per pale and per chevron inverted".
+    if frozenset([p[2], p[6]]) != frozenset(["pale", "chevron"]):
+        raise Exception("Must be per pale and per chevron.")
+    res = treatment.PerPaleAndChevron
+    # There really should be only one of the optinverteds.
+    mods = p[3] or p[7]
+    # When will I break this out into a function of its own?
+    # (have to pass the current variables in as locals...)
+    def rv(*ar, **kw):
+        z = res(*ar, **kw)
+        for m in mods:
+            z.modify(m)
+        return z
+    p[0] = rv
+
 def p_division_2(p):
     "division : QUARTERLY optinverted optlinetype"
     p[0]=functools.partial(lookup(p[1]), linetype=p[4])
-    
+
 def p_multitreatment_2(p):
     "multitreatment : division multitreatment AND multitreatment"
     p[0]=p[1](p[2],p[4])
@@ -312,7 +336,7 @@ def p_grpcharge_1a(p):
     if p[4]:
         res.arrangement=ByNumbers(p[4])
     p[0]=res
-    
+
 
 def p_basecharge(p):
     """basecharge : ORDINARY

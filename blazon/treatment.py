@@ -24,7 +24,7 @@ class Treatment:                         # Metal or color.
              "argent" : "white",
              "d'eau" : "white",
              # Allows a hint of detail in sable image charges:
-             "sable" : "#181818", 
+             "sable" : "#181818",
              "de poix" : "#181818",
              "vert" : "green",
              "d'huile" : "green",
@@ -41,7 +41,7 @@ class Treatment:                         # Metal or color.
              "fieldless" : "proper",    # syntactic sugar for fields.
              "none" : "none"
              }
-   
+
     def __init__(self,color):
         try:
             self.color=Treatment.lookup[color]
@@ -225,15 +225,15 @@ class Fretty(Ermine):
         rect1=self.color2.fill(SVGdraw.rect(x="-2",y="-20",
                                             width="4",height="50"))
         rect1.attributes["transform"]="translate(0,10) rotate(45)"
-        
+
         rect2=self.color2.fill(SVGdraw.rect(x="-2",y="-20",
                                             width="4",height="50"))
         rect2.attributes["transform"]="translate(20,10) rotate(45)"
-                           
+
         rect3=self.color2.fill(SVGdraw.rect(x="-2",y="-20",
                                             width="4",height="50"))
         rect3.attributes["transform"]="translate(0,10) rotate(-45)"
-        
+
         rect4=self.color2.fill(SVGdraw.rect(x="-2",y="-20",
                                             width="4",height="50"))
         rect4.attributes["transform"]="translate(20,10) rotate(-45)"
@@ -278,7 +278,7 @@ class Masoned(Fretty):
                              height=blazon.Ordinary.HEIGHT,
                              fill="url(#%s)"%pattern.attributes["id"])
         newelt.addElement(newbase)
-        return newelt                               
+        return newelt
 
 class Semy(Fur):
     def __init__(self,background,charge):
@@ -322,13 +322,13 @@ class Estencelly(Semy):
         cg.arrangement=arrangement.ByNumbers([1,2])
         self.charge=blazon.BigRect()
         self.charge.addCharge(cg)
-                           
+
 # I wonder if this'll work...
 
 class Countercharged(Treatment):
     def __init__(self):
         pass
-    
+
     def fill(self,elt):
         realtincture=copy.copy(elt.charge.parent.tincture)
         realtincture.colors=(realtincture.colors[1],
@@ -359,7 +359,7 @@ class Paly(Treatment):
                  -blazon.Ordinary.HEIGHT,
                  2*width,2*blazon.Ordinary.HEIGHT)
       self.path=SVGdraw.path(p)
-      
+
    def __init__(self,bars=8,color1="argent",color2="sable",linetype="plain"):
       self.parseColors(color1,color2)
       self.lineType=linetype
@@ -370,7 +370,7 @@ class Paly(Treatment):
           self.pieces=bars
       else:
           self.pieces=8
-            
+
    def fill(self, elt,symbol=False):
       self.assemble()
       self.foreground=blazon.Ordinary()        # treat it like an blazon.Ordinary
@@ -465,7 +465,7 @@ class Bendy(Paly):
                  width,2*blazon.Ordinary.HEIGHT)
       self.path=SVGdraw.path(p)
       self.path.attributes["transform"]="rotate(-45)"
-      
+
 class BendySinister(Paly):
    def assemble(self):
       # Can't really do this by rotating Bendy, since the round corner is
@@ -605,7 +605,7 @@ class PerPall(Paly):
             pass
         tmp=blazon.Pall()
         tmp.inverted=self.inverted
-        return tmp.patternSiblings(num)        
+        return tmp.patternSiblings(num)
 
 class PerCross(Paly):
    def __init__(self,color1="argent",color2="sable",linetype="plain",
@@ -622,7 +622,7 @@ class PerCross(Paly):
            return patterns[num]
        except IndexError:
            pass
-       return blazon.Cross.patternSiblings(num)        
+       return blazon.Cross.patternSiblings(num)
 
    def assemble(self):
       p=partLine()
@@ -650,7 +650,7 @@ class PerSaltire(PerCross):
            return patterns[num]
        except IndexError:
            pass
-       return blazon.Saltire.patternSiblings(num)        
+       return blazon.Saltire.patternSiblings(num)
 
 
 class Gyronny(Paly):
@@ -700,7 +700,7 @@ class PerChevron(Paly):
         tmp=blazon.Chevron()
         tmp.inverted=self.inverted
         return tmp.patternSiblings(num)
-   
+
     def assemble(self):
         p=partLine(linetype=self.lineType)
         p.move(-blazon.Ordinary.FESSPTX,35)
@@ -732,7 +732,37 @@ class PerChevron(Paly):
     def debased(self):
         self.transform="translate(0, 25)"
 
-       
+class PerPaleAndChevron(PerChevron):
+    def assemble(self):
+        # Too complicated to open up a path and do it again.
+        # super().assemble()
+        # Also too complicated to draw new shapes, when evenodd
+        # filling is what's needed.  Copypasting from PerChevron
+        # until I think of somehing better.
+        p=partLine(linetype=self.lineType)
+        p.move(-blazon.Ordinary.FESSPTX,35)
+        p.makeline(0,-5,1)
+        p.makeline(blazon.Ordinary.FESSPTX,35,shift=-1)
+        p.relvline(blazon.Ordinary.HEIGHT)
+
+        p.hline(0)
+        # DIFFERENT CHOICES OF LINETYPE???
+        p.makeline(0, -blazon.Ordinary.HEIGHT - blazon.Ordinary.FESSPTY)
+        p.hline(-blazon.Ordinary.FESSPTX)
+
+        p.closepath()
+        self.path=SVGdraw.path(p)
+        # self.path.attributes["fill-rule"] = "evenodd"
+        trns=""
+        try:
+            trns+=" "+self.transform
+        except AttributeError:
+            pass
+        if self.inverted:
+            trns+=" rotate(180)"
+        if trns:
+            self.path.attributes['transform']=trns
+
 class Chevronny(Paly):
     def assemble(self):
         p=partLine(linetype=self.lineType)

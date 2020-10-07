@@ -7,7 +7,7 @@ class partLine:
     # Copied from SVGdraw, to be overwritten...
     """class used to create a pathdata object which can be used for a path.
     although most methods are pretty straightforward it might be useful to look at the SVG specification."""
-    #I didn't test the methods below. 
+    #I didn't test the methods below.
     def __init__(self,x=None,y=None,linetype="plain"):
         self.path=[]
         if x is not None and y is not None:
@@ -116,7 +116,7 @@ class partLine:
         "potenty": (2,6),
         }
     def makeline(self,x,y,align=0,shift=1,*args,**kwargs):
-        """draw a line using whatever linetype is called for"""        
+        """draw a line using whatever linetype is called for"""
         # If align is False (default), then put the leftover part (that
         # doesn't make up a complete oscillation) at the other end.  If
         # it's True, put it on the near end.  This will be easier to do
@@ -261,7 +261,7 @@ class partLine:
                                      (amplitude,amplitude,sweep,uptoX,uptoY))
                 self.path.append(" A%f,%f 0 1 %d %f,%f"%
                                  (amplitude, amplitude,sweep,x,y))
-                
+
             elif self.lineType == "rayonny":
                 for i in range(0,int(leng/wavelength)):
                     self.path.append("l%.4f,%.4f %.4f,%.4f %.4f,%.4f "%
