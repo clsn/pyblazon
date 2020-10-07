@@ -1034,6 +1034,9 @@ class Bendlet(Bend,Charge):
    def enhanced(self):
       self.moveto((0,-27))
 
+   def debased(self):
+      self.moveto((0,27))
+
 class BendSinister(Bend):
    "Reversed bend: slants from upper right to lower left"
    def __init__(self,*args,**kwargs):
@@ -1291,6 +1294,9 @@ class Chevron(Ordinary,TrueOrdinary):
 
    def enhanced(self,*args):
       self.moveto((0, -22))
+
+   def debased(self,*args):
+      self.moveto((0, 22))
 
    def moveto(self,*args):
       if "transform" not in self.maingroup.attributes:

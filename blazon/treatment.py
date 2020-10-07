@@ -727,7 +727,10 @@ class PerChevron(Paly):
         self.colors=(self.colors[1], self.colors[0])
 
     def enhanced(self):
-        self.transform="translate(0,-30)"
+        self.transform="translate(0,-25)"
+
+    def debased(self):
+        self.transform="translate(0, 25)"
 
        
 class Chevronny(Paly):
