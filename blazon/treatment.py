@@ -608,10 +608,12 @@ class PerPall(Paly):
         return tmp.patternSiblings(num)        
 
 class PerCross(Paly):
-   def __init__(self,color1="argent",color2="sable",linetype="plain"):
+   def __init__(self,color1="argent",color2="sable",linetype="plain",
+                linetypefess=None):
       # reverse order of colors  so I don't have to bother rewriting assemble()
       self.parseColors(color2,color1)
       self.lineType=linetype
+      self.lineTypeFess = linetypefess or linetype
 
    @staticmethod
    def patternContents(num):
@@ -630,6 +632,7 @@ class PerCross(Paly):
       p.makeline(0,blazon.Ordinary.HEIGHT)
       p.hline(blazon.Ordinary.WIDTH)
       p.vline(0)
+      p.lineType=self.lineTypeFess
       p.makeline(-blazon.Ordinary.WIDTH,0)
       p.closepath()
       self.path=SVGdraw.path(p)

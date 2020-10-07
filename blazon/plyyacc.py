@@ -82,12 +82,24 @@ def p_division_1(p):
         def rv(*ar, **kw):
             v=z(*ar,**kw)
             for i in m:
-                sys.stderr.write("%s\n"%i)
+                # sys.stderr.write("%s\n"%i)
                 v.modify(i)
             return v
         p[0]=rv
     else:
         p[0]=z
+
+def p_division_1_0(p):
+    """division : QUARTERLY PARTYPER ORDINARY LINETYPE"""
+    # For handling "quarterly per pale indented"
+    # ORDINARY had better be "pale" or "fess"
+    lines = {'linetype':'plain', 'linetypefess':'plain'}
+    if p[3] == "pale":
+        key = 'linetype'
+    else:
+        key = 'linetypefess'
+    lines[key] = p[4]
+    p[0] = functools.partial(lookup(p[1]), **lines)
 
 def p_division_2(p):
     "division : QUARTERLY optinverted optlinetype"
